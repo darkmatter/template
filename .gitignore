@@ -11,3 +11,11 @@ result-*
 work/
 *.agekey
 *.tsbuildinfo
+.wrangler
+gen
+target
+.alchemy
+apps/fumadocs/.source
+.beads/backup
+.beads/embeddeddolt/beads
+.beads/.local_version

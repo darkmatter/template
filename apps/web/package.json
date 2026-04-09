@@ -9,6 +9,12 @@
   "scripts": {
     "dev": "bun src/server.ts",
     "typecheck": "tsc --noEmit"
+    "build": "vite build",
+    "serve": "vite preview",
+    "dev:bare": "vite dev",
+    "tauri": "tauri",
+    "desktop:dev": "tauri dev",
+    "desktop:build": "tauri build"
   },
   "dependencies": {
     "@effect/platform-bun": "catalog:",
