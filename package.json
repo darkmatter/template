@@ -13,7 +13,7 @@
       "@types/node": "^24.0.0",
       "effect": "4.0.0-beta.102",
       "typescript": "^7.0.2",
-      "vitest": "^4.1.6"
+      "vitest": "^4.1.6",
       "dotenv": "^17.2.2",
       "zod": "^4.1.13",
       "lucide-react": "^1.7.0",
@@ -30,9 +30,10 @@
       "@tanstack/react-form": "^1.28.0",
       "@polar-sh/better-auth": "^1.8.3",
       "@types/react-dom": "^19.2.3",
-      "alchemy": "^0.90.0",
+      "alchemy": "2.0.0-beta.66",
       "@better-auth/expo": "1.5.5",
-      "drizzle-orm": "^0.45.1"
+      "drizzle-orm": "^0.45.1",
+      "@effect/platform-node": "4.0.0-beta.102"
     }
   },
   "type": "module",
@@ -57,14 +58,13 @@
     "oxlint": "1.77.0",
     "oxlint-tsgolint": "^7.0.2001",
     "typescript": "7.0.2",
-    "vitest": "catalog:"
+    "vitest": "catalog:",
     "@cloudflare/workers-types": "^4.20251213.0",
-    "@labs/config": "workspace:*",
-    "@types/node": "^24.12.2",
-    "oxfmt": "^0.43.0",
-    "oxlint": "^1.41.0",
     "turbo": "^2.8.12",
-    "typescript": "^6.0.2"
+    "alchemy": "catalog:",
+    "effect": "catalog:",
+    "@effect/platform-bun": "catalog:",
+    "@effect/platform-node": "catalog:"
   },
   "overrides": {
     "@effect/platform-node-shared": "4.0.0-beta.102"
