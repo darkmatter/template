@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+set -eu
+
+echo "Demo migration command: invoke the real migration tool from this stable operational entrypoint."

@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+set -eu
+
+environment="${1:?usage: ops/bin/deploy <development|staging|production>}"
+case "$environment" in development|staging|production) ;; *) exit 2 ;; esac
+
+echo "Rendering Kubernetes manifests for $environment"
+kubectl kustomize "ops/environments/$environment"
+echo "Rendering only: submit changes through the repository's GitOps workflow."

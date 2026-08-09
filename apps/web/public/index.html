@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ops Monorepo Demo</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Runnable reference repository</p>
+      <h1>Ops monorepo demo</h1>
+      <p class="lede">A tiny app whose surrounding repository shows where containers, environments, secrets, deployment, and observability belong.</p>
+      <section aria-labelledby="status-title">
+        <div>
+          <p class="eyebrow">Live application state</p>
+          <h2 id="status-title">Status</h2>
+        </div>
+        <dl id="status" aria-live="polite"><div><dt>Loading</dt><dd>…</dd></div></dl>
+      </section>
+      <p class="hint">Refresh the page to increment the Prometheus-ready request counter.</p>
+    </main>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

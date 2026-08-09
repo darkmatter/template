@@ -1,0 +1,6 @@
+services:
+  web-test:
+    build:
+      context: ../..
+      dockerfile: ops/container/web/Dockerfile
+    command: node --check server.mjs

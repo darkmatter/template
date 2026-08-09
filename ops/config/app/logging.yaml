@@ -1,0 +1,6 @@
+level: info
+format: json
+redact:
+  - authorization
+  - cookie
+  - set-cookie

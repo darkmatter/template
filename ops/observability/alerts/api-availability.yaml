@@ -1,0 +1,10 @@
+groups:
+  - name: ops-demo
+    rules:
+      - alert: OpsDemoUnavailable
+        expr: up{job="ops-demo"} == 0
+        for: 2m
+        labels:
+          severity: page
+        annotations:
+          summary: The ops-demo web service cannot be scraped.

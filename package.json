@@ -1,0 +1,10 @@
+{
+  "name": "ops-monorepo-demo",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "node apps/web/server.mjs",
+    "test": "node --test tests/smoke.test.mjs",
+    "check": "node --check apps/web/server.mjs && node --check apps/web/public/app.js"
+  }
+}
