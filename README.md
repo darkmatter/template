@@ -45,7 +45,7 @@ docker compose \
 - `apps/` and `packages/` are application source and reusable code.
 - `flake.nix` and `flake.lock` remain at the root because Nix discovers flakes there.
 - `flake/` is the intentionally thin public Nix-output layer.
-- `src/demo/` holds the Nix package implementation.
+- `nix/demo/` holds the Nix package implementation.
 - `ops/` contains operational configuration: containers, deployment bases, environment bindings, SOPS material, observability, and policies.
 
 See [ops/README.md](ops/README.md) for the boundary of each operational directory.
