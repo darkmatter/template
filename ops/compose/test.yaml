@@ -3,4 +3,12 @@ services:
     build:
       context: ../..
       dockerfile: ops/container/web/Dockerfile
-    command: bun --eval "import './apps/web/src/server.ts'"
+    command:
+      [
+        "bun",
+        "build",
+        "--no-install",
+        "--target=bun",
+        "apps/web/src/server.ts",
+        "--outfile=/tmp/ops-demo-check.js",
+      ]
