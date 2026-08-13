@@ -1,10 +1,16 @@
-FROM node:22-alpine
+FROM oven/bun:1.3.14-alpine
 
 WORKDIR /app
-COPY apps/web/package.json ./package.json
-COPY apps/web/server.mjs ./server.mjs
-COPY apps/web/public ./public
+COPY package.json bun.lock ./
+COPY apps/web/package.json ./apps/web/package.json
+COPY packages/tooling/package.json ./packages/tooling/package.json
+COPY packages/web-core/package.json ./packages/web-core/package.json
+RUN bun install --frozen-lockfile --production --ignore-scripts
 
-USER node
+COPY apps/web ./apps/web
+COPY packages/tooling ./packages/tooling
+COPY packages/web-core ./packages/web-core
+
+USER bun
 EXPOSE 3000
-CMD ["node", "server.mjs"]
+CMD ["bun", "apps/web/src/server.ts"]

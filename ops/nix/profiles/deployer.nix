@@ -1,4 +1,3 @@
-{ pkgs, ... }:
-{
-  environment.systemPackages = [ pkgs.kubectl pkgs.kustomize pkgs.sops ];
+{pkgs, ...}: {
+  environment.systemPackages = [pkgs.kubectl pkgs.kustomize pkgs.sops];
 }

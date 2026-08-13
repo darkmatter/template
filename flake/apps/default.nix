@@ -1,7 +1,8 @@
-{ self, nixpkgs, forAllSystems }:
-forAllSystems (system: {
-  default = {
-    type = "app";
-    program = "${self.packages.${system}.ops-demo}/bin/ops-demo";
+{...}: {
+  perSystem = {config, ...}: {
+    apps.default = {
+      type = "app";
+      program = "${config.packages.ops-demo}/bin/ops-demo";
+    };
   };
-})
+}

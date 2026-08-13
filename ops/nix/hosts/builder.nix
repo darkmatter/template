@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   imports = [
     ../hardware/builder.nix
     ../profiles/base.nix

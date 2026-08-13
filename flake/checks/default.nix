@@ -1,13 +1,10 @@
-{ nixpkgs, forAllSystems }:
-forAllSystems (system:
-  let pkgs = import nixpkgs { inherit system; };
+{inputs, ...}: {
+  perSystem = {system, ...}: let
+    pkgs = import inputs.nixpkgs {
+      inherit system;
+      overlays = [inputs.bun2nix.overlays.default];
+    };
   in {
-    smoke = pkgs.runCommand "ops-demo-smoke" { nativeBuildInputs = [ pkgs.nodejs_22 ]; } ''
-      cp -R ${../../apps/web} web
-      cp ${../../tests/smoke.test.mjs} smoke.test.mjs
-      chmod -R u+w web
-      cd web
-      APP_DIRECTORY=$PWD node --test ../smoke.test.mjs
-      touch $out
-    '';
-  })
+    checks.smoke = import ../../nix/demo/check.nix {inherit pkgs;};
+  };
+}

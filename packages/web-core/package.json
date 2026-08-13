@@ -1,23 +1,25 @@
 {
-  "name": "@ops-demo/web",
+  "name": "@repo/web-core",
   "version": "0.1.0",
   "private": true,
+  "description": "Framework-independent status and metrics helpers for the demo app",
   "type": "module",
   "imports": {
     "#*": "./src/*"
   },
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
-    "dev": "bun src/server.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@effect/platform-bun": "catalog:",
-    "@repo/web-core": "workspace:*",
     "effect": "catalog:"
   },
   "devDependencies": {
+    "@effect/vitest": "catalog:",
     "@repo/tooling": "workspace:*",
-    "@types/bun": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

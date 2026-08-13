@@ -3,4 +3,4 @@ services:
     build:
       context: ../..
       dockerfile: ops/container/web/Dockerfile
-    command: node --check server.mjs
+    command: bun --eval "import './apps/web/src/server.ts'"

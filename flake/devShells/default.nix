@@ -1,11 +1,33 @@
-{ nixpkgs, forAllSystems }:
-forAllSystems (system:
-  let pkgs = import nixpkgs { inherit system; };
-  in {
-    default = pkgs.mkShell {
-      packages = [ pkgs.age pkgs.jq pkgs.kubectl pkgs.kustomize pkgs.nodejs_22 pkgs.sops pkgs.yq-go ];
+{...}: {
+  perSystem = {
+    config,
+    pkgs,
+    ...
+  }: {
+    treefmt = {
+      programs.alejandra.enable = true;
+      programs.oxfmt.enable = true;
+      settings.excludes = ["*.sops.yaml" "flake.lock"];
+    };
+
+    devShells.default = pkgs.mkShell {
+      packages = [
+        config.packages.prelude
+        pkgs.age
+        pkgs.bun
+        pkgs.git
+        pkgs.jq
+        pkgs.kubectl
+        pkgs.kustomize
+        pkgs.sops
+        pkgs.yq-go
+      ];
       shellHook = ''
-        echo "Ops monorepo demo shell: run just, npm test, or nix flake check."
+        motd
+
+        repoRoot=$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")
+        export PATH="node_modules/.bin:$repoRoot/node_modules/.bin:$PATH"
       '';
     };
-  })
+  };
+}
