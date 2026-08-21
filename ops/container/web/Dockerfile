@@ -8,6 +8,7 @@ COPY packages/web-core/package.json ./packages/web-core/package.json
 RUN bun install --frozen-lockfile --production --ignore-scripts
 
 COPY apps/web ./apps/web
+COPY ops/secrets ./ops/secrets
 COPY packages/tooling ./packages/tooling
 COPY packages/web-core ./packages/web-core
 

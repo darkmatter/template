@@ -81,6 +81,7 @@ Determine the repo's current state:
 - Check for `.zed/`, `ops/`, `.github/`, `docs/`, `justfile`.
 
 Classify the repo:
+
 - **New repo**: no `package.json` or no `flake.nix`. Start from the
   template and adapt.
 - **Existing repo**: has some structure already. Audit against the
@@ -124,6 +125,7 @@ earlier ones:
 14. **AGENTS.md** — last, because it documents everything else
 
 Adaptation rules:
+
 - Replace `ops-monorepo-demo` / `@ops-demo/web` with the target repo's
   actual name and package names.
 - Replace `Ops monorepo demo` in user-facing strings with the repo's

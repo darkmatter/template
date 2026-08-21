@@ -24,6 +24,7 @@ export class Status extends Context.Service<
           return yield* encode({
             environment: config.environment,
             release: config.release,
+            demoMessageConfigured: config.demoMessageConfigured,
             requestCount,
             status: "ok",
             timestamp: DateTime.formatIso(yield* DateTime.now),

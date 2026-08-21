@@ -34,6 +34,7 @@ beforeAll(async () => {
       HOST: "127.0.0.1",
       PORT: String(port),
       APP_ENV: "test",
+      DEMO_MESSAGE: "smoke-only",
     },
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -53,7 +54,9 @@ afterAll(async () => {
 test("the demo app serves its status API and front page", async () => {
   const status = await waitForStatus();
   assert.equal(status.status, 200);
-  assert.equal((await status.json()).environment, "test");
+  const payload = await status.json();
+  assert.equal(payload.environment, "test");
+  assert.equal(payload.demoMessageConfigured, true);
 
   const frontPage = await fetch(`http://127.0.0.1:${port}/`);
   assert.match(await frontPage.text(), /Ops monorepo demo/);
