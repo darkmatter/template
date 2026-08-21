@@ -37,6 +37,7 @@
     "@effect/platform-bun": "catalog:",
     "@effect/platform-node": "catalog:",
     "@effect/tsgo": "0.36.1",
+    "@effect/vitest": "catalog:",
     "@repo/tooling": "workspace:*",
     "@types/bun": "catalog:",
     "@types/node": "catalog:",
