@@ -7,19 +7,19 @@ treating `ops/` as a junk drawer.
 
 ## Repository layout
 
-| Path              | Purpose                                                      |
-| ----------------- | ------------------------------------------------------------ |
-| `apps/web/`       | Demo web app (`@ops-demo/web`) — Effect/Bun HTTP server      |
-| `packages/web-core/` | Framework-independent domain logic (`@repo/web-core`)     |
-| `packages/tooling/`  | Shared TypeScript and Oxc configuration (`@repo/tooling`) |
-| `flake.nix`       | Root flake — stays at root because Nix discovers flakes there |
-| `flake/`          | Thin public Nix-output layer (apps, checks, devShells, packages) |
-| `nix/demo/`       | Nix package and smoke-check implementation                   |
-| `nix/prelude.nix` | Prelude command catalogue (`x` menu, MOTD, docs)             |
-| `ops/`            | Operational surface — see [ops/README.md](ops/README.md)     |
-| `tests/`          | Cross-package smoke tests                                    |
-| `docs/`           | Architecture and getting-started docs                        |
-| `.github/workflows/` | CI pipeline                                               |
+| Path                 | Purpose                                                          |
+| -------------------- | ---------------------------------------------------------------- |
+| `apps/web/`          | Demo web app (`@ops-demo/web`) — Effect/Bun HTTP server          |
+| `packages/web-core/` | Framework-independent domain logic (`@repo/web-core`)            |
+| `packages/tooling/`  | Shared TypeScript and Oxc configuration (`@repo/tooling`)        |
+| `flake.nix`          | Root flake — stays at root because Nix discovers flakes there    |
+| `flake/`             | Thin public Nix-output layer (apps, checks, devShells, packages) |
+| `nix/demo/`          | Nix package and smoke-check implementation                       |
+| `nix/prelude.nix`    | Prelude command catalogue (`x` menu, MOTD, docs)                 |
+| `ops/`               | Operational surface — see [ops/README.md](ops/README.md)         |
+| `tests/`             | Cross-package smoke tests                                        |
+| `docs/`              | Architecture and getting-started docs                            |
+| `.github/workflows/` | CI pipeline                                                      |
 
 ### `ops/` boundary
 
@@ -27,18 +27,18 @@ treating `ops/` as a junk drawer.
 for source-adjacent configuration. A Vite config, package manifest, or
 application schema still belongs beside the application that uses it.
 
-| Directory          | Owns                                            |
-| ------------------ | ----------------------------------------------- |
-| `ops/bin/`         | Human-invoked operational commands              |
-| `ops/container/`   | Container build recipes (Dockerfiles, bases)    |
-| `ops/compose/`     | Local multi-service Docker Compose stacks       |
-| `ops/config/`      | Runtime configuration for dependencies (Nginx, PostgreSQL, Redis) |
-| `ops/deploy/`      | Reusable deployment primitives (Kubernetes base, Terraform) |
-| `ops/environments/`| Environment-specific assembly (dev, staging, production) |
-| `ops/secrets/`     | SOPS-encrypted secret material and rules        |
-| `ops/observability/` | Dashboards, alerts, metrics, tracing, logging |
-| `ops/nix/`         | Operational host/profile Nix configuration      |
-| `ops/policies/`    | Guardrails evaluated by automation              |
+| Directory            | Owns                                                              |
+| -------------------- | ----------------------------------------------------------------- |
+| `ops/bin/`           | Human-invoked operational commands                                |
+| `ops/container/`     | Container build recipes (Dockerfiles, bases)                      |
+| `ops/compose/`       | Local multi-service Docker Compose stacks                         |
+| `ops/config/`        | Runtime configuration for dependencies (Nginx, PostgreSQL, Redis) |
+| `ops/deploy/`        | Reusable deployment primitives (Kubernetes base, Terraform)       |
+| `ops/environments/`  | Environment-specific assembly (dev, staging, production)          |
+| `ops/secrets/`       | SOPS-encrypted secret material and rules                          |
+| `ops/observability/` | Dashboards, alerts, metrics, tracing, logging                     |
+| `ops/nix/`           | Operational host/profile Nix configuration                        |
+| `ops/policies/`      | Guardrails evaluated by automation                                |
 
 ## Tooling
 
@@ -103,7 +103,8 @@ Domain helpers live in `packages/web-core` so they can be tested without
 the HTTP server:
 
 - `AppConfig` — Effect service reading `HOST`, `PORT`, `APP_ENV`,
-  `APP_RELEASE` from environment config with defaults.
+  `APP_RELEASE`, and the optional redacted `DEMO_MESSAGE`; the web adapter can
+  add a SOPS document behind environment config through `APP_SOPS_FILE`.
 - `Metrics` — in-memory request counter with Prometheus text export.
 - `Status` — typed status payload encoded via `Schema`.
 

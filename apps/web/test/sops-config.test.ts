@@ -3,7 +3,7 @@ import type { SopsCommandRequest } from "alchemy-sops";
 import { AppConfig } from "@repo/web-core";
 import { ConfigProvider, Effect } from "effect";
 
-import { makeAppConfigLive } from "../src/config.ts";
+import { makeAppConfigLive } from "#config.ts";
 
 it.effect("loads the existing app config through the SOPS fallback", () => {
   const requests: SopsCommandRequest[] = [];
