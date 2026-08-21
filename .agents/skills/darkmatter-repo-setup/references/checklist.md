@@ -1,9 +1,9 @@
 # Repo Standards Audit Checklist
 
 Work through each section. For every item, check if the file exists and
-matches the canonical template at
-`/home/cm/git/darkmatter/template` (or the nearest darkmatter template
-clone). Record ✅ present, ⚠️ partial, or ❌ missing.
+matches the canonical template (cloned to
+`/tmp/darkmatter-template` — see SKILL.md). Record ✅ present, ⚠️ partial,
+or ❌ missing.
 
 ## 1. AGENTS.md
 
