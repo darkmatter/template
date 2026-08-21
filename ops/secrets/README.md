@@ -12,20 +12,21 @@ sops ops/secrets/production.sops.yaml
 
 Never commit an age private key, a decrypted file, or a plaintext `.env` file. An environment composition should reference a secret through its deployment/GitOps controller, rather than copying secret values into `ops/environments/`.
 
-## Alchemy demo
+## Existing app integration
 
-`../alchemy/sops-demo/alchemy.run.ts` reads `demo.sops.yaml` through
-`alchemy-sops` and returns only non-secret metadata. After replacing the demo
-recipient and re-encrypting the document with your team identity, run it from
-the repository root:
+`apps/web` adds `demo.sops.yaml` to its Effect config provider chain when
+`APP_SOPS_FILE` is set. After replacing the demo recipient and re-encrypting the
+document with your team identity, run the existing app from the repository
+root:
 
 ```sh
-export SOPS_AGE_KEY="$(grep '^AGE-SECRET-KEY-' ~/.config/sops/age/keys.txt | head -1)"
-bun run demo:sops
-bun run demo:sops:destroy
+export APP_SOPS_FILE="$PWD/ops/secrets/demo.sops.yaml"
+bun run dev
 ```
 
-The checked-in document's throwaway private identity is intentionally absent,
-so the real command should fail until the recipient has been replaced. The
-provider-style test covers the integration without committing an identity or
-revealing a decrypted value.
+`sops-age` discovers the identity through standard SOPS locations and variables,
+including `SOPS_AGE_KEY` and `SOPS_AGE_KEY_FILE`. The checked-in document's
+throwaway private identity is intentionally absent, so the real app path should
+fail until the recipient has been replaced. The focused test covers the same
+existing-app provider integration with synthetic plaintext and never reveals a
+real decrypted value.

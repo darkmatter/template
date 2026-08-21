@@ -1,4 +1,4 @@
-import { Config, Context, Effect, Layer, Schema } from "effect";
+import { Config, Context, Effect, Layer, Option, Schema } from "effect";
 
 export const environments = [
   "development",
@@ -15,6 +15,7 @@ export class AppConfig extends Context.Service<
     readonly port: number;
     readonly environment: AppEnvironment;
     readonly release: string;
+    readonly demoMessageConfigured: boolean;
   }
 >()("ops-demo/AppConfig") {
   static readonly layer = Layer.effect(
@@ -30,12 +31,14 @@ export class AppConfig extends Context.Service<
       const release = yield* Config.string("APP_RELEASE").pipe(
         Config.withDefault("local"),
       );
+      const demoMessage = yield* Config.option(Config.redacted("DEMO_MESSAGE"));
 
       return AppConfig.of({
         host,
         port,
         environment,
         release,
+        demoMessageConfigured: Option.isSome(demoMessage),
       });
     }),
   );
@@ -44,6 +47,7 @@ export class AppConfig extends Context.Service<
 export const StatusSchema = Schema.Struct({
   environment: Schema.Literals(environments),
   release: Schema.String,
+  demoMessageConfigured: Schema.Boolean,
   requestCount: Schema.Int,
   status: Schema.Literal("ok"),
   timestamp: Schema.String,

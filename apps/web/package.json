@@ -13,9 +13,11 @@
   "dependencies": {
     "@effect/platform-bun": "catalog:",
     "@repo/web-core": "workspace:*",
+    "alchemy-sops": "catalog:",
     "effect": "catalog:"
   },
   "devDependencies": {
+    "@effect/vitest": "catalog:",
     "@repo/tooling": "workspace:*",
     "@types/bun": "catalog:",
     "typescript": "catalog:"

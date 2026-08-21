@@ -45,21 +45,22 @@ docker compose -f ops/compose/local.yaml up --build
 
 Set `OPS_DEMO_PORT` if port 3000 is already in use.
 
-## SOPS and Alchemy demo
+## SOPS config in the web app
 
-The template includes a local-state Alchemy stack at
-`ops/alchemy/sops-demo/alchemy.run.ts`. It uses `alchemy-sops@0.8.1` to read the
-checked-in encrypted Kubernetes Secret and returns only its source hash,
-top-level keys, and whether the selected value exists.
+The existing web app can add the checked-in encrypted Kubernetes Secret to its
+Effect config provider chain through `alchemy-sops@0.8.1`. Environment values
+remain primary, and the status endpoint reports only whether `DEMO_MESSAGE` was
+configured; the decrypted value never enters the response.
 
 Run the identity-free provider integration test:
 
 ```sh
-bun run test -- ops/alchemy/sops-demo/sops-demo.test.ts
+bun run test -- apps/web/test/sops-config.test.ts
 ```
 
-To run the real decrypt path after replacing the demo SOPS recipient with your
-team recipient, follow [ops/secrets/README.md](ops/secrets/README.md).
+To run the app against the real decrypt path after replacing the demo SOPS
+recipient with your team recipient, follow
+[ops/secrets/README.md](ops/secrets/README.md).
 
 ## Layout
 

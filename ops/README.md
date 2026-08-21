@@ -4,7 +4,6 @@
 
 | Directory        | Owns                                            | Example                                      |
 | ---------------- | ----------------------------------------------- | -------------------------------------------- |
-| `alchemy/`       | Alchemy stacks and provider wiring              | local SOPS resource demo                     |
 | `bin/`           | Human-invoked operational commands              | deploy, migrations, smoke tests              |
 | `container/`     | Container build recipes                         | application Dockerfiles and shared bases     |
 | `compose/`       | Local multi-service compositions                | app, database, and observability stacks      |
