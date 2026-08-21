@@ -6,6 +6,7 @@
     "plugins": [
       {
         "name": "@effect/language-service",
+        "allowedDuplicatedPackages": ["@distilled.cloud/core"],
         "diagnostics": false,
         "ignoreEffectWarningsInTscExitCode": true,
         "diagnosticSeverity": {
@@ -35,6 +36,6 @@
       }
     ]
   },
-  "include": ["vitest.config.ts", "oxlint.config.ts"],
+  "include": ["vitest.config.ts", "oxlint.config.ts", "ops/alchemy/**/*.ts"],
   "exclude": ["node_modules"]
 }

@@ -47,6 +47,12 @@
         exec = "docker compose -f ops/compose/local.yaml config";
         description = "Validate the local Compose stack";
       };
+
+      "ops:sops-demo" = {
+        exec = "bun run demo:sops";
+        description = "Decrypt the demo SOPS document through Alchemy";
+        details = "Requires SOPS_AGE_KEY for the document's configured age recipient.";
+      };
     };
 
     motd = {

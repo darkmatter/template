@@ -1,6 +1,7 @@
 node_modules/
 .direnv/
 .turbo/
+.alchemy/
 dist/
 .env
 .env.*

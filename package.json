@@ -8,9 +8,12 @@
     ],
     "catalog": {
       "@effect/platform-bun": "4.0.0-beta.102",
+      "@effect/platform-node": "4.0.0-beta.102",
       "@effect/vitest": "4.0.0-beta.102",
       "@types/bun": "^1.3.10",
       "@types/node": "^24.0.0",
+      "alchemy": "2.0.0-beta.70",
+      "alchemy-sops": "0.8.1",
       "effect": "4.0.0-beta.102",
       "typescript": "^7.0.2",
       "vitest": "^4.1.6"
@@ -20,6 +23,8 @@
   "scripts": {
     "dev": "bun run --cwd apps/web dev",
     "check": "tsc && bun run --filter '@ops-demo/web' typecheck && bun run --filter '@repo/web-core' typecheck",
+    "demo:sops": "alchemy deploy ./ops/alchemy/sops-demo/alchemy.run.ts --stage demo",
+    "demo:sops:destroy": "alchemy destroy ./ops/alchemy/sops-demo/alchemy.run.ts --stage demo",
     "generate:bun-nix": "bun2nix -o bun.nix",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -29,11 +34,16 @@
     "prepare": "effect-tsgo patch --no-typescript --oxlint"
   },
   "devDependencies": {
+    "@effect/platform-bun": "catalog:",
+    "@effect/platform-node": "catalog:",
     "@effect/tsgo": "0.36.1",
     "@repo/tooling": "workspace:*",
     "@types/bun": "catalog:",
     "@types/node": "catalog:",
+    "alchemy": "catalog:",
+    "alchemy-sops": "catalog:",
     "bun2nix": "^2.1.2",
+    "effect": "catalog:",
     "oxfmt": "^0.62.0",
     "oxlint": "1.77.0",
     "oxlint-tsgolint": "^7.0.2001",
@@ -41,7 +51,9 @@
     "vitest": "catalog:"
   },
   "overrides": {
-    "@effect/platform-node-shared": "4.0.0-beta.102"
+    "@effect/platform-node-shared": "4.0.0-beta.102",
+    "@effect/sql-d1": "4.0.0-beta.102",
+    "@effect/sql-sqlite-do": "4.0.0-beta.102"
   },
   "engines": {
     "node": ">=24"
