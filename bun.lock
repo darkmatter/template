@@ -50,7 +50,7 @@
     },
   },
   "overrides": {
-    "@effect/platform-node-shared": "4.0.0-beta.102",
+    "@effect/platform-node-shared": "4.0.0-rc.111",
   },
   "catalog": {
     "@effect/platform-bun": "4.0.0-beta.102",
@@ -64,7 +64,7 @@
   "packages": {
     "@effect/platform-bun": ["@effect/platform-bun@4.0.0-beta.102", "", { "dependencies": { "@effect/platform-node-shared": "^4.0.0-beta.102" }, "peerDependencies": { "effect": "^4.0.0-beta.102" } }, "sha512-hTIb0jjTfXhNgnDq2OX5wrigc0OSvTT0VWWb1PLpMM395RJPu8rCIbTlGhy0NS7kZOd8FfgNi9e0sDhgyu+5Ag=="],
 
-    "@effect/platform-node-shared": ["@effect/platform-node-shared@4.0.0-beta.102", "", { "dependencies": { "@types/ws": "^8.18.1", "ws": "^8.21.0" }, "peerDependencies": { "effect": "^4.0.0-beta.102" } }, "sha512-gVd793I72MrkX4dXo7eYtRKfNj0RW4eMRfVEKEJI16h2+mBDCzQ+gqMrog2hSTHQnaIbvbYShNQ4TVGuRCYZeQ=="],
+    "@effect/platform-node-shared": ["@effect/platform-node-shared@4.0.0-rc.111", "", { "dependencies": { "@types/ws": "^8.18.1", "ws": "^8.21.3" }, "peerDependencies": { "effect": "^4.0.0-rc.111" } }, "sha512-iES0Q9vmjhaUKqeW9ceonuD45MUg/Ouk08LzRSptZ+B5qB0w9WlRjDmUz5TJmY2betNop5FRI5k4AD4mtQt3Bw=="],
 
     "@effect/tsgo": ["@effect/tsgo@0.36.1", "", { "optionalDependencies": { "@effect/tsgo-darwin-arm64": "0.36.1", "@effect/tsgo-darwin-x64": "0.36.1", "@effect/tsgo-linux-arm": "0.36.1", "@effect/tsgo-linux-arm64": "0.36.1", "@effect/tsgo-linux-x64": "0.36.1", "@effect/tsgo-win32-arm64": "0.36.1", "@effect/tsgo-win32-x64": "0.36.1" }, "bin": { "effect-tsgo": "dist/effect-tsgo.cjs" } }, "sha512-w52AXlRYFEJHU39FhL68dcFCGDKW7qTkrCMUWWlCMYkFoOVFvwp+4qVM4OcrqPeNFizmhqEGHGrvUabaNf086g=="],
 
