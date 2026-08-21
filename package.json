@@ -1,0 +1,20 @@
+{
+  "name": "acme",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "effect-tsgo patch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "effect": "^4.0.0-beta.104"
+  },
+  "devDependencies": {
+    "@effect/tsgo": "^0.32.1",
+    "@effect/vitest": "^4.0.0-beta.104",
+    "typescript": "^7.0.2",
+    "vitest": "^4.1.0"
+  }
+}
