@@ -29,7 +29,7 @@
     "prepare": "effect-tsgo patch --no-typescript --oxlint"
   },
   "devDependencies": {
-    "@effect/tsgo": "0.36.1",
+    "@effect/tsgo": "0.36.5",
     "@repo/tooling": "workspace:*",
     "@types/bun": "catalog:",
     "@types/node": "catalog:",
