@@ -11,13 +11,13 @@ Record ✅ present, ⚠️ partial, or ❌ missing.
 - [ ] States the toolchain contract (Bun, tsgo, oxlint/oxfmt, Vitest)
 - [ ] States package conventions (catalog, workspace, # imports)
 - [ ] Documents the Nix devshell and `x` / `justfile` commands
-- [] Documents testing, secrets, CI, and validation steps
+- [ ] Documents testing, secrets, CI, and validation steps
+- [ ] Forbids adding any additional top-level directories (or ask permission)
 
 ## 2. package.json (root)
 
 - [ ] Bun workspace with `apps/*` and `packages/*`
 - [ ] Shared dependency versions in a catalog (not pinned per-package)
-- [ ] Scripts for: typecheck, test, lint, format, format-check, prepare
 - [ ] `prepare` patches tsgo and oxlint via `effect-tsgo patch`
 - [ ] `generate:bun-nix` script for regenerating the Nix lock
 - [ ] Engine and package-manager constraints matching the org standard
@@ -48,7 +48,7 @@ Record ✅ present, ⚠️ partial, or ❌ missing.
 - [ ] oxfmt is the formatter for all supported languages
 - [ ] Prettier disabled everywhere
 - [ ] effect-tsgo is the TypeScript LSP (other TS LSPs disabled)
-- [ ] oxlint LSP runs on type
+- [ ] oxlint LSP runs on save
 
 ## 7. Nix flake
 
@@ -58,12 +58,18 @@ Record ✅ present, ⚠️ partial, or ❌ missing.
 - [ ] Package and smoke-check implementations under `nix/`
 - [ ] `bun.nix` generated and committed
 - [ ] devShell puts bun, age, sops, and ops tooling on PATH
+- [ ] Use prelude's justfile integration to get justfile <-> prelude sync
 
 ## 8. justfile
 
+- [ ] Preferred due to being agnostic
 - [ ] Guards all targets with devshell entry (`nixsh`)
 - [ ] Wraps the core commands: check, test, dev, fmt
 - [ ] Has container config validation and container-up targets
+- [ ] Do NOT overload this. For additional modes like `lint --fix`, use param
+- [ ] Params should be enumerated so that they are self-documenting
+- [ ] Complex tasks should get their own executable in `ops/bin`
+
 
 ## 9. ops/ directory
 

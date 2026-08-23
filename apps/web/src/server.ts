@@ -8,6 +8,8 @@ import {
 } from "effect/unstable/http";
 import { fileURLToPath } from "node:url";
 
+import { AppConfigLive } from "./config.ts";
+
 const packagedPublicDirectory = fileURLToPath(
   new URL("../public", import.meta.url),
 );
@@ -64,7 +66,7 @@ const MainLive = HttpRouter.serve(Layer.mergeAll(Routes, StaticFiles)).pipe(
   Layer.provide(Status.layer),
   Layer.provide(Metrics.layer),
   Layer.provide(ServerBackend),
-  Layer.provide(AppConfig.layer),
+  Layer.provide(AppConfigLive),
 );
 
 BunRuntime.runMain(Layer.launch(MainLive));

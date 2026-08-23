@@ -13,6 +13,7 @@ const TestLayer = Status.layer.pipe(
       port: 3000,
       environment: "test",
       release: "unit",
+      demoMessageConfigured: true,
     }),
   ),
 );
@@ -26,6 +27,7 @@ it.effect("encodes a typed status payload", () =>
     const payload = yield* status.current;
     assert.strictEqual(payload.environment, "test");
     assert.strictEqual(payload.release, "unit");
+    assert.strictEqual(payload.demoMessageConfigured, true);
     assert.strictEqual(payload.requestCount, 2);
     assert.strictEqual(payload.status, "ok");
     assert.isString(payload.timestamp);
@@ -47,6 +49,7 @@ it.effect("accepts staging as APP_ENV", () =>
             port: 3000,
             environment: "staging",
             release: "staging",
+            demoMessageConfigured: false,
           }),
         ),
       ),
