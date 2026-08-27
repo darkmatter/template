@@ -1,0 +1,3 @@
+[submodule "vendor/darkmatter/common"]
+	path = vendor/darkmatter/common
+	url = git@github.com:darkmatter/common.git
