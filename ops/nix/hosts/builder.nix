@@ -5,5 +5,5 @@
     ../profiles/deployer.nix
   ];
 
-  networking.hostName = "ops-demo-builder";
+  networking.hostName = "agent-demo-builder";
 }

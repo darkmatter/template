@@ -1,6 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: ops-demo-development
+namespace: agent-demo-development
 resources:
   - ../../deploy/kubernetes/base
   - namespace.yaml
@@ -9,5 +9,5 @@ patches:
   - path: replicas.patch.yaml
   - path: runtime-config.patch.yaml
 images:
-  - name: ghcr.io/example/ops-demo
+  - name: ghcr.io/example/agent-demo
     newTag: development

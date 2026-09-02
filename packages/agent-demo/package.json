@@ -1,0 +1,24 @@
+{
+  "name": "@repo/agent-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Provider-free Effect layers for the agent harness demo",
+  "type": "module",
+  "imports": {
+    "#*": "./src/*"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/agent-core": "workspace:*",
+    "effect": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/tooling": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

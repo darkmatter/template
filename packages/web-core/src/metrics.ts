@@ -11,7 +11,7 @@ export class Metrics extends Context.Service<
     readonly snapshot: Effect.Effect<Snapshot>;
     readonly prometheus: Effect.Effect<string>;
   }
->()("ops-demo/Metrics") {
+>()("agent-demo/Metrics") {
   static readonly layer = Layer.effect(
     Metrics,
     Effect.gen(function* () {
@@ -24,9 +24,9 @@ export class Metrics extends Context.Service<
         })),
         prometheus: Effect.map(Ref.get(count), (requestCount) =>
           [
-            "# HELP ops_demo_requests_total Requests handled by the demo application.",
-            "# TYPE ops_demo_requests_total counter",
-            `ops_demo_requests_total ${requestCount}`,
+            "# HELP agent_demo_requests_total Requests handled by the demo application.",
+            "# TYPE agent_demo_requests_total counter",
+            `agent_demo_requests_total ${requestCount}`,
             "",
           ].join("\n"),
         ),

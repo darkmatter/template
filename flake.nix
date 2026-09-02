@@ -1,5 +1,5 @@
 {
-  description = "Runnable example of a monorepo with a tidy operational surface";
+  description = "Effect-native agent harness with CLI, daemon, desktop, and Rust edges";
 
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";

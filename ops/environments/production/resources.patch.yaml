@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ops-demo-web
+  name: agent-demo-web
 spec:
   template:
     spec:

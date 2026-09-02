@@ -1,0 +1,29 @@
+{
+  "name": "@agent-demo/native",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#*": "./src/*"
+  },
+  "scripts": {
+    "build": "vite build",
+    "desktop:build": "tauri build",
+    "desktop:dev": "tauri dev",
+    "dev": "vite",
+    "tauri": "tauri",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/agent-core": "workspace:*",
+    "@repo/agent-demo": "workspace:*",
+    "effect": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/tooling": "workspace:*",
+    "@tauri-apps/cli": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:"
+  }
+}

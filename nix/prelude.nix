@@ -2,7 +2,7 @@
   prelude = {
     theme = "minted";
     colorProfile = "auto";
-    project = "ops-monorepo-demo";
+    project = "effect-agent-harness";
 
     commands = {
       install = {
@@ -19,6 +19,18 @@
         motd = 2;
       };
 
+      cli = {
+        exec = "bun run cli";
+        description = "Run the deterministic agent harness CLI";
+        details = "Try: x cli run --events 'Explain the harness'";
+      };
+
+      harnessd = {
+        exec = "bun run harnessd";
+        description = "Run the typed Effect/Bun harness daemon";
+        details = "Serves /health, /status, /runs, and /openapi.json on :4319.";
+      };
+
       check = {
         exec = "bun run check";
         description = "Typecheck with tsgo";
@@ -27,10 +39,15 @@
 
       test = {
         exec = "bun run test";
-        description = "Run Vitest";
+        description = "Run deterministic Effect/Vitest tests";
         details = "Always `bun run test` — never `bun test`.";
         key = "t";
         motd = 3;
+      };
+
+      "test:rust" = {
+        exec = "cargo test --workspace";
+        description = "Test the Rust process supervisor";
       };
 
       lint = {
@@ -55,7 +72,7 @@
       maxWidth = 90;
       header = {
         tagline = {
-          text = "preferred toolchain + a tidy ops surface";
+          text = "clean Effect architecture + a supervised Rust edge";
         };
         status = {
           ready = {
@@ -75,7 +92,7 @@
       };
       description = {
         text = ''
-          You are inside the nix devshell — Bun, oxc, tsgo, and project
+          You are inside the nix devshell — Bun, Rust, oxc, tsgo, and project
           commands are on PATH. Run `x` to browse commands, `docs` for notes.
         '';
       };

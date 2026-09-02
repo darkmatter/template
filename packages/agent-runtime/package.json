@@ -1,0 +1,25 @@
+{
+  "name": "@repo/agent-runtime",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Effect AI and sandbox adapters for the agent harness",
+  "type": "module",
+  "imports": {
+    "#*": "./src/*"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/agent-core": "workspace:*",
+    "@repo/sandbox-client": "workspace:*",
+    "effect": "catalog:"
+  },
+  "devDependencies": {
+    "@repo/tooling": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

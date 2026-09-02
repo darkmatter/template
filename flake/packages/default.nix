@@ -8,9 +8,9 @@
       inherit system;
       overlays = [inputs.bun2nix.overlays.default];
     };
-    opsDemo = import ../../nix/demo/package.nix {inherit pkgs;};
+    agentHarness = import ../../nix/demo/package.nix {inherit pkgs;};
   in {
-    packages.ops-demo = opsDemo;
-    packages.default = config.packages.ops-demo;
+    packages.agent-harness = agentHarness;
+    packages.default = config.packages.agent-harness;
   };
 }

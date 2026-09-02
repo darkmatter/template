@@ -22,6 +22,12 @@ test: nixsh
 dev: nixsh
   bun run dev
 
+cli *args: nixsh
+  bun run cli {{args}}
+
+harnessd: nixsh
+  bun run harnessd
+
 fmt: nixsh
   nix fmt
 
