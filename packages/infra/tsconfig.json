@@ -1,0 +1,10 @@
+{
+  "extends": "@repo/tooling/tsconfig",
+  "compilerOptions": {
+    "paths": {
+      "#*": ["./src/*"]
+    }
+  },
+  "include": ["alchemy.run.ts", "src/**/*.ts"],
+  "exclude": [".alchemy", "node_modules"]
+}

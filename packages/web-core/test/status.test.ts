@@ -25,6 +25,7 @@ it.effect("encodes a typed status payload", () =>
     yield* metrics.record;
     yield* metrics.record;
     const payload = yield* status.current;
+    assert.strictEqual(payload.demo, "effect-agent-harness");
     assert.strictEqual(payload.environment, "test");
     assert.strictEqual(payload.release, "unit");
     assert.strictEqual(payload.demoMessageConfigured, true);

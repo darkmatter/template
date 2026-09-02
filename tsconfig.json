@@ -6,6 +6,7 @@
     "plugins": [
       {
         "name": "@effect/language-service",
+        "allowedDuplicatedPackages": ["@distilled.cloud/core"],
         "diagnostics": false,
         "ignoreEffectWarningsInTscExitCode": true,
         "diagnosticSeverity": {

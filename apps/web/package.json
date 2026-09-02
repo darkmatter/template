@@ -1,5 +1,5 @@
 {
-  "name": "@ops-demo/web",
+  "name": "@agent-demo/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -11,10 +11,7 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "serve": "vite preview",
-    "dev:bare": "vite dev",
-    "tauri": "tauri",
-    "desktop:dev": "tauri dev",
-    "desktop:build": "tauri build"
+    "dev:bare": "vite dev"
   },
   "dependencies": {
     "@effect/platform-bun": "catalog:",
@@ -26,6 +23,7 @@
     "@effect/vitest": "catalog:",
     "@repo/tooling": "workspace:*",
     "@types/bun": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite": "catalog:"
   }
 }

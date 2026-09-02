@@ -1,0 +1,20 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "id": 1,
+      "targets": [{ "expr": "agent_demo_requests_total", "refId": "A" }],
+      "title": "Harness requests handled",
+      "type": "stat"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["agent-demo"],
+  "title": "Agent harness overview",
+  "uid": "agent-demo-overview",
+  "version": 1
+}

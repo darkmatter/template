@@ -55,9 +55,10 @@ test("the demo app serves its status API and front page", async () => {
   const status = await waitForStatus();
   assert.equal(status.status, 200);
   const payload = await status.json();
+  assert.equal(payload.demo, "effect-agent-harness");
   assert.equal(payload.environment, "test");
   assert.equal(payload.demoMessageConfigured, true);
 
   const frontPage = await fetch(`http://127.0.0.1:${port}/`);
-  assert.match(await frontPage.text(), /Ops monorepo demo/);
+  assert.match(await frontPage.text(), /Effect-native agent harness/);
 });

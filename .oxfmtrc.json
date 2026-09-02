@@ -1,6 +1,12 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "printWidth": 80,
-  "ignorePatterns": ["**/*.sops.yaml"],
+  "ignorePatterns": [
+    "**/*.sops.yaml",
+    "**/routeTree.gen.ts",
+    ".agents/**",
+    "packages/tooling/src/secrets.yaml",
+    "vendor/**"
+  ],
   "sortPackageJson": true
 }

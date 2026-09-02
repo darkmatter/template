@@ -7,7 +7,7 @@ services:
       APP_ENV: development
       APP_RELEASE: compose-local
     ports:
-      - "${OPS_DEMO_PORT:-3000}:3000"
+      - "${AGENT_DEMO_PORT:-3000}:3000"
     healthcheck:
       test:
         [

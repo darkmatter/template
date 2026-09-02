@@ -1,10 +1,10 @@
 groups:
-  - name: ops-demo
+  - name: agent-demo
     rules:
       - alert: OpsDemoUnavailable
-        expr: up{job="ops-demo"} == 0
+        expr: up{job="agent-demo"} == 0
         for: 2m
         labels:
           severity: page
         annotations:
-          summary: The ops-demo web service cannot be scraped.
+          summary: The agent-demo web service cannot be scraped.

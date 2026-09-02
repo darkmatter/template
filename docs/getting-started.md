@@ -1,42 +1,56 @@
 # Getting started
 
-Bun + Effect reference monorepo. The demo app lives in `apps/web`. Shared
-domain logic lives in `packages/web-core`. Operational configuration lives
-in `ops/`.
-
-## Enter the shell
+Enter the pinned development environment and install the Bun workspace:
 
 ```sh
 nix develop
-```
-
-Inside the shell, `x` lists every project command, `docs` opens this viewer,
-and `x <name>` runs a command by key.
-
-## Install and validate
-
-```sh
 bun install
-x check
-x test
-x lint
 ```
 
-Use Vitest via `bun run test` (never `bun test`).
+Inside the shell, `x` lists the project commands and `docs` opens these notes.
 
-## Run the app
+## Read the demo
+
+The useful reading order is:
+
+1. `packages/agent-core/src/domain/model.ts` — schema-backed decisions.
+2. `packages/agent-core/src/services/agent-harness.ts` — the orchestration loop.
+3. `packages/agent-testkit/test/agent-harness.test.ts` — layer substitution.
+4. `packages/agent-demo/src/layer.ts` — provider-free app composition.
+5. `apps/cli/src/command.ts` — the terminal process boundary.
+6. `apps/harnessd/src/api.ts` — the typed HTTP boundary.
+7. `packages/agent-runtime/src/effect-ai-model.ts` — unstable API isolation.
+8. `apps/native/src/app.ts` — the callback/runtime boundary.
+9. `crates/agent-sandboxd/src/supervisor.rs` — the process boundary.
+
+## Run and validate
 
 ```sh
 x dev
+x test
+x check
+x lint
+cargo test --workspace
 ```
 
-Open <http://localhost:3000>. The status API is `/api/status`; Prometheus
-metrics are `/api/metrics`.
-
-## Format
+Exercise the shared demo layer through the terminal or daemon edge:
 
 ```sh
-x fmt
+bun run cli run --events "Explain the harness"
+bun run harnessd
 ```
 
-That runs `nix fmt` (alejandra + oxfmt via treefmt).
+In another terminal, submit an HTTP run:
+
+```sh
+curl -sS http://127.0.0.1:4319/runs \
+  -H 'content-type: application/json' \
+  -d '{"goal":"Explain the harness"}'
+```
+
+Open <http://localhost:3000> for the architecture page. The web app is an
+operational shell around the demo; a provider-backed agent is intentionally not
+preconfigured.
+
+Always run Vitest through `bun run test`, never `bun test`. Format TypeScript,
+JSON, and Nix with `x fmt`; format Rust with `cargo fmt --all`.
