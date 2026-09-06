@@ -15,7 +15,7 @@ import { it } from "@effect/vitest";
 import { Effect, Schema } from "effect";
 import { expect } from "vitest";
 
-import { agentTestLayer } from "../src/layer.ts";
+import { agentTestLayer } from "../src/index.ts";
 
 const runId = RunId.make("run-demo");
 const toolCallId = ToolCallId.make("call-demo");
