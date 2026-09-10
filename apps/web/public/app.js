@@ -1,15 +1,19 @@
 const status = document.querySelector("#status");
 
-async function loadStatus() {
-  try {
-    const response = await fetch("/api/status");
-    const data = await response.json();
-    status.innerHTML = Object.entries(data)
-      .map(([key, value]) => `<div><dt>${key}</dt><dd>${value}</dd></div>`)
-      .join("");
-  } catch {
-    status.innerHTML = "<div><dt>status</dt><dd>unavailable</dd></div>";
-  }
+function renderStatus(entries) {
+  const rows = entries.map(([key, value]) => {
+    const row = document.createElement("div");
+    const label = document.createElement("dt");
+    const content = document.createElement("dd");
+    label.textContent = key;
+    content.textContent = String(value);
+    row.append(label, content);
+    return row;
+  });
+  status.replaceChildren(...rows);
 }
 
-void loadStatus();
+fetch("/api/status")
+  .then((response) => response.json())
+  .then((payload) => renderStatus(Object.entries(payload)))
+  .catch(() => renderStatus([["status", "unavailable"]]));

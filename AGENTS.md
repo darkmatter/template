@@ -1,25 +1,34 @@
-# Darkmatter Production-Ready Template
+# Darkmatter Effect Agent Harness Template
 
-Bun + Effect web application with a deliberately structured operational
-surface. This is the org reference for the preferred TypeScript toolchain
-(Bun, tsgo, oxlint/oxfmt) and a Nix flake-parts + Prelude devshell, without
-treating `ops/` as a junk drawer.
+Bun + Effect agent harness with a Tauri desktop shell, a bounded Rust process
+supervisor, and a deliberately structured operational surface. This is the org
+reference for clean Effect-native TypeScript and the preferred toolchain (Bun,
+tsgo, oxlint/oxfmt, Nix flake-parts + Prelude).
 
 ## Repository layout
 
-| Path                 | Purpose                                                          |
-| -------------------- | ---------------------------------------------------------------- |
-| `apps/web/`          | Demo web app (`@ops-demo/web`) — Effect/Bun HTTP server          |
-| `packages/web-core/` | Framework-independent domain logic (`@repo/web-core`)            |
-| `packages/tooling/`  | Shared TypeScript and Oxc configuration (`@repo/tooling`)        |
-| `flake.nix`          | Root flake — stays at root because Nix discovers flakes there    |
-| `flake/`             | Thin public Nix-output layer (apps, checks, devShells, packages) |
-| `nix/demo/`          | Nix package and smoke-check implementation                       |
-| `nix/prelude.nix`    | Prelude command catalogue (`x` menu, MOTD, docs)                 |
-| `ops/`               | Operational surface — see [ops/README.md](ops/README.md)         |
-| `tests/`             | Cross-package smoke tests                                        |
-| `docs/`              | Architecture and getting-started docs                            |
-| `.github/workflows/` | CI pipeline                                                      |
+| Path                       | Purpose                                                          |
+| -------------------------- | ---------------------------------------------------------------- |
+| `apps/cli/`                | Effect CLI and terminal rendering boundary                       |
+| `apps/harnessd/`           | Typed harness HTTP API and long-lived Bun server                 |
+| `apps/web/`                | Status/architecture page (`@agent-demo/web`) — Effect/Bun server |
+| `apps/native/`             | Tauri shell and managed Effect runtime boundary                  |
+| `packages/agent-core/`     | Stable schemas, services, journal, and agent loop                |
+| `packages/agent-demo/`     | Provider-free model/tool layers shared by runnable apps          |
+| `packages/agent-runtime/`  | Effect AI and sandbox adapters                                   |
+| `packages/agent-testkit/`  | Scripted model and deterministic test layers                     |
+| `packages/sandbox-client/` | Schema contract for the Rust supervisor                          |
+| `packages/web-core/`       | Framework-independent status and metrics helpers                 |
+| `packages/tooling/`        | Shared TypeScript and Oxc configuration                          |
+| `crates/agent-sandboxd/`   | Bounded NDJSON process supervisor                                |
+| `flake.nix`                | Root flake — stays at root because Nix discovers flakes there    |
+| `flake/`                   | Thin public Nix-output layer (apps, checks, devShells, packages) |
+| `nix/demo/`                | Nix package and smoke-check implementation                       |
+| `nix/prelude.nix`          | Prelude command catalogue (`x` menu, MOTD, docs)                 |
+| `ops/`                     | Operational surface — see [ops/README.md](ops/README.md)         |
+| `tests/`                   | Cross-package smoke tests                                        |
+| `docs/`                    | Architecture and getting-started docs                            |
+| `.github/workflows/`       | CI pipeline                                                      |
 
 ### `ops/` boundary
 
@@ -55,9 +64,10 @@ application schema still belongs beside the application that uses it.
   Split files that exceed this.
 - oxfmt is configured at 80 print width and sorts `package.json` keys.
   Prettier is disabled in Zed — oxfmt is the only formatter.
-- The root `bun run check` runs `tsc` then per-package `tsc --noEmit` for
-  `@ops-demo/web` and `@repo/web-core`. New packages with a `typecheck`
-  script should be added to this chain.
+- The root `bun run check` runs root `tsc` then every workspace package's
+  `typecheck` script through Bun's workspace filter.
+- Rust uses the root Cargo workspace. Run `cargo check --workspace` and
+  `cargo test --workspace` after changing the supervisor or its protocol.
 
 ### Nix devshell
 
@@ -66,6 +76,8 @@ automatic entry). Inside the shell:
 
 - `x` — interactive command picker
 - `x dev` — run the Effect/Bun demo server
+- `x cli` — run the deterministic harness CLI
+- `x harnessd` — run the typed harness daemon
 - `x check` — tsgo typecheck
 - `x test` — Vitest
 - `x lint` — oxlint
@@ -95,12 +107,29 @@ After changing `package.json` dependencies, regenerate the Nix lock:
 
 ## Application architecture
 
-The application is intentionally small. `apps/web` serves a static front
-page, a `/api/status` endpoint, and Prometheus-compatible `/api/metrics`
-through Effect and Bun (`@effect/platform-bun`).
+The demo is an Effect-native agent harness. `packages/agent-core` owns branded
+IDs, schema-backed requests/decisions/results/events/errors, capability
+services, an in-memory event journal, and the bounded sequential agent loop.
+`AgentHarness.layerNoDeps` captures its model, tool, journal, and configuration
+dependencies so its public operation has no hidden environment requirement.
 
-Domain helpers live in `packages/web-core` so they can be tested without
-the HTTP server:
+Provider and process details point inward from adapters. Only
+`packages/agent-runtime` may import `effect/unstable/ai`.
+`packages/sandbox-client` owns the tagged wire protocol implemented by
+`crates/agent-sandboxd`. The Rust daemon supervises processes but is not a
+security sandbox.
+
+`packages/agent-demo` supplies one deterministic, schema-validated tool
+round-trip without provider credentials. `apps/cli`, `apps/harnessd`, and
+`apps/native` consume this same layer; application entrypoints must not copy or
+reimplement the harness loop.
+
+`apps/native` creates one `ManagedRuntime` for UI callback execution and
+disposes it with the application lifecycle. `apps/web` remains the operational
+shell, serving a static architecture page, `/api/status`, and Prometheus-ready
+`/api/metrics` through Effect and Bun.
+
+Web support helpers live in `packages/web-core`:
 
 - `AppConfig` — Effect service reading `HOST`, `PORT`, `APP_ENV`,
   `APP_RELEASE`, and the optional redacted `DEMO_MESSAGE`; the web adapter can
@@ -121,8 +150,10 @@ image reference. Production uses a digest rather than a mutable image tag.
 
 ## Testing
 
-- Unit tests live next to the code they test (`packages/web-core/test/`).
-  They use `@effect/vitest` with `it.effect` and test layers.
+- Unit tests live next to the code they test. They use `@effect/vitest` with
+  `it.effect` and fresh layers; do not wrap `it.effect` in `Effect.scoped`.
+- `packages/agent-testkit` replaces model and tool services with deterministic
+  layers while exercising the real harness and journal.
 - Smoke tests live in `tests/` and spawn the real server to verify the
   status API and front page end-to-end.
 - Test files match `**/*.test.ts`. Vitest excludes `.direnv/**`.
@@ -150,8 +181,9 @@ image reference. Production uses a digest rather than a mutable image tag.
 4. `bun run test`
 5. `bun run lint`
 6. `bun run fmt:check`
-7. `nix flake check`
-8. `docker compose -f ops/compose/local.yaml config`
+7. `cargo check --workspace`, `cargo test --workspace`, and Rust formatting
+8. `nix flake check`
+9. `docker compose -f ops/compose/local.yaml config`
 
 All steps must pass. The `--ignore-scripts` install flag means no
 postinstall scripts run in CI — the `prepare` step handles patching.
@@ -165,6 +197,8 @@ bun run check
 bun run test
 bun run lint
 bun run fmt:check
+cargo check --workspace
+cargo test --workspace
 nix flake check
 docker compose -f ops/compose/local.yaml config
 ```

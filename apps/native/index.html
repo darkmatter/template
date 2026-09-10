@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101510" />
+    <title>Effect Agent Harness</title>
+  </head>
+  <body>
+    <main id="app">
+      <section class="shell" aria-labelledby="title">
+        <header class="hero">
+          <p class="eyebrow">Effect-native desktop boundary</p>
+          <h1 id="title">A small shell around a managed agent runtime.</h1>
+          <p class="lede">
+            The UI owns one ManagedRuntime. The runtime owns the demo service
+            layer. Teardown releases both together.
+          </p>
+        </header>
+
+        <form class="prompt" data-prompt-form>
+          <label for="goal">Goal</label>
+          <textarea id="goal" name="goal" rows="4">
+Explain the boundary in one sentence.</textarea>
+          <button type="submit">Run demo agent</button>
+        </form>
+
+        <section class="result" aria-live="polite" aria-atomic="true">
+          <div class="result-heading">
+            <span>Agent reply</span>
+            <span class="status" data-status>ready</span>
+          </div>
+          <p data-reply>
+            Submit the goal to cross from the UI into the Effect runtime.
+          </p>
+        </section>
+      </section>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

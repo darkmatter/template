@@ -10,7 +10,7 @@ export class Status extends Context.Service<
   {
     readonly current: Effect.Effect<StatusPayload>;
   }
->()("ops-demo/Status") {
+>()("agent-demo/Status") {
   static readonly layer = Layer.effect(
     Status,
     Effect.gen(function* () {
@@ -22,6 +22,7 @@ export class Status extends Context.Service<
         current: Effect.gen(function* () {
           const { requestCount } = yield* metrics.snapshot;
           return yield* encode({
+            demo: "effect-agent-harness",
             environment: config.environment,
             release: config.release,
             demoMessageConfigured: config.demoMessageConfigured,

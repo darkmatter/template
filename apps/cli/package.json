@@ -1,0 +1,31 @@
+{
+  "name": "@agent-demo/cli",
+  "version": "0.1.0",
+  "private": true,
+  "bin": {
+    "harness": "./src/main.ts"
+  },
+  "type": "module",
+  "imports": {
+    "#*": "./src/*"
+  },
+  "scripts": {
+    "dev": "bun src/main.ts",
+    "test": "vitest run test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@effect/platform-bun": "catalog:",
+    "@repo/agent-core": "workspace:*",
+    "@repo/agent-demo": "workspace:*",
+    "effect": "catalog:"
+  },
+  "devDependencies": {
+    "@effect/vitest": "catalog:",
+    "@repo/tooling": "workspace:*",
+    "@types/bun": "catalog:",
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

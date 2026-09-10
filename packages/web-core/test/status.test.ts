@@ -1,9 +1,9 @@
 import { assert, it } from "@effect/vitest";
 import { Effect, Layer } from "effect";
 
-import { AppConfig } from "../src/config.ts";
-import { Metrics } from "../src/metrics.ts";
-import { Status } from "../src/status.ts";
+import { AppConfig } from "../src/index.ts";
+import { Metrics } from "../src/index.ts";
+import { Status } from "../src/index.ts";
 
 const TestLayer = Status.layer.pipe(
   Layer.provideMerge(Metrics.layer),
@@ -25,6 +25,7 @@ it.effect("encodes a typed status payload", () =>
     yield* metrics.record;
     yield* metrics.record;
     const payload = yield* status.current;
+    assert.strictEqual(payload.demo, "effect-agent-harness");
     assert.strictEqual(payload.environment, "test");
     assert.strictEqual(payload.release, "unit");
     assert.strictEqual(payload.demoMessageConfigured, true);

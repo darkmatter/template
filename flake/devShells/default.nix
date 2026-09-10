@@ -15,10 +15,13 @@
         config.packages.prelude
         pkgs.age
         pkgs.bun
+        pkgs.cargo
         pkgs.git
         pkgs.jq
         pkgs.kubectl
         pkgs.kustomize
+        pkgs.rustc
+        pkgs.rustfmt
         pkgs.sops
         pkgs.yq-go
       ];

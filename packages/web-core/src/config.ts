@@ -17,7 +17,7 @@ export class AppConfig extends Context.Service<
     readonly release: string;
     readonly demoMessageConfigured: boolean;
   }
->()("ops-demo/AppConfig") {
+>()("agent-demo/AppConfig") {
   static readonly layer = Layer.effect(
     AppConfig,
     Effect.gen(function* () {
@@ -45,6 +45,7 @@ export class AppConfig extends Context.Service<
 }
 
 export const StatusSchema = Schema.Struct({
+  demo: Schema.Literal("effect-agent-harness"),
   environment: Schema.Literals(environments),
   release: Schema.String,
   demoMessageConfigured: Schema.Boolean,

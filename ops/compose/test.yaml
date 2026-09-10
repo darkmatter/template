@@ -10,5 +10,5 @@ services:
         "--no-install",
         "--target=bun",
         "apps/web/src/server.ts",
-        "--outfile=/tmp/ops-demo-check.js",
+        "--outfile=/tmp/agent-demo-check.js",
       ]

@@ -1,82 +1,103 @@
-# Ops monorepo demo
+# Effect agent harness demo
 
-A small Bun + Effect web application with a deliberately structured
-operational surface. It is the org reference for the preferred TypeScript
-toolchain (Bun, tsgo, oxlint/oxfmt) and a Nix flake-parts + Prelude
-devshell, without treating `ops/` as a junk drawer.
+A production-shaped monorepo whose demo is a deliberately small agent harness.
+The interesting part is the code architecture: Effect schemas describe every
+boundary, services state capabilities, layers assemble implementations, and
+tests swap the model and tools without mocks or global state.
 
-## Install
+The repository does not ship a model credential or pretend that arbitrary
+process execution is safe. The AI provider is an adapter seam, and the Rust
+worker is a bounded process supervisor—not a security sandbox.
 
-Enter the Nix development shell (direnv will do this after `direnv allow`):
+## Tour
+
+| Path                       | Purpose                                                         |
+| -------------------------- | --------------------------------------------------------------- |
+| `apps/cli/`                | Effect CLI for local and operator-driven harness runs           |
+| `apps/harnessd/`           | Typed HTTP API and long-lived Bun runtime boundary              |
+| `apps/native/`             | Tauri shell with one managed Effect runtime at the UI boundary  |
+| `apps/web/`                | Small Bun status server and architecture landing page           |
+| `packages/agent-core/`     | Stable schemas, errors, services, event journal, and agent loop |
+| `packages/agent-demo/`     | Shared provider-free model, tool, and runnable demo layer       |
+| `packages/agent-runtime/`  | Isolated `effect/unstable/ai` and supervised-shell adapters     |
+| `packages/agent-testkit/`  | Scripted model and deterministic tool layers                    |
+| `packages/infra/`          | Alchemy stack composition for the deployable web surface        |
+| `packages/sandbox-client/` | Effect Schema contract shared with the Rust worker              |
+| `crates/agent-sandboxd/`   | NDJSON process supervisor with deadlines and output bounds      |
+
+Start with [`packages/agent-core/src/services/agent-harness.ts`](packages/agent-core/src/services/agent-harness.ts),
+then read [`packages/agent-testkit/test/agent-harness.test.ts`](packages/agent-testkit/test/agent-harness.test.ts).
+The test is the shortest executable explanation of the design.
+
+## Use it
 
 ```sh
 nix develop
 bun install
+x test
+x dev
 ```
 
-## Usage
+Open <http://localhost:3000>. The status API is `/api/status`; metrics are at
+`/api/metrics`.
+
+Run the deterministic harness from the terminal:
 
 ```sh
-x                 # interactive command picker
-x dev             # Effect/Bun demo server
-x check           # tsgo typecheck
-x test            # Vitest
-x lint            # oxlint
-x fmt             # treefmt (alejandra + oxfmt)
+bun run cli run --events "Explain the harness boundaries"
 ```
 
-Open <http://localhost:3000>, or verify the API directly:
+Or start the daemon and submit the same run over its schema-described API:
 
 ```sh
-curl http://localhost:3000/api/status
+bun run harnessd
+curl -sS http://127.0.0.1:4319/runs \
+  -H 'content-type: application/json' \
+  -d '{"goal":"Explain the harness boundaries"}'
 ```
 
-Run the packaged application without entering a shell:
+The daemon publishes its OpenAPI document at
+<http://127.0.0.1:4319/openapi.json>.
+
+Validate both language stacks:
 
 ```sh
-nix run .
+bun run check
+bun run test
+bun run lint
+bun run fmt:check
+cargo check --workspace
+cargo test --workspace
 ```
 
-Run the equivalent containerized stack:
+## Design notes
 
-```sh
-docker compose -f ops/compose/local.yaml up --build
-```
+- `agent-core` imports no provider SDK, desktop framework, or process API.
+- CLI, daemon, and desktop consume the same `DemoHarnessLayer`; none owns a
+  second orchestration loop.
+- `AgentHarness.layerNoDeps` captures its dependencies once and exposes an
+  operation with no hidden environment requirement.
+- Domain failures use schema-backed tagged errors and remain recoverable.
+- The in-memory journal uses `Ref`, `PubSub`, and `Stream`, bounding retained
+  histories while returning each terminal snapshot atomically; persistence can
+  replace its layer without changing the loop.
+- The Effect AI beta surface is quarantined in `agent-runtime` so version drift
+  cannot spread through the domain.
+- Tauri owns callback execution through one `ManagedRuntime`; libraries only
+  describe effects.
+- Alchemy owns infrastructure composition, not the application agent runtime.
 
-Set `OPS_DEMO_PORT` if port 3000 is already in use.
+See [the architecture guide](docs/architecture.md) for dependency direction and
+[the canonical patterns note](docs/10-effect-solutions.md) for the version-pinned
+Effect and Alchemy decisions.
 
-## SOPS config in the web app
+## Operations
 
-The existing web app can add the checked-in encrypted Kubernetes Secret to its
-Effect config provider chain through `alchemy-sops@0.8.1`. Environment values
-remain primary, and the status endpoint reports only whether `DEMO_MESSAGE` was
-configured; the decrypted value never enters the response.
-
-Run the identity-free provider integration test:
-
-```sh
-bun run test -- apps/web/test/sops-config.test.ts
-```
-
-To run the app against the real decrypt path after replacing the demo SOPS
-recipient with your team recipient, follow
-[ops/secrets/README.md](ops/secrets/README.md).
-
-## Layout
-
-- `apps/` and `packages/` are application source and reusable code.
-- `flake.nix` and `flake.lock` remain at the root because Nix discovers flakes there.
-- `flake/` is the intentionally thin public Nix-output layer.
-- `nix/demo/` holds the Nix package implementation.
-- `nix/prelude.nix` is the Prelude command catalogue.
-- `ops/` contains operational configuration: containers, deployment bases, environment bindings, SOPS material, observability, and policies.
-
-See [ops/README.md](ops/README.md) for the boundary of each operational directory.
-
-## Contributing
-
-See [AGENTS.md](AGENTS.md) for the toolchain contract. Verify with
-`bun run check`, `bun run test`, `bun run lint`, and `nix flake check`.
+`ops/` remains the repository's operational boundary for containers,
+environments, deployment, SOPS material, observability, and policy. See
+[`ops/README.md`](ops/README.md). The web config can add an encrypted SOPS
+document behind environment config through `alchemy-sops`; decrypted values
+never enter the status payload.
 
 ## License
 

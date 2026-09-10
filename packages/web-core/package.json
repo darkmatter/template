@@ -2,7 +2,7 @@
   "name": "@repo/web-core",
   "version": "0.1.0",
   "private": true,
-  "description": "Framework-independent status and metrics helpers for the demo app",
+  "description": "Framework-independent status and metrics for the demo shell",
   "type": "module",
   "imports": {
     "#*": "./src/*"

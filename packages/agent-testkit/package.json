@@ -1,0 +1,26 @@
+{
+  "name": "@repo/agent-testkit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Deterministic layers for exercising the agent harness",
+  "type": "module",
+  "imports": {
+    "#*": "./src/*"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/agent-core": "workspace:*",
+    "effect": "catalog:"
+  },
+  "devDependencies": {
+    "@effect/vitest": "catalog:",
+    "@repo/tooling": "workspace:*",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

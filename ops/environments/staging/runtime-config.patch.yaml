@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ops-demo-runtime
+  name: agent-demo-runtime
 data:
   APP_ENV: staging
   APP_RELEASE: staging
