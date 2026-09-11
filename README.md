@@ -1,4 +1,4 @@
-# Canonical Monorepo
+# Canonical Monorepo Template
 
 Living reference of preferred conventions for all the software we write.
 Especially useful to get agents to write code that is consistent and
