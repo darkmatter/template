@@ -1,7 +1,17 @@
-# Ops monorepo demo
+# Canonical Monorepo
 
-A small Bun + Effect web application with a deliberately structured
-operational surface. It is the org reference for the preferred TypeScript
+Living reference of preferred conventions for all the software we write.
+Especially useful to get agents to write code that is consistent and
+cohesive with the rest of your codebases. In your AGENTS.md or in a
+skill, you should add a requirement that says something like:
+
+```
+Required setup: Clone git@github.com:acme/template.git to `~/.agents/repos/<org>/<repo>`
+and make sure its up to date. Use this as a reference when writing new code and make
+sure that your code follows a similar shape.
+```
+
+This repo is also a reference for the preferred TypeScript
 toolchain (Bun, tsgo, oxlint/oxfmt) and a Nix flake-parts + Prelude
 devshell, without treating `ops/` as a junk drawer.
 
