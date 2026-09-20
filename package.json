@@ -49,7 +49,7 @@
     "@types/node": "catalog:",
     "alchemy": "catalog:",
     "bun2nix": "^2.1.2",
-    "dependency-cruiser": "18.2.0",
+    "dependency-cruiser": "18.4.0",
     "effect": "catalog:",
     "oxfmt": "^0.62.0",
     "oxlint": "1.79.0",
