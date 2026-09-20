@@ -42,7 +42,7 @@
   "devDependencies": {
     "@effect/platform-bun": "catalog:",
     "@effect/platform-node": "catalog:",
-    "@effect/tsgo": "0.43.0",
+    "@effect/tsgo": "0.45.0",
     "@repo/tooling": "workspace:*",
     "@swc/core": "^1.16.2",
     "@types/bun": "catalog:",
