@@ -1,0 +1,43 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "stream",
+  "boundaries": {
+    "tags": {
+      "app": {
+        "dependents": {
+          "allow": ["app"]
+        }
+      },
+      "service": {
+        "dependencies": {
+          "deny": ["app"]
+        }
+      },
+      "internal": {
+        "dependencies": {
+          "allow": ["internal", "leaf"]
+        }
+      },
+      "leaf": {
+        "dependencies": {
+          "allow": []
+        }
+      }
+    }
+  },
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "inputs": ["$TURBO_DEFAULT$", "$TURBO_ROOT$/oxlint.config.ts"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^typecheck"],
+      "outputs": []
+    }
+  }
+}

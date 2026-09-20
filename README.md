@@ -25,7 +25,7 @@ worker is a bounded process supervisor—not a security sandbox.
 | `packages/sandbox-client/` | Effect Schema contract shared with the Rust worker              |
 | `crates/agent-sandboxd/`   | NDJSON process supervisor with deadlines and output bounds      |
 
-Start with [`packages/agent-core/src/services/agent-harness.ts`](packages/agent-core/src/services/agent-harness.ts),
+Start with [`packages/agent-core/src/services/AgentHarness.ts`](packages/agent-core/src/services/AgentHarness.ts),
 then read [`packages/agent-testkit/test/agent-harness.test.ts`](packages/agent-testkit/test/agent-harness.test.ts).
 The test is the shortest executable explanation of the design.
 

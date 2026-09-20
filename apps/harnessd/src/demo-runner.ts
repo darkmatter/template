@@ -20,6 +20,12 @@ const failureReason = (error: AgentError): string => {
   }
 };
 
+const toRunRejected = (error: AgentError) =>
+  new RunRejected({
+    kind: error._tag,
+    reason: failureReason(error),
+  });
+
 export class DemoRunner extends Context.Service<
   DemoRunner,
   {
@@ -35,15 +41,9 @@ export class DemoRunner extends Context.Service<
 
       const runOne = Effect.fn("DemoRunner.runOne")(function* (goal: string) {
         const id = yield* runIds.next;
-        return yield* harness.run(new RunRequest({ goal, id })).pipe(
-          Effect.mapError(
-            (error) =>
-              new RunRejected({
-                kind: error._tag,
-                reason: failureReason(error),
-              }),
-          ),
-        );
+        return yield* harness
+          .run(new RunRequest({ goal, id }))
+          .pipe(Effect.mapError(toRunRejected));
       });
       const run = Effect.fn("DemoRunner.run")((goal: string) =>
         gate.withPermit(runOne(goal)),

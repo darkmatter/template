@@ -7,6 +7,8 @@ import {
 import { DemoHarnessLayer } from "@repo/agent-demo";
 import { Context, Effect, Layer, Ref, Schema } from "effect";
 
+const increment = (value: number) => value + 1;
+
 export class DemoReply extends Schema.Class<DemoReply>("native/DemoReply")({
   message: Schema.String,
   turn: Schema.Natural,
@@ -25,7 +27,7 @@ export class DemoAgent extends Context.Service<
       const turns = yield* Ref.make(0);
 
       const respond = Effect.fn("DemoAgent.respond")(function* (goal: string) {
-        const turn = yield* Ref.updateAndGet(turns, (current) => current + 1);
+        const turn = yield* Ref.updateAndGet(turns, increment);
         const report = yield* harness.run(
           new RunRequest({ goal, id: RunId.make(`desktop-${turn}`) }),
         );

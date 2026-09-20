@@ -12,6 +12,52 @@ interface MemoryOptions {
   readonly maxRuns: number;
 }
 
+const isActiveEvent = (event: AgentEvent) =>
+  event._tag !== "RunCompleted" && event._tag !== "RunFailed";
+
+const findEviction = (
+  entries: JournalState,
+  keepRunId: RunId,
+  active: boolean,
+): RunId | undefined => {
+  for (const [runId, entry] of entries) {
+    if (runId !== keepRunId && !entry.active) {
+      return runId;
+    }
+  }
+  return active ? undefined : keepRunId;
+};
+
+const boundJournal = (
+  entries: Map<RunId, JournalEntry>,
+  keepRunId: RunId,
+  active: boolean,
+  maxRuns: number,
+) => {
+  while (entries.size > maxRuns) {
+    const evicted = findEviction(entries, keepRunId, active);
+    if (evicted === undefined) break;
+    entries.delete(evicted);
+  }
+};
+
+const appendEvent =
+  (event: AgentEvent, maxRuns: number) =>
+  (current: JournalState): [ReadonlyArray<AgentEvent>, JournalState] => {
+    const next = new Map(current);
+    const history = [...(current.get(event.runId)?.events ?? []), event];
+    const active = isActiveEvent(event);
+    next.set(event.runId, { active, events: history });
+    boundJournal(next, event.runId, active, maxRuns);
+    return [history, next];
+  };
+
+const eventsFor = (runId: RunId) => (current: JournalState) =>
+  current.get(runId)?.events ?? [];
+
+const eventsForRun = (runId: RunId) => (event: AgentEvent) =>
+  event.runId === runId;
+
 export class RunJournal extends Context.Service<
   RunJournal,
   {
@@ -37,45 +83,17 @@ export class RunJournal extends Context.Service<
         const append = Effect.fn("RunJournal.append")(function* (
           event: AgentEvent,
         ) {
-          const history = yield* Ref.modify(state, (current) => {
-            const next = new Map(current);
-            const previous = current.get(event.runId);
-            const history = [...(previous?.events ?? []), event];
-            const active =
-              event._tag !== "RunCompleted" && event._tag !== "RunFailed";
-            next.set(event.runId, {
-              active,
-              events: history,
-            });
-
-            while (next.size > maxRuns) {
-              let evicted: RunId | undefined;
-              for (const [runId, entry] of next) {
-                if (runId !== event.runId && !entry.active) {
-                  evicted = runId;
-                  break;
-                }
-              }
-              if (evicted === undefined && !active) evicted = event.runId;
-              if (evicted === undefined) break;
-              next.delete(evicted);
-            }
-            return [history, next];
-          });
+          const history = yield* Ref.modify(state, appendEvent(event, maxRuns));
           yield* PubSub.publish(events, event);
           return history;
         });
 
         const read = Effect.fn("RunJournal.read")((runId: RunId) =>
-          Ref.get(state).pipe(
-            Effect.map((current) => current.get(runId)?.events ?? []),
-          ),
+          Ref.get(state).pipe(Effect.map(eventsFor(runId))),
         );
 
         const changes = (runId: RunId) =>
-          Stream.fromPubSub(events).pipe(
-            Stream.filter((event) => event.runId === runId),
-          );
+          Stream.fromPubSub(events).pipe(Stream.filter(eventsForRun(runId)));
 
         return RunJournal.of({ append, changes, read });
       }),

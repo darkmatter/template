@@ -12,6 +12,13 @@ import { ShellParameters } from "./shell-tool.ts";
 
 const decodeShellParameters = Schema.decodeUnknownEffect(ShellParameters);
 
+const failureFromUnknown = (tool: string) => (error: unknown) =>
+  new ToolFailure({ reason: String(error), tool });
+
+const failureFromSandbox =
+  (tool: string) => (error: { readonly reason: string }) =>
+    new ToolFailure({ reason: error.reason, tool });
+
 export const SandboxToolRunnerLayer = Layer.effect(
   ToolRunner,
   Effect.gen(function* () {
@@ -28,19 +35,11 @@ export const SandboxToolRunnerLayer = Layer.effect(
       }
 
       const request = yield* decodeShellParameters(call.input).pipe(
-        Effect.mapError(
-          (error) =>
-            new ToolFailure({ reason: String(error), tool: call.name }),
-        ),
+        Effect.mapError(failureFromUnknown(call.name)),
       );
       const output = yield* sandbox
         .execute(new CommandRequest(request))
-        .pipe(
-          Effect.mapError(
-            (error) =>
-              new ToolFailure({ reason: error.reason, tool: call.name }),
-          ),
-        );
+        .pipe(Effect.mapError(failureFromSandbox(call.name)));
 
       return new ToolResult({
         callId: ToolCallId.make(call.id),

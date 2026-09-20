@@ -16,4 +16,5 @@ gen
 target
 .alchemy
 apps/fumadocs/.source
+**/routeTree.gen.ts
 .beads

@@ -1,6 +1,8 @@
 import { AgentModel, ModelFailure, type ModelDecision } from "@repo/agent-core";
 import { Effect, Layer, Ref } from "effect";
 
+const increment = (value: number) => value + 1;
+
 export const scriptedModelLayer = (decisions: ReadonlyArray<ModelDecision>) =>
   Layer.effect(
     AgentModel,
@@ -8,7 +10,7 @@ export const scriptedModelLayer = (decisions: ReadonlyArray<ModelDecision>) =>
       const cursor = yield* Ref.make(0);
 
       const decide = Effect.fn("ScriptedModel.decide")(function* () {
-        const index = yield* Ref.getAndUpdate(cursor, (value) => value + 1);
+        const index = yield* Ref.getAndUpdate(cursor, increment);
         const decision = decisions[index];
 
         if (decision === undefined) {

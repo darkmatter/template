@@ -1,6 +1,7 @@
 import { Clock, Context, Effect, Layer } from "effect";
 
 import {
+  type AgentEvent,
   RunCompleted,
   RunFailed,
   RunStarted,
@@ -11,10 +12,34 @@ import { ModelContext } from "#domain/model.ts";
 import { RunReport, RunSummary, type RunRequest } from "#domain/run.ts";
 import { StepLimitExceeded, type AgentError } from "#errors.ts";
 
-import { AgentModel } from "./agent-model.ts";
-import { HarnessConfig } from "./harness-config.ts";
-import { RunJournal } from "./run-journal.ts";
-import { ToolRunner } from "./tool-runner.ts";
+import { AgentModel } from "./AgentModel.ts";
+import { HarnessConfig } from "./HarnessConfig.ts";
+import { RunJournal } from "./RunJournal.ts";
+import { ToolRunner } from "./ToolRunner.ts";
+
+type Journal = {
+  readonly append: (
+    event: AgentEvent,
+  ) => Effect.Effect<ReadonlyArray<AgentEvent>>;
+};
+
+const appendFailed = (
+  journal: Journal,
+  runId: RunRequest["id"],
+  error: AgentError,
+  at: number,
+) => journal.append(new RunFailed({ at, error, runId }));
+
+const failedAt =
+  (journal: Journal, runId: RunRequest["id"], error: AgentError) =>
+  (at: number) =>
+    appendFailed(journal, runId, error, at);
+
+const recordRunFailed =
+  (journal: Journal, runId: RunRequest["id"]) => (error: AgentError) =>
+    Clock.currentTimeMillis.pipe(
+      Effect.flatMap(failedAt(journal, runId, error)),
+    );
 
 export class AgentHarness extends Context.Service<
   AgentHarness,
@@ -104,13 +129,7 @@ export class AgentHarness extends Context.Service<
         );
 
         return yield* execute(request).pipe(
-          Effect.tapError((error) =>
-            Clock.currentTimeMillis.pipe(
-              Effect.flatMap((at) =>
-                journal.append(new RunFailed({ at, error, runId: request.id })),
-              ),
-            ),
-          ),
+          Effect.tapError(recordRunFailed(journal, request.id)),
         );
       });
 

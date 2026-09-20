@@ -25,8 +25,8 @@ export {
   ToolFailure,
   type AgentError,
 } from "./errors.ts";
-export { AgentHarness } from "./services/agent-harness.ts";
-export { AgentModel } from "./services/agent-model.ts";
-export { HarnessConfig } from "./services/harness-config.ts";
-export { RunJournal } from "./services/run-journal.ts";
-export { ToolRunner } from "./services/tool-runner.ts";
+export { AgentHarness } from "./services/AgentHarness.ts";
+export { AgentModel } from "./services/AgentModel.ts";
+export { HarnessConfig } from "./services/HarnessConfig.ts";
+export { RunJournal } from "./services/RunJournal.ts";
+export { ToolRunner } from "./services/ToolRunner.ts";

@@ -6,6 +6,8 @@ import { Argument, Command, Flag } from "effect/unstable/cli";
 import { runDemo } from "#demo-run.ts";
 import { renderJson, renderText } from "#render.ts";
 
+const logLine = (line: string) => Console.log(line);
+
 const goal = Argument.string("goal").pipe(
   Argument.withSchema(Goal),
   Argument.withDescription("Goal for the deterministic demo agent"),
@@ -35,7 +37,7 @@ const run = Command.make(
       const lines = json
         ? [yield* renderJson(result)]
         : renderText(result, events);
-      yield* Effect.forEach(lines, (line) => Console.log(line), {
+      yield* Effect.forEach(lines, logLine, {
         discard: true,
       });
     }),

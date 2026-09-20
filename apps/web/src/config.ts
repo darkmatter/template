@@ -9,36 +9,42 @@ interface AppConfigLayerOptions extends Pick<
   readonly provider?: ConfigProvider.ConfigProvider;
 }
 
+const makeSopsProvider = (
+  path: string,
+  decrypt: AppConfigLayerOptions["decrypt"],
+) =>
+  SopsConfig.make({
+    path,
+    format: "yaml",
+    backend: "sops-age",
+    secrets: {
+      DEMO_MESSAGE: "stringData.DEMO_MESSAGE",
+    },
+    ...(decrypt ? { decrypt } : {}),
+  });
+
+const withSopsFile = (
+  environment: ConfigProvider.ConfigProvider,
+  decrypt: AppConfigLayerOptions["decrypt"],
+) =>
+  Option.match({
+    onNone: () => environment,
+    onSome: (path: string) =>
+      environment.pipe(ConfigProvider.orElse(makeSopsProvider(path, decrypt))),
+  });
+
+const layerForProvider = (provider: ConfigProvider.ConfigProvider) =>
+  AppConfig.layer.pipe(Layer.provide(ConfigProvider.layer(provider)));
+
 export const makeAppConfigLive = (options: AppConfigLayerOptions = {}) => {
   const environment = options.provider ?? ConfigProvider.fromEnv();
+  const sopsPath = Config.option(Config.string("APP_SOPS_FILE"));
+  const resolveProvider = withSopsFile(environment, options.decrypt);
 
   return Layer.unwrap(
-    Config.option(Config.string("APP_SOPS_FILE"))
+    sopsPath
       .parse(environment)
-      .pipe(
-        Effect.map(
-          Option.match({
-            onNone: () => environment,
-            onSome: (path) =>
-              environment.pipe(
-                ConfigProvider.orElse(
-                  SopsConfig.make({
-                    path,
-                    format: "yaml",
-                    backend: "sops-age",
-                    secrets: {
-                      DEMO_MESSAGE: "stringData.DEMO_MESSAGE",
-                    },
-                    ...(options.decrypt ? { decrypt: options.decrypt } : {}),
-                  }),
-                ),
-              ),
-          }),
-        ),
-        Effect.map((provider) =>
-          AppConfig.layer.pipe(Layer.provide(ConfigProvider.layer(provider))),
-        ),
-      ),
+      .pipe(Effect.map(resolveProvider), Effect.map(layerForProvider)),
   );
 };
 

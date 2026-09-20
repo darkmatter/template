@@ -31,10 +31,12 @@ Record ✅ present, ⚠️ partial, or ❌ missing.
 
 ## 4. Linting & formatting
 
-- [ ] oxlint config extends the tsgo preset
+- [ ] oxlint config extends the tsgo presets (`recommended`, `antipattern`,
+      `effectNative`, `style`)
 - [ ] File-size limit enforced (split files that exceed it)
 - [ ] SOPS files ignored by linter and formatter
 - [ ] oxfmt configured as the sole formatter (Prettier disabled in Zed)
+- [ ] `turbo.json` boundaries tags (`app`, `service`, `internal`, `leaf`)
 
 ## 5. Testing
 

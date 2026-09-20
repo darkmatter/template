@@ -14,7 +14,7 @@ Inside the shell, `x` lists the project commands and `docs` opens these notes.
 The useful reading order is:
 
 1. `packages/agent-core/src/domain/model.ts` — schema-backed decisions.
-2. `packages/agent-core/src/services/agent-harness.ts` — the orchestration loop.
+2. `packages/agent-core/src/services/AgentHarness.ts` — the orchestration loop.
 3. `packages/agent-testkit/test/agent-harness.test.ts` — layer substitution.
 4. `packages/agent-demo/src/layer.ts` — provider-free app composition.
 5. `apps/cli/src/command.ts` — the terminal process boundary.

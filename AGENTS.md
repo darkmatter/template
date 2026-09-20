@@ -19,7 +19,8 @@ tsgo, oxlint/oxfmt, Nix flake-parts + Prelude).
 | `packages/agent-testkit/`  | Scripted model and deterministic test layers                     |
 | `packages/sandbox-client/` | Schema contract for the Rust supervisor                          |
 | `packages/web-core/`       | Framework-independent status and metrics helpers                 |
-| `packages/tooling/`        | Shared TypeScript and Oxc configuration                          |
+| `packages/tooling/`        | Shared TypeScript, Oxc, and oxlint configuration                 |
+| `turbo.json`               | Turborepo tasks and package-boundary tags                        |
 | `crates/agent-sandboxd/`   | Bounded NDJSON process supervisor                                |
 | `flake.nix`                | Root flake — stays at root because Nix discovers flakes there    |
 | `flake/`                   | Thin public Nix-output layer (apps, checks, devShells, packages) |
@@ -60,12 +61,13 @@ application schema still belongs beside the application that uses it.
 - Lint with oxlint (`bun run lint`). Format with oxfmt / `nix fmt`.
 - Effect/TSGO style warnings are advisory outside intentionally Effect-owned
   code. Keep the tsconfig plugin name as `@effect/language-service`.
-- oxlint enforces a 150-line max per file (blank lines and comments skipped).
+- oxlint warns at 300 lines per file (blank lines and comments skipped).
   Split files that exceed this.
 - oxfmt is configured at 80 print width and sorts `package.json` keys.
   Prettier is disabled in Zed — oxfmt is the only formatter.
-- The root `bun run check` runs root `tsc` then every workspace package's
-  `typecheck` script through Bun's workspace filter.
+- The root `bun run check` runs dependency-cruiser, `turbo boundaries`,
+  root `tsc`, then every workspace package's `typecheck` script through
+  Bun's workspace filter.
 - Rust uses the root Cargo workspace. Run `cargo check --workspace` and
   `cargo test --workspace` after changing the supervisor or its protocol.
 
@@ -102,6 +104,11 @@ After changing `package.json` dependencies, regenerate the Nix lock:
   Each package declares `"imports": { "#*": "./src/*" }` and a `paths`
   entry in its `tsconfig.json`.
 - Workspace packages: `apps/*` and `packages/*`.
+- Each workspace package declares a `turbo.json` with one of `app`,
+  `service`, `internal`, or `leaf`. `turbo boundaries` enforces the graph:
+  only apps may depend on apps, services may not depend on apps, internal
+  packages may depend only on internal and leaf, and leaf packages may not
+  depend on other tagged packages.
 - The root `package.json` `engines` requires Node >= 24; `packageManager`
   is `bun@1.3.14`.
 
