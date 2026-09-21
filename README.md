@@ -24,6 +24,8 @@ worker is a bounded process supervisor—not a security sandbox.
 | `packages/infra/`          | Alchemy stack composition for the deployable web surface        |
 | `packages/sandbox-client/` | Effect Schema contract shared with the Rust worker              |
 | `crates/agent-sandboxd/`   | NDJSON process supervisor with deadlines and output bounds      |
+| `crates/alloy-web3-example/` | Alloy HTTP provider and `sol!` contract interface example     |
+| `contracts/`               | Foundry Solidity project with Counter contract and forge tests  |
 
 Start with [`packages/agent-core/src/services/AgentHarness.ts`](packages/agent-core/src/services/AgentHarness.ts),
 then read [`packages/agent-testkit/test/agent-harness.test.ts`](packages/agent-testkit/test/agent-harness.test.ts).
@@ -68,6 +70,7 @@ bun run lint
 bun run fmt:check
 cargo check --workspace
 cargo test --workspace
+forge test --root contracts
 ```
 
 ## Design notes
