@@ -194,7 +194,7 @@
   },
   "overrides": {
     "@effect/platform-node-shared": "4.0.0-beta.102",
-    "@effect/sql-d1": "4.0.0-beta.102",
+    "@effect/sql-d1": "4.0.0-rc.117",
     "@effect/sql-sqlite-do": "4.0.0-beta.102",
   },
   "catalog": {
@@ -286,7 +286,7 @@
 
     "@cloudflare/workerd-windows-64": ["@cloudflare/workerd-windows-64@1.20260704.1", "", { "os": "win32", "cpu": "x64" }, "sha512-a97Ecnzhy04x3U052VKPCNp863F7Wf00WY7Ga5P0SbtYvaO1PDzylsHrvFMPKeiDFcOwqiredawmJ+v6bhIgeQ=="],
 
-    "@cloudflare/workers-types": ["@cloudflare/workers-types@5.20260829.1", "", {}, "sha512-SsH4G9+JePvrBmz+b5Dl67LQ9w2/ycoIpAPcAkfg2aEs2SEisQHk7/AY0TymSXEBbDbWgcBqoLe4hNcuY3CxWA=="],
+    "@cloudflare/workers-types": ["@cloudflare/workers-types@5.20260921.1", "", {}, "sha512-uXGGKlxIrXx9/I33MIdq1hUv+yVTKCBLIJiQ9PthEgLrqePEELYYRC75I0Qw6JUa3cYtoJI8y6ewyLYHPkIP7g=="],
 
     "@distilled.cloud/aws": ["@distilled.cloud/aws@1.0.0-rc.2", "", { "dependencies": { "@aws-crypto/crc32": "^5.2.0", "@aws-crypto/util": "^5.2.0", "@aws-sdk/credential-providers": "^3.994.0", "@aws-sdk/types": "^3.973.1", "@distilled.cloud/core": "1.0.0-rc.2", "@smithy/shared-ini-file-loader": "^4.4.3", "@smithy/types": "^4.12.0", "@smithy/util-base64": "^4.3.0", "aws4fetch": "^1.0.20", "fast-xml-parser": "^5.3.2" }, "peerDependencies": { "effect": ">=4.0.0-beta.102 || >=4.0.0" } }, "sha512-hTWmdpfaKt6yLQ1YrJ17tp0DXINH7Wm5WQ05ap1FZW13Kwv+HzejXc4QPOYS6KT00Tlrfm6EEkTd3fDrY8dSGQ=="],
 
@@ -312,7 +312,7 @@
 
     "@effect/platform-node-shared": ["@effect/platform-node-shared@4.0.0-beta.102", "", { "dependencies": { "@types/ws": "^8.18.1", "ws": "^8.21.0" }, "peerDependencies": { "effect": "^4.0.0-beta.102" } }, "sha512-gVd793I72MrkX4dXo7eYtRKfNj0RW4eMRfVEKEJI16h2+mBDCzQ+gqMrog2hSTHQnaIbvbYShNQ4TVGuRCYZeQ=="],
 
-    "@effect/sql-d1": ["@effect/sql-d1@4.0.0-beta.102", "", { "dependencies": { "@cloudflare/workers-types": "^5.20260708.1" }, "peerDependencies": { "effect": "^4.0.0-beta.102" } }, "sha512-p6V1BqXEKF/EVH1JkWjjslPtg5Knl2TWopMnDdgto2jGfRpCHfhEaI8fA2OmR5J5H/TIH9ihYBiUA6Awru2Kvg=="],
+    "@effect/sql-d1": ["@effect/sql-d1@4.0.0-rc.117", "", { "dependencies": { "@cloudflare/workers-types": "^5.20260919.1" }, "peerDependencies": { "effect": "^4.0.0-rc.117" } }, "sha512-N+hvdT/g9x0aRBAEHtTbqsM4iRKtdO85G86Z1XlB3r7nnVYWXmNR8/8iHsqV+PFTF6r8cGXnBwxThcX5JCD4QA=="],
 
     "@effect/sql-sqlite-do": ["@effect/sql-sqlite-do@4.0.0-beta.102", "", { "peerDependencies": { "effect": "^4.0.0-beta.102" } }, "sha512-akZzkZjVUwXyMGV/EF7O1N8Lgcl3EW1TQOjA+NDebzmlGQYohlU4959sV2XnMrWXdXF240w3rr4UH43H/lCfJA=="],
 
