@@ -31,12 +31,14 @@ network access or credentials.
 
 ## Why
 
-- **Import provider SDKs directly in `agent-core`.** Rejected because stable
-  policy would inherit unstable provider versioning and credential concerns.
-- **Copy the harness loop into each application.** Rejected because app-specific
-  loops would drift and make tests less meaningful.
-- **Make demos depend on live provider credentials.** Rejected because examples
-  and smoke tests should run deterministically without secrets.
+The template needs a stable domain that can outlive provider APIs, desktop
+runtime details, HTTP server choices, and shell execution mechanisms. Keeping
+those concerns at the edges lets the core model stay small and reusable while
+adapters absorb SDK shape, version drift, transport errors, and credentials.
+
+This edge pattern also keeps examples and tests useful without live providers.
+Provider-free layers can exercise the real harness, while production adapters
+translate external behavior into the same domain contracts.
 
 ## Trade-offs
 

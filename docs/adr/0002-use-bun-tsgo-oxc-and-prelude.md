@@ -33,11 +33,15 @@ not a second source of truth.
 
 ## Why
 
-- **Use npm/pnpm with stock TypeScript and ESLint.** Rejected because this
-  template already optimizes for Bun workspaces, tsgo, and Oxc-family tooling.
-- **Make Nix commands the only interface.** Rejected because CI and agents need
-  direct, non-interactive package scripts that work outside an interactive
-  command picker.
+Bun gives the template one runtime, workspace manager, and script runner for
+the TypeScript surface. tsgo, oxlint, and oxfmt keep checking and formatting
+fast enough for agents to run repeatedly while preserving the Effect-specific
+TypeScript behavior this template depends on.
+
+Prelude makes the common commands discoverable in an interactive devshell, but
+the same operations remain available as package scripts for CI and headless
+agents. That pairing keeps the human workflow friendly without making CI depend
+on an interactive shell.
 
 ## Trade-offs
 

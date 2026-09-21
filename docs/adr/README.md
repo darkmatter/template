@@ -46,8 +46,9 @@ What did we decide. State it plainly.
 
 ## Why
 
-Why this decision was made. Explain the rationale, including the meaningful
-alternatives that were rejected.
+Why this decision was made. Explain the positive rationale for the chosen path:
+the goals, constraints, and properties it gives adopters. Do not use this as a
+dump of rejected alternatives.
 
 ## Trade-offs
 

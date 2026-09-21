@@ -40,11 +40,15 @@ configuration stay beside the application or package that consumes them.
 
 ## Why
 
-- **Put all configuration under `ops/`.** Rejected because application-owned
-  config becomes harder to maintain when it is separated from the code that
-  consumes it.
-- **Let each app own its own operational surface.** Rejected because cross-app
-  deployment, secrets, observability, and policy conventions would fragment.
+The template needs a directory boundary that adopters can copy before they know
+which deployment platform, environment count, or operational maturity they will
+end up with. Putting operational concerns under `ops/` gives those concerns a
+stable address without pulling application-owned configuration away from the
+code that uses it.
+
+The boundary also gives agents and humans a shared routing rule: source-adjacent
+files stay with source, while deployment, secrets, observability, policy, and
+runtime-environment assembly stay under the operational surface.
 
 ## Trade-offs
 

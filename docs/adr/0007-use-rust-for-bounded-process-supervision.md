@@ -30,14 +30,14 @@ future production isolation must be layered outside or above it.
 
 ## Why
 
-- **Run child processes directly from the TypeScript harness.** Rejected
-  because output capture, deadlines, and process-group cleanup are clearer at a
-  dedicated supervisor edge.
-- **Make the Rust daemon a full security sandbox.** Rejected because this crate
-  does not provide filesystem, network, syscall, or tenant isolation.
-- **Invent additional Rust workspaces for adjacent Rust code.** Rejected
-  because a template with multiple Rust roots makes Cargo validation and
-  dependency policy harder for adopters to understand.
+Process supervision is a sharp runtime edge: output can grow without bound,
+children can outlive their caller, and Unix process groups need careful cleanup.
+A small Rust daemon gives that edge a focused implementation while the
+TypeScript harness talks to it through a typed protocol.
+
+Keeping the daemon in the existing Cargo workspace makes Rust validation and
+dependency policy straightforward for adopters. Calling it a supervisor rather
+than a sandbox keeps its security guarantees honest.
 
 ## Trade-offs
 

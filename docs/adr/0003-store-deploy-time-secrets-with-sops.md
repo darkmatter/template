@@ -31,12 +31,14 @@ untracked.
 
 ## Why
 
-- **Check in plaintext example secrets.** Rejected because the template would
-  teach an unsafe default.
-- **Keep secrets only in local `.env` files.** Rejected because deployment and
-  GitOps flows need reviewable encrypted manifests.
-- **Let app code read decrypted files ad hoc.** Rejected because typed config
-  providers keep secret access explicit and testable.
+SOPS lets a template show realistic deploy-time secret handling while keeping
+the encrypted file reviewable in version control. The age recipients in
+`.sops.yaml` make access explicit, and the `ops/secrets/` placement keeps
+secret material with the rest of the operational surface.
+
+Typed configuration providers keep decrypted values at application boundaries.
+That lets apps opt into encrypted configuration without teaching domain packages
+to read plaintext files or environment-specific secret paths directly.
 
 ## Trade-offs
 

@@ -31,12 +31,14 @@ creating informal cross-package dependencies.
 
 ## Why
 
-- **Document boundaries without enforcing them.** Rejected because dependency
-  drift is easy in a monorepo and hard to spot in review.
-- **Use only TypeScript path aliases.** Rejected because aliases improve import
-  ergonomics but do not express allowed dependency direction.
-- **Allow packages to depend freely on apps.** Rejected because app entrypoints
-  are composition roots, not reusable libraries.
+Package boundaries are part of the template's architecture, so they need to be
+checked the same way types and tests are checked. Tags give each workspace a
+role, and dependency-cruiser/Turbo turn those roles into an executable graph.
+
+That enforcement lets adopters scale the monorepo without relying on review
+memory. App entrypoints remain composition roots, reusable packages stay
+reusable, and path aliases stay an import convenience rather than the only
+boundary mechanism.
 
 ## Trade-offs
 

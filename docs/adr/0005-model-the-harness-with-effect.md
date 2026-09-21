@@ -34,13 +34,14 @@ Model the agent harness as an Effect-native domain:
 
 ## Why
 
-- **Use plain TypeScript classes and promises.** Rejected because the harness
-  needs typed dependencies, recoverable failures, and test-layer substitution.
-- **Use an actor or workflow framework for the loop.** Rejected because the
-  current bounded sequential state machine is clearer as ordinary control flow
-  inside `Effect.gen`.
-- **Let each app implement its own loop.** Rejected because the CLI, daemon,
-  and native shell must share one orchestration model.
+Effect gives the harness typed services, layer-based dependency injection,
+schema-backed data, and recoverable errors as one programming model. Those
+pieces matter together: apps can share one orchestration loop, tests can swap
+capabilities with deterministic layers, and boundary payloads remain explicit.
+
+The harness loop is intentionally small enough to stay as ordinary control flow
+inside `Effect.gen`. The types and layers carry the architectural contract,
+while the loop itself stays readable for adopters studying the template.
 
 ## Trade-offs
 

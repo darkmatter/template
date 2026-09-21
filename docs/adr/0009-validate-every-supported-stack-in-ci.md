@@ -34,14 +34,15 @@ tool.
 
 ## Why
 
-- **Only run TypeScript checks in CI.** Rejected because Rust, Nix, and Compose
-  are part of the template contract.
-- **Let package install scripts patch tools implicitly.** Rejected because CI
-  installs with `--ignore-scripts`; patching must be an explicit step.
-- **Require every optional local tool in CI immediately.** Rejected because some
-  template examples or adopter-specific tools may not have a reliable install
-  path in the shared workflow. Document local checks until they become part of
-  the supported CI surface.
+The template is useful only if its supported surfaces keep working together.
+TypeScript success alone does not prove that Rust protocol code, Nix outputs,
+or Compose configuration still work, so CI validates each supported stack
+explicitly.
+
+The workflow also makes setup behavior explicit. Installing with ignored
+lifecycle scripts and then running `prepare` keeps patching visible and
+repeatable. Local-only checks remain documented until they are stable enough to
+become part of the shared CI surface.
 
 ## Trade-offs
 

@@ -33,14 +33,15 @@ than invoking the Alchemy runtime.
 
 ## Why
 
-- **Put deployment resources in app entrypoints.** Rejected because app runtime
-  code would become harder to test and reason about.
-- **Use Alchemy's agent resource for the harness.** Rejected because the
-  template's agent loop is the Effect domain model; Alchemy only owns
-  deployable infrastructure.
-- **Avoid infrastructure-as-code in the template.** Rejected because the
-  template is intended to demonstrate an operationally shaped app, not only
-  local code.
+Alchemy gives the template a typed resource graph for infrastructure while
+keeping deployment concerns outside application entrypoints. Infrastructure can
+share the TypeScript toolchain and still remain a composition root for cloud
+resources rather than for the agent runtime.
+
+Keeping the harness in Effect and the infrastructure in Alchemy preserves two
+separate responsibilities: Effect models application behavior and service
+composition, while Alchemy declares deployable resources and returns their
+outputs.
 
 ## Trade-offs
 
