@@ -45,6 +45,6 @@ because it is named like a sandbox.
   dedicated supervisor edge.
 - **Make the Rust daemon a full security sandbox.** Rejected because this crate
   does not provide filesystem, network, syscall, or tenant isolation.
-- **Invent a second Rust workspace for new Rust examples.** Rejected by the
-  existing top-level Cargo workspace convention and reinforced by the web3
-  example being added as another `crates/` member.
+- **Invent additional Rust workspaces for adjacent Rust code.** Rejected
+  because a template with multiple Rust roots makes Cargo validation and
+  dependency policy harder for adopters to understand.

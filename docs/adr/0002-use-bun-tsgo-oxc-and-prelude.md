@@ -33,7 +33,7 @@ not a second source of truth.
 
 ## Consequences
 
-The repo has one fast TypeScript toolchain and one command vocabulary across
+The template has one fast TypeScript toolchain and one command vocabulary across
 apps, packages, CI, and agents. The `prepare` script owns patching tsgo and
 oxlint so CI can install with `--ignore-scripts`.
 
@@ -44,7 +44,7 @@ plain upstream `tsc` without changing the template contract.
 ## Alternatives considered
 
 - **Use npm/pnpm with stock TypeScript and ESLint.** Rejected because the repo
-  already optimizes for Bun workspaces, tsgo, and Oxc-family tooling.
+  template already optimizes for Bun workspaces, tsgo, and Oxc-family tooling.
 - **Make Nix commands the only interface.** Rejected because CI and agents need
   direct, non-interactive package scripts that work outside an interactive
   command picker.

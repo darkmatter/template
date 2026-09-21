@@ -33,7 +33,7 @@ than invoking the Alchemy runtime.
 
 ## Consequences
 
-Infrastructure is described in TypeScript and can share the repo's toolchain
+Infrastructure is described in TypeScript and can share the template's toolchain
 without becoming application domain code. The deployable web surface can evolve
 without moving the harness loop into a cloud resource declaration.
 
@@ -48,5 +48,6 @@ Effect-native agent architecture.
 - **Use Alchemy's agent resource for the harness.** Rejected because the
   repository's agent loop is the Effect domain model; Alchemy only owns
   deployable infrastructure.
-- **Avoid infrastructure-as-code in the template.** Rejected because the repo is
-  intended to demonstrate an operationally shaped app, not only local code.
+- **Avoid infrastructure-as-code in the template.** Rejected because the
+  template is intended to demonstrate an operationally shaped app, not only
+  local code.

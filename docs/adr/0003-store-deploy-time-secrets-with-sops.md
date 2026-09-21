@@ -8,7 +8,7 @@
 
 The template needs to demonstrate deploy-time configuration without teaching
 contributors to check in plaintext credentials. Secrets must be reviewable as
-repository artifacts while remaining encrypted at rest.
+versioned artifacts while remaining encrypted at rest.
 
 The template includes `.sops.yaml`, `ops/secrets/`, `.gitignore` exclusions
 for plaintext `.env` files and `*.agekey`, and web app configuration that can
