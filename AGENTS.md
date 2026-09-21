@@ -22,6 +22,8 @@ tsgo, oxlint/oxfmt, Nix flake-parts + Prelude).
 | `packages/tooling/`        | Shared TypeScript, Oxc, and oxlint configuration                 |
 | `turbo.json`               | Turborepo tasks and package-boundary tags                        |
 | `crates/agent-sandboxd/`   | Bounded NDJSON process supervisor                                |
+| `crates/alloy-web3-example/` | Alloy HTTP provider and `sol!` contract interface example      |
+| `contracts/`               | Foundry Solidity project with Counter contract and forge tests   |
 | `flake.nix`                | Root flake — stays at root because Nix discovers flakes there    |
 | `flake/`                   | Thin public Nix-output layer (apps, checks, devShells, packages) |
 | `nix/demo/`                | Nix package and smoke-check implementation                       |
@@ -70,6 +72,8 @@ application schema still belongs beside the application that uses it.
   Bun's workspace filter.
 - Rust uses the root Cargo workspace. Run `cargo check --workspace` and
   `cargo test --workspace` after changing the supervisor or its protocol.
+- Solidity examples use Foundry under `contracts/`. Run
+  `forge test --root contracts` after changing contracts or forge tests.
 
 ### Nix devshell
 
@@ -194,6 +198,8 @@ image reference. Production uses a digest rather than a mutable image tag.
 
 All steps must pass. The `--ignore-scripts` install flag means no
 postinstall scripts run in CI — the `prepare` step handles patching.
+Foundry is not installed by this workflow; run `forge test --root contracts`
+locally when Solidity examples change.
 
 ## Validation
 
@@ -206,6 +212,7 @@ bun run lint
 bun run fmt:check
 cargo check --workspace
 cargo test --workspace
+forge test --root contracts
 nix flake check
 docker compose -f ops/compose/local.yaml config
 ```

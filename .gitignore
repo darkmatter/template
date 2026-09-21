@@ -14,6 +14,9 @@ work/
 .wrangler
 gen
 target
+contracts/out/
+contracts/cache/
+contracts/broadcast/
 .alchemy
 apps/fumadocs/.source
 **/routeTree.gen.ts
