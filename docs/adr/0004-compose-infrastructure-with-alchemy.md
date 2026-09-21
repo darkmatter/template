@@ -6,8 +6,10 @@
 
 ## Context
 
-Commit `7132965 feat: migrate labs to alchemy 2.0.0-beta.66 Stack API`
-established Alchemy as the infrastructure composition layer. The current
+The template includes deployable infrastructure alongside the application
+harness. Infrastructure code needs a resource graph and deployment composition
+root without becoming the application runtime itself.
+
 `packages/infra/alchemy.run.ts` declares a named `AgentHarness` stack, receives
 Cloudflare provider/state layers, composes storage, queue, and dashboard
 resources, and returns deployable outputs. `docs/10-effect-solutions.md`

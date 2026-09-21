@@ -6,12 +6,14 @@
 
 ## Context
 
-Commits `43aef5f feat: enforce package boundaries with dependency-cruiser` and
-`c8c2fe0 feat: add turbo boundaries and align oxlint with agents` made package
-dependency direction executable. The root `turbo.json` defines boundary tags
-for `app`, `service`, `internal`, and `leaf`. Workspace package `turbo.json`
-files tag each app/package, and the root `package.json` check script runs both
-`depcruise apps packages tests` and `turbo boundaries`.
+The template is a monorepo with apps, services, internal packages, leaf
+packages, and tests. Dependency direction has to be executable; otherwise,
+reusable domain packages can quietly start depending on app composition roots.
+
+The root `turbo.json` defines boundary tags for `app`, `service`, `internal`,
+and `leaf`. Workspace package `turbo.json` files tag each app/package, and the
+root `package.json` check script runs both `depcruise apps packages tests` and
+`turbo boundaries`.
 
 `AGENTS.md` describes the intended graph: only apps may depend on apps,
 services may not depend on apps, internal packages may depend only on internal

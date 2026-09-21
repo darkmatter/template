@@ -6,7 +6,7 @@
 
 ## Context
 
-The Effect harness architecture includes a Rust process boundary:
+The template's Effect harness architecture includes a Rust process boundary:
 `docs/architecture.md` shows `sandbox-client` talking to
 `agent-sandboxd (Rust process boundary)`. The same doc states that
 `crates/agent-sandboxd` accepts one tagged NDJSON command per line, drains
@@ -14,10 +14,9 @@ stdout and stderr while retaining bounded prefixes, enforces a deadline, and
 kills the process group on Unix. It also explicitly warns that the supervisor is
 not filesystem, network, syscall, or tenant isolation.
 
-The code matches that description. `packages/sandbox-client` owns the
-TypeScript schema contract, while `crates/agent-sandboxd/src/protocol.rs`
-implements the tagged JSON wire format in Rust with bounded output fields and
-timeout metadata.
+`packages/sandbox-client` owns the TypeScript schema contract, while
+`crates/agent-sandboxd/src/protocol.rs` implements the tagged JSON wire format
+in Rust with bounded output fields and timeout metadata.
 
 ## Decision
 

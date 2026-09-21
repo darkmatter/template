@@ -1,9 +1,9 @@
 # Architecture Decision Records
 
-Standing decisions about how this repo is structured and how the template is
-maintained. Use ADRs for choices that cross-cut apps, packages, operational
-layout, validation, or future template work — not for one-off implementation
-notes.
+Standing decisions about how this template pattern is structured and maintained.
+Use ADRs for choices that cross-cut apps, packages, operational layout,
+validation, or future template work — not for one-off implementation notes or
+local examples.
 
 ## Current records
 
@@ -18,12 +18,11 @@ notes.
 | [0007](0007-use-rust-for-bounded-process-supervision.md) | accepted | Use Rust for bounded process supervision |
 | [0008](0008-enforce-package-boundaries.md) | accepted | Enforce package boundaries |
 | [0009](0009-validate-every-supported-stack-in-ci.md) | accepted | Validate every supported stack in CI |
-| [0010](0010-include-rust-web3-and-foundry-examples.md) | accepted | Include Rust web3 and Foundry examples |
 
 ## Format
 
 One file per decision: `NNNN-kebab-case-title.md`. Numbers are zero-padded to
-four digits and assigned in commit or decision order.
+four digits and assigned in decision order.
 
 Each ADR has the same shape (loosely [Nygard][nygard], [MADR][madr]):
 
@@ -37,8 +36,9 @@ Each ADR has the same shape (loosely [Nygard][nygard], [MADR][madr]):
 ## Context
 
 What's the situation that forced a decision? What constraints are in play?
-Write this for a teammate who will never see the chat. Do not recap a
-discussion. State the situation so a first-time reader can apply the decision.
+Write this for a teammate who will never see the original discussion. Do not
+recap process history. State the situation so a first-time reader can apply the
+decision.
 
 ## Decision
 

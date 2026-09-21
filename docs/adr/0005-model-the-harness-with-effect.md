@@ -6,14 +6,14 @@
 
 ## Context
 
-Commit `3597f9a feat: transform template into Effect agent harness demo`
-established the current application architecture. `docs/architecture.md`
-describes the dependency rule as "stable policy points inward; integrations
-point in from the edges." `docs/10-effect-solutions.md` records the pinned
-Effect version and conventions: services extend `Context.Service`, domain data
-uses `Schema.Class`, protocol variants use `Schema.TaggedClass` and
-`Schema.Union`, recoverable failures use schema-backed tagged errors, and
-layers acquire dependencies once.
+The template demonstrates an agent harness that should remain inspectable,
+testable, and independent of any one provider or application shell.
+`docs/architecture.md` describes the dependency rule as "stable policy points
+inward; integrations point in from the edges." `docs/10-effect-solutions.md`
+records the pinned Effect version and conventions: services extend
+`Context.Service`, domain data uses `Schema.Class`, protocol variants use
+`Schema.TaggedClass` and `Schema.Union`, recoverable failures use
+schema-backed tagged errors, and layers acquire dependencies once.
 
 The code follows this shape: `packages/agent-core` owns request, model, event,
 error, journal, and harness services; `AgentHarness.layerNoDeps` captures its

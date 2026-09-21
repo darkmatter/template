@@ -6,11 +6,14 @@
 
 ## Context
 
-The repository started as an ops-oriented monorepo demo (`a497521 Initial ops
-monorepo demo`) and then moved Nix implementation details out of the root
-surface (`d91033d Move Nix implementation to nix`). The current `ops/README.md`
-and `AGENTS.md` both say `ops/` owns the operational life of the repository and
-is not a catch-all for source-adjacent application configuration.
+This template carries application source, local development support,
+deployment primitives, container configuration, secrets, observability, and
+policy examples in one repository. Those concerns need stable homes so
+adopting projects do not inherit a junk drawer.
+
+`ops/README.md` and `AGENTS.md` define `ops/` as the operational boundary. It
+owns deployment and runtime concerns, not source-adjacent application
+configuration.
 
 Without a durable boundary, deployment manifests, local Compose files, runtime
 dependency configuration, policies, and secrets could drift into app or package

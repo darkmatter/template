@@ -6,18 +6,17 @@
 
 ## Context
 
-The repository is deliberately multi-stack: Bun/Effect TypeScript apps and
-packages, a Rust Cargo workspace, Nix flake outputs, container/Compose
-configuration, and now Solidity examples documented for local Foundry
-validation. `.github/workflows/ci.yaml` runs on PRs and pushes to `main` and
-checks Bun install/prepare, TypeScript boundaries and typechecks, Vitest,
-oxlint, oxfmt, Cargo check/test/fmt, `nix flake check`, and Docker Compose
-configuration.
+This template is deliberately multi-stack: Bun/Effect TypeScript apps and
+packages, a Rust Cargo workspace, Nix flake outputs, and container/Compose
+configuration. Adopters need confidence that changes preserve every supported
+stack, not only the TypeScript application surface.
+
+`.github/workflows/ci.yaml` runs on PRs and pushes to `main` and checks Bun
+install/prepare, TypeScript boundaries and typechecks, Vitest, oxlint, oxfmt,
+Cargo check/test/fmt, `nix flake check`, and Docker Compose configuration.
 
 `AGENTS.md` mirrors the same validation list and tells contributors to start
-narrow, then run the full suite. It also notes that Foundry is not installed in
-the workflow, so `forge test --root contracts` is a local validation command
-when Solidity examples change.
+narrow, then run the full suite.
 
 ## Decision
 
@@ -31,7 +30,7 @@ available in the workflow:
 - Docker Compose configuration validation.
 
 Keep additional local-only validation documented when CI does not install the
-tool, as with Foundry.
+tool.
 
 ## Consequences
 
@@ -49,6 +48,7 @@ need the right local tools or must rely on CI for unavailable checks.
   are part of the template contract.
 - **Let package install scripts patch tools implicitly.** Rejected because CI
   installs with `--ignore-scripts`; patching must be an explicit step.
-- **Add Foundry to CI immediately.** Rejected for now because the workflow does
-  not install Forge. The repo documents local `forge test --root contracts`
-  until a reliable CI install path is added.
+- **Require every optional local tool in CI immediately.** Rejected because some
+  template examples or adopter-specific tools may not have a reliable install
+  path in the shared workflow. Document local checks until they become part of
+  the supported CI surface.

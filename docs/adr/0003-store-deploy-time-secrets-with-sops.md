@@ -6,14 +6,16 @@
 
 ## Context
 
-The SOPS path was introduced through `d6de611 feat: demo alchemy-sops
-integration`, `3c9bc29 refactor: wire sops into web app`, and `ef1a80f docs:
-describe web sops config`. The repository now has `.sops.yaml`, `ops/secrets/`,
-`.gitignore` exclusions for plaintext `.env` files and `*.agekey`, and web app
-configuration that can layer `APP_SOPS_FILE` through `alchemy-sops`.
+The template needs to demonstrate deploy-time configuration without teaching
+contributors to check in plaintext credentials. Secrets must be reviewable as
+repository artifacts while remaining encrypted at rest.
+
+The template includes `.sops.yaml`, `ops/secrets/`, `.gitignore` exclusions
+for plaintext `.env` files and `*.agekey`, and web app configuration that can
+layer `APP_SOPS_FILE` through `alchemy-sops`.
 
 `AGENTS.md` says secrets are SOPS-encrypted with age, decrypted files and age
-private keys must not be committed, and encrypted manifests should expose
+private keys must never be checked in, and encrypted manifests should expose
 secrets to deployments rather than copying plaintext into environment overlays.
 
 ## Decision
@@ -39,7 +41,7 @@ avoid depending on plaintext secrets.
 
 ## Alternatives considered
 
-- **Commit plaintext example secrets.** Rejected because the template would
+- **Check in plaintext example secrets.** Rejected because the template would
   teach an unsafe default.
 - **Keep secrets only in local `.env` files.** Rejected because deployment and
   GitOps flows need reviewable encrypted manifests.

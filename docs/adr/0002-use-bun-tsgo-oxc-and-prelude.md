@@ -6,12 +6,15 @@
 
 ## Context
 
-Commit `a85af5f feat: adopt bun, tsgo, oxc, and prelude` established the
-repository's TypeScript toolchain. The root `package.json` uses Bun workspaces,
-`bun@1.3.14`, `tsc`/tsgo typechecking, oxlint, and oxfmt. `AGENTS.md` records
-the standing rules: run scripts with Bun, use `bun run check`, use Vitest via
-`bun run test`, lint with oxlint, format with oxfmt, and avoid unpatched
-TypeScript 5 for the repo typecheck.
+This template is TypeScript-heavy and includes multiple apps, packages, CI
+checks, generated Nix inputs, and agent-facing commands. Adopting projects need
+one non-interactive command vocabulary and one formatting/linting toolchain.
+
+The root `package.json` uses Bun workspaces, `bun@1.3.14`, `tsc`/tsgo
+typechecking, oxlint, and oxfmt. `AGENTS.md` records the standing rules: run
+scripts with Bun, use `bun run check`, use Vitest via `bun run test`, lint with
+oxlint, format with oxfmt, and avoid unpatched TypeScript 5 for the repo
+typecheck.
 
 The Nix devshell includes Bun and exposes Prelude commands (`x check`,
 `x test`, `x lint`, `x fmt`) so people and agents do not need to remember raw
@@ -20,7 +23,7 @@ tool invocations.
 ## Decision
 
 Use Bun as the JavaScript runtime and package manager for this template. Use
-tsgo through the repository's patched TypeScript setup for typechecking, oxlint
+tsgo through the template's patched TypeScript setup for typechecking, oxlint
 for linting, and oxfmt/treefmt for formatting. Expose the common workflows
 through Prelude commands in the Nix devshell.
 
@@ -36,7 +39,7 @@ oxlint so CI can install with `--ignore-scripts`.
 
 The cost is tighter coupling to Bun, Oxc, and the specific Effect/TypeScript
 beta toolchain. Contributors cannot freely substitute npm, Jest, Prettier, or
-plain upstream `tsc` without changing the repository contract.
+plain upstream `tsc` without changing the template contract.
 
 ## Alternatives considered
 
