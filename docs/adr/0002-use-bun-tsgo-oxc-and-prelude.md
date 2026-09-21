@@ -13,7 +13,7 @@ one non-interactive command vocabulary and one formatting/linting toolchain.
 The root `package.json` uses Bun workspaces, `bun@1.3.14`, `tsc`/tsgo
 typechecking, oxlint, and oxfmt. `AGENTS.md` records the standing rules: run
 scripts with Bun, use `bun run check`, use Vitest via `bun run test`, lint with
-oxlint, format with oxfmt, and avoid unpatched TypeScript 5 for the repo
+oxlint, format with oxfmt, and avoid unpatched TypeScript 5 for the template
 typecheck.
 
 The Nix devshell includes Bun and exposes Prelude commands (`x check`,
@@ -43,7 +43,7 @@ plain upstream `tsc` without changing the template contract.
 
 ## Alternatives considered
 
-- **Use npm/pnpm with stock TypeScript and ESLint.** Rejected because the repo
+- **Use npm/pnpm with stock TypeScript and ESLint.** Rejected because this
   template already optimizes for Bun workspaces, tsgo, and Oxc-family tooling.
 - **Make Nix commands the only interface.** Rejected because CI and agents need
   direct, non-interactive package scripts that work outside an interactive
