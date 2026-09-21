@@ -29,7 +29,16 @@ New packages should use workspace/package imports (`@repo/*` and package `#`
 imports) and fit the existing app/service/internal/leaf model rather than
 creating informal cross-package dependencies.
 
-## Consequences
+## Why
+
+- **Document boundaries without enforcing them.** Rejected because dependency
+  drift is easy in a monorepo and hard to spot in review.
+- **Use only TypeScript path aliases.** Rejected because aliases improve import
+  ergonomics but do not express allowed dependency direction.
+- **Allow packages to depend freely on apps.** Rejected because app entrypoints
+  are composition roots, not reusable libraries.
+
+## Trade-offs
 
 The intended architecture is checked automatically instead of living only in
 docs. Core and leaf packages stay reusable, services cannot reach into apps,
@@ -38,12 +47,3 @@ and app composition remains at the top of the graph.
 The cost is a small amount of package metadata and occasional boundary friction.
 When a dependency is rejected, contributors must either move code to the right
 package or introduce a deliberate new boundary convention.
-
-## Alternatives considered
-
-- **Document boundaries without enforcing them.** Rejected because dependency
-  drift is easy in a monorepo and hard to spot in review.
-- **Use only TypeScript path aliases.** Rejected because aliases improve import
-  ergonomics but do not express allowed dependency direction.
-- **Allow packages to depend freely on apps.** Rejected because app entrypoints
-  are composition roots, not reusable libraries.

@@ -29,7 +29,16 @@ directly.
 Plaintext `.env`, `.env.*`, decrypted secret files, and private age keys remain
 untracked.
 
-## Consequences
+## Why
+
+- **Check in plaintext example secrets.** Rejected because the template would
+  teach an unsafe default.
+- **Keep secrets only in local `.env` files.** Rejected because deployment and
+  GitOps flows need reviewable encrypted manifests.
+- **Let app code read decrypted files ad hoc.** Rejected because typed config
+  providers keep secret access explicit and testable.
+
+## Trade-offs
 
 The template demonstrates secret handling without checking in credentials. CI
 and operators can reason about which files may contain encrypted material, and
@@ -38,12 +47,3 @@ apps can add secret-backed config behind typed configuration boundaries.
 The cost is setup overhead: contributors need SOPS and the right age/keyservice
 access to decrypt or update protected values. Tests and status endpoints must
 avoid depending on plaintext secrets.
-
-## Alternatives considered
-
-- **Check in plaintext example secrets.** Rejected because the template would
-  teach an unsafe default.
-- **Keep secrets only in local `.env` files.** Rejected because deployment and
-  GitOps flows need reviewable encrypted manifests.
-- **Let app code read decrypted files ad hoc.** Rejected because typed config
-  providers keep secret access explicit and testable.

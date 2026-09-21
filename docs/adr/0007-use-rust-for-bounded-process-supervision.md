@@ -28,17 +28,7 @@ NDJSON protocol owned by `packages/sandbox-client` and implemented by
 Treat the Rust daemon as a process supervisor, not a security sandbox. Any
 future production isolation must be layered outside or above it.
 
-## Consequences
-
-The process edge can use Rust's process-control and Unix process-group behavior
-while the TypeScript harness keeps a typed protocol boundary. Output and
-deadline limits are enforced close to the child process.
-
-The cost is a second language stack and a protocol boundary that must stay in
-sync. Contributors must not overstate the safety properties of the daemon just
-because it is named like a sandbox.
-
-## Alternatives considered
+## Why
 
 - **Run child processes directly from the TypeScript harness.** Rejected
   because output capture, deadlines, and process-group cleanup are clearer at a
@@ -48,3 +38,13 @@ because it is named like a sandbox.
 - **Invent additional Rust workspaces for adjacent Rust code.** Rejected
   because a template with multiple Rust roots makes Cargo validation and
   dependency policy harder for adopters to understand.
+
+## Trade-offs
+
+The process edge can use Rust's process-control and Unix process-group behavior
+while the TypeScript harness keeps a typed protocol boundary. Output and
+deadline limits are enforced close to the child process.
+
+The cost is a second language stack and a protocol boundary that must stay in
+sync. Contributors must not overstate the safety properties of the daemon just
+because it is named like a sandbox.

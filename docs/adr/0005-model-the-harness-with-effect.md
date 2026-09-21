@@ -32,17 +32,7 @@ Model the agent harness as an Effect-native domain:
 - Recoverable domain failures are typed errors rather than unstructured thrown
   exceptions.
 
-## Consequences
-
-The core harness can be tested with deterministic layers and without provider
-credentials. Public operations avoid hidden environment requirements, and
-schema-backed contracts make app, daemon, CLI, and testkit boundaries explicit.
-
-The cost is that contributors must understand Effect services, layers, schema
-classes, and the pinned beta API. Simpler ad hoc async functions may look easier
-locally but would lose the substitution and boundary guarantees.
-
-## Alternatives considered
+## Why
 
 - **Use plain TypeScript classes and promises.** Rejected because the harness
   needs typed dependencies, recoverable failures, and test-layer substitution.
@@ -51,3 +41,13 @@ locally but would lose the substitution and boundary guarantees.
   inside `Effect.gen`.
 - **Let each app implement its own loop.** Rejected because the CLI, daemon,
   and native shell must share one orchestration model.
+
+## Trade-offs
+
+The core harness can be tested with deterministic layers and without provider
+credentials. Public operations avoid hidden environment requirements, and
+schema-backed contracts make app, daemon, CLI, and testkit boundaries explicit.
+
+The cost is that contributors must understand Effect services, layers, schema
+classes, and the pinned beta API. Simpler ad hoc async functions may look easier
+locally but would lose the substitution and boundary guarantees.

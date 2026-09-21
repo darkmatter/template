@@ -32,17 +32,7 @@ available in the workflow:
 Keep additional local-only validation documented when CI does not install the
 tool.
 
-## Consequences
-
-Template changes are verified across the same surfaces future projects inherit.
-The explicit prepare step keeps CI deterministic even with
-`--ignore-scripts`, and the separate Rust/Nix/Compose checks prevent TypeScript
-success from hiding other breakage.
-
-The cost is a broader and sometimes heavier validation matrix. Contributors
-need the right local tools or must rely on CI for unavailable checks.
-
-## Alternatives considered
+## Why
 
 - **Only run TypeScript checks in CI.** Rejected because Rust, Nix, and Compose
   are part of the template contract.
@@ -52,3 +42,13 @@ need the right local tools or must rely on CI for unavailable checks.
   template examples or adopter-specific tools may not have a reliable install
   path in the shared workflow. Document local checks until they become part of
   the supported CI surface.
+
+## Trade-offs
+
+Template changes are verified across the same surfaces future projects inherit.
+The explicit prepare step keeps CI deterministic even with
+`--ignore-scripts`, and the separate Rust/Nix/Compose checks prevent TypeScript
+success from hiding other breakage.
+
+The cost is a broader and sometimes heavier validation matrix. Contributors
+need the right local tools or must rely on CI for unavailable checks.

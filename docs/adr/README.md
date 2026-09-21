@@ -44,13 +44,14 @@ decision.
 
 What did we decide. State it plainly.
 
-## Consequences
+## Why
+
+Why this decision was made. Explain the rationale, including the meaningful
+alternatives that were rejected.
+
+## Trade-offs
 
 What follows from this — both the upside and the costs we're accepting.
-
-## Alternatives considered
-
-Briefly: what else we looked at and why we didn't pick it.
 ```
 
 [nygard]: https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions

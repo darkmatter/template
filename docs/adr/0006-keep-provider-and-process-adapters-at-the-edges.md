@@ -29,7 +29,16 @@ translate external behavior into those contracts.
 Provider-free demos and test layers should exercise the real harness without
 network access or credentials.
 
-## Consequences
+## Why
+
+- **Import provider SDKs directly in `agent-core`.** Rejected because stable
+  policy would inherit unstable provider versioning and credential concerns.
+- **Copy the harness loop into each application.** Rejected because app-specific
+  loops would drift and make tests less meaningful.
+- **Make demos depend on live provider credentials.** Rejected because examples
+  and smoke tests should run deterministically without secrets.
+
+## Trade-offs
 
 Version drift and provider-specific behavior are quarantined. The same harness
 can run from CLI, daemon, native UI, tests, and demos because each edge supplies
@@ -38,12 +47,3 @@ the required services through layers.
 The cost is adapter code and translation boundaries. New integrations must map
 into the domain model instead of reaching through it, even when a direct SDK
 call would be shorter.
-
-## Alternatives considered
-
-- **Import provider SDKs directly in `agent-core`.** Rejected because stable
-  policy would inherit unstable provider versioning and credential concerns.
-- **Copy the harness loop into each application.** Rejected because app-specific
-  loops would drift and make tests less meaningful.
-- **Make demos depend on live provider credentials.** Rejected because examples
-  and smoke tests should run deterministically without secrets.

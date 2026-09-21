@@ -31,7 +31,15 @@ Package scripts remain the canonical non-interactive command surface for CI and
 agents. The devshell command picker is a convenience layer over those scripts,
 not a second source of truth.
 
-## Consequences
+## Why
+
+- **Use npm/pnpm with stock TypeScript and ESLint.** Rejected because this
+  template already optimizes for Bun workspaces, tsgo, and Oxc-family tooling.
+- **Make Nix commands the only interface.** Rejected because CI and agents need
+  direct, non-interactive package scripts that work outside an interactive
+  command picker.
+
+## Trade-offs
 
 The template has one fast TypeScript toolchain and one command vocabulary across
 apps, packages, CI, and agents. The `prepare` script owns patching tsgo and
@@ -40,11 +48,3 @@ oxlint so CI can install with `--ignore-scripts`.
 The cost is tighter coupling to Bun, Oxc, and the specific Effect/TypeScript
 beta toolchain. Contributors cannot freely substitute npm, Jest, Prettier, or
 plain upstream `tsc` without changing the template contract.
-
-## Alternatives considered
-
-- **Use npm/pnpm with stock TypeScript and ESLint.** Rejected because this
-  template already optimizes for Bun workspaces, tsgo, and Oxc-family tooling.
-- **Make Nix commands the only interface.** Rejected because CI and agents need
-  direct, non-interactive package scripts that work outside an interactive
-  command picker.

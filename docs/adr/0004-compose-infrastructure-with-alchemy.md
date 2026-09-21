@@ -31,17 +31,7 @@ Alchemy provider/state concerns should be assembled in infrastructure code.
 Application packages should consume configuration and service boundaries rather
 than invoking the Alchemy runtime.
 
-## Consequences
-
-Infrastructure is described in TypeScript and can share the template's toolchain
-without becoming application domain code. The deployable web surface can evolve
-without moving the harness loop into a cloud resource declaration.
-
-The cost is an additional beta dependency and a clear separation contributors
-must preserve: Alchemy is for resource composition, not for replacing the
-Effect-native agent architecture.
-
-## Alternatives considered
+## Why
 
 - **Put deployment resources in app entrypoints.** Rejected because app runtime
   code would become harder to test and reason about.
@@ -51,3 +41,13 @@ Effect-native agent architecture.
 - **Avoid infrastructure-as-code in the template.** Rejected because the
   template is intended to demonstrate an operationally shaped app, not only
   local code.
+
+## Trade-offs
+
+Infrastructure is described in TypeScript and can share the template's toolchain
+without becoming application domain code. The deployable web surface can evolve
+without moving the harness loop into a cloud resource declaration.
+
+The cost is an additional beta dependency and a clear separation contributors
+must preserve: Alchemy is for resource composition, not for replacing the
+Effect-native agent architecture.

@@ -38,7 +38,15 @@ Keep operational concerns under `ops/`:
 Application schemas, package manifests, Vite configs, and other source-adjacent
 configuration stay beside the application or package that consumes them.
 
-## Consequences
+## Why
+
+- **Put all configuration under `ops/`.** Rejected because application-owned
+  config becomes harder to maintain when it is separated from the code that
+  consumes it.
+- **Let each app own its own operational surface.** Rejected because cross-app
+  deployment, secrets, observability, and policy conventions would fragment.
+
+## Trade-offs
 
 Operators and agents have one predictable place to look for deployment and
 runtime concerns. Application directories stay focused on source and local app
@@ -47,11 +55,3 @@ configuration.
 The boundary requires judgment. A file can be operationally relevant without
 belonging in `ops/`; contributors must decide whether the file configures the
 application itself or the operational environment around it.
-
-## Alternatives considered
-
-- **Put all configuration under `ops/`.** Rejected because application-owned
-  config becomes harder to maintain when it is separated from the code that
-  consumes it.
-- **Let each app own its own operational surface.** Rejected because cross-app
-  deployment, secrets, observability, and policy conventions would fragment.
