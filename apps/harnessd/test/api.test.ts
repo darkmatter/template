@@ -1,4 +1,5 @@
 import { it } from "@effect/vitest";
+import { call } from "@orpc/server";
 import { AgentHarness, ModelFailure } from "@repo/agent-core";
 import { DemoHarnessLayer } from "@repo/agent-demo";
 import { Effect, FileSystem, Layer, Path } from "effect";
@@ -9,6 +10,7 @@ import { expect } from "vitest";
 import { HarnessdApi, SubmitRun } from "#api.ts";
 import { DemoRunner } from "#demo-runner.ts";
 import { HarnessdHandlers } from "#handlers.ts";
+import { HarnessdOrpcRouter } from "#orpc.ts";
 import { RunIds } from "#run-ids.ts";
 
 const DemoRunnerLive = DemoRunner.layerNoDeps.pipe(
@@ -82,3 +84,13 @@ it.effect("maps domain failures into the declared API error", () =>
     });
   }).pipe(Effect.provide(FailureTestLayer)),
 );
+
+it("exposes the preferred-libs snapshot through an Effect oRPC procedure", async () => {
+  const snapshot = await call(HarnessdOrpcRouter.preferred.libs, undefined);
+
+  expect(snapshot).toMatchObject({
+    database: "postgres",
+    rpc: "effect-orpc",
+    runtime: "bun-effect",
+  });
+});

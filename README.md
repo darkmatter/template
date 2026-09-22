@@ -11,22 +11,22 @@ worker is a bounded process supervisor—not a security sandbox.
 
 ## Tour
 
-| Path                       | Purpose                                                         |
-| -------------------------- | --------------------------------------------------------------- |
-| `apps/cli/`                | Effect CLI for local and operator-driven harness runs           |
-| `apps/harnessd/`           | Typed HTTP API and long-lived Bun runtime boundary              |
-| `apps/native/`             | Tauri shell with one managed Effect runtime at the UI boundary  |
-| `apps/web/`                | Small Bun status server and architecture landing page           |
-| `packages/agent-core/`     | Stable schemas, errors, services, event journal, and agent loop |
-| `packages/agent-demo/`     | Shared provider-free model, tool, and runnable demo layer       |
-| `packages/agent-runtime/`  | Isolated `effect/unstable/ai` and supervised-shell adapters     |
-| `packages/agent-testkit/`  | Scripted model and deterministic tool layers                    |
-| `packages/infra/`          | Alchemy stack composition for the deployable web surface        |
-| `packages/sandbox-client/` | Effect Schema contract shared with the Rust worker              |
-| `crates/agent-sandboxd/`   | NDJSON process supervisor with deadlines and output bounds      |
-| `crates/alloy-web3-example/` | Alloy HTTP provider and `sol!` contract interface example     |
-| `contracts/`               | Foundry Solidity project with Counter contract and forge tests  |
-| `docs/adr/`                | Architecture Decision Records for standing repo decisions       |
+| Path                         | Purpose                                                         |
+| ---------------------------- | --------------------------------------------------------------- |
+| `apps/cli/`                  | Effect CLI for local and operator-driven harness runs           |
+| `apps/harnessd/`             | Typed HTTP API and long-lived Bun runtime boundary              |
+| `apps/native/`               | Tauri shell with one managed Effect runtime at the UI boundary  |
+| `apps/web/`                  | Small Bun status server and architecture landing page           |
+| `packages/agent-core/`       | Stable schemas, errors, services, event journal, and agent loop |
+| `packages/agent-demo/`       | Shared provider-free model, tool, and runnable demo layer       |
+| `packages/agent-runtime/`    | Isolated `effect/unstable/ai` and supervised-shell adapters     |
+| `packages/agent-testkit/`    | Scripted model and deterministic tool layers                    |
+| `packages/infra/`            | Alchemy stack composition for the deployable web surface        |
+| `packages/sandbox-client/`   | Effect Schema contract shared with the Rust worker              |
+| `crates/agent-sandboxd/`     | NDJSON process supervisor with deadlines and output bounds      |
+| `crates/alloy-web3-example/` | Alloy HTTP provider and `sol!` contract interface example       |
+| `contracts/`                 | Foundry Solidity project with Counter contract and forge tests  |
+| `docs/adr/`                  | Architecture Decision Records for standing repo decisions       |
 
 Start with [`packages/agent-core/src/services/AgentHarness.ts`](packages/agent-core/src/services/AgentHarness.ts),
 then read [`packages/agent-testkit/test/agent-harness.test.ts`](packages/agent-testkit/test/agent-harness.test.ts).
@@ -90,6 +90,12 @@ forge test --root contracts
 - Tauri owns callback execution through one `ManagedRuntime`; libraries only
   describe effects.
 - Alchemy owns infrastructure composition, not the application agent runtime.
+- Typed RPC examples should use `effect-orpc` on its Effect v4 dist-tag
+  (`effect-orpc@1.0.0-effect-v4.8`) with compatible `@orpc/*` peers; see
+  `apps/harnessd/src/orpc.ts` for the minimal Effect procedure pattern.
+- Postgres is the preferred application data store. Use `kysely` + `pg` or
+  `@effect/sql-pg` for new persistence examples; existing D1 resources are
+  Cloudflare demo infrastructure rather than the recommended default.
 
 See [the architecture guide](docs/architecture.md) for dependency direction and
 [the canonical patterns note](docs/10-effect-solutions.md) for the version-pinned
