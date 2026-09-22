@@ -60,7 +60,7 @@
     "bun2nix": "^2.1.2",
     "dependency-cruiser": "18.2.0",
     "effect": "catalog:",
-    "oxfmt": "^0.62.0",
+    "oxfmt": "^0.70.0",
     "oxlint": "1.79.0",
     "oxlint-tsgolint": "^7.0.2001",
     "turbo": "^2.10.12",
