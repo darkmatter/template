@@ -7,17 +7,17 @@ local examples.
 
 ## Current records
 
-| ADR | Status | Decision |
-| --- | --- | --- |
-| [0001](0001-keep-ops-as-the-operational-boundary.md) | accepted | Keep `ops/` as the operational boundary |
-| [0002](0002-use-bun-tsgo-oxc-and-prelude.md) | accepted | Use Bun, tsgo, Oxc, and Prelude |
-| [0003](0003-store-deploy-time-secrets-with-sops.md) | accepted | Store deploy-time secrets with SOPS |
-| [0004](0004-compose-infrastructure-with-alchemy.md) | accepted | Compose infrastructure with Alchemy |
-| [0005](0005-model-the-harness-with-effect.md) | accepted | Model the harness with Effect |
+| ADR                                                             | Status   | Decision                                        |
+| --------------------------------------------------------------- | -------- | ----------------------------------------------- |
+| [0001](0001-keep-ops-as-the-operational-boundary.md)            | accepted | Keep `ops/` as the operational boundary         |
+| [0002](0002-use-bun-tsgo-oxc-and-prelude.md)                    | accepted | Use Bun, tsgo, Oxc, and Prelude                 |
+| [0003](0003-store-deploy-time-secrets-with-sops.md)             | accepted | Store deploy-time secrets with SOPS             |
+| [0004](0004-compose-infrastructure-with-alchemy.md)             | accepted | Compose infrastructure with Alchemy             |
+| [0005](0005-model-the-harness-with-effect.md)                   | accepted | Model the harness with Effect                   |
 | [0006](0006-keep-provider-and-process-adapters-at-the-edges.md) | accepted | Keep provider and process adapters at the edges |
-| [0007](0007-use-rust-for-bounded-process-supervision.md) | accepted | Use Rust for bounded process supervision |
-| [0008](0008-enforce-package-boundaries.md) | accepted | Enforce package boundaries |
-| [0009](0009-validate-every-supported-stack-in-ci.md) | accepted | Validate every supported stack in CI |
+| [0007](0007-use-rust-for-bounded-process-supervision.md)        | accepted | Use Rust for bounded process supervision        |
+| [0008](0008-enforce-package-boundaries.md)                      | accepted | Enforce package boundaries                      |
+| [0009](0009-validate-every-supported-stack-in-ci.md)            | accepted | Validate every supported stack in CI            |
 
 ## Format
 
