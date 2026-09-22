@@ -52,7 +52,7 @@
     "dependency-cruiser": "18.2.0",
     "effect": "catalog:",
     "oxfmt": "^0.62.0",
-    "oxlint": "1.79.0",
+    "oxlint": "1.85.0",
     "oxlint-tsgolint": "^7.0.2001",
     "turbo": "^2.10.12",
     "typescript": "7.0.2",
