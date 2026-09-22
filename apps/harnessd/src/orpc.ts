@@ -26,18 +26,16 @@ export class PreferredLibsUnavailable extends ORPCTaggedError(
 export class PreferredLibsCatalog extends Context.Service<
   PreferredLibsCatalog,
   {
-    readonly describe: () => Effect.Effect<
+    readonly describe: Effect.Effect<
       PreferredLibsSnapshot,
       PreferredLibsUnavailable
     >;
   }
->()("harnessd/PreferredLibsCatalog") {
+>()("@agent-demo/harnessd/orpc/PreferredLibsCatalog") {
   static readonly layer = Layer.succeed(
     PreferredLibsCatalog,
     PreferredLibsCatalog.of({
-      describe: Effect.fn("PreferredLibsCatalog.describe")(function* () {
-        return preferredLibsSnapshot;
-      }),
+      describe: Effect.succeed(preferredLibsSnapshot),
     }),
   );
 }
@@ -47,7 +45,7 @@ const preferredLibsProcedure = eos
   .errors({ PreferredLibsUnavailable })
   .effect(function* () {
     const catalog = yield* PreferredLibsCatalog;
-    return yield* catalog.describe();
+    return yield* catalog.describe;
   });
 
 export const HarnessdOrpcRouter = {
