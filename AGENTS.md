@@ -7,32 +7,32 @@ tsgo, oxlint/oxfmt, Nix flake-parts + Prelude).
 
 ## Repository layout
 
-| Path                       | Purpose                                                          |
-| -------------------------- | ---------------------------------------------------------------- |
-| `apps/cli/`                | Effect CLI and terminal rendering boundary                       |
-| `apps/harnessd/`           | Typed harness HTTP API and long-lived Bun server                 |
-| `apps/web/`                | Status/architecture page (`@agent-demo/web`) — Effect/Bun server |
-| `apps/native/`             | Tauri shell and managed Effect runtime boundary                  |
-| `packages/agent-core/`     | Stable schemas, services, journal, and agent loop                |
-| `packages/agent-demo/`     | Provider-free model/tool layers shared by runnable apps          |
-| `packages/agent-runtime/`  | Effect AI and sandbox adapters                                   |
-| `packages/agent-testkit/`  | Scripted model and deterministic test layers                     |
-| `packages/sandbox-client/` | Schema contract for the Rust supervisor                          |
-| `packages/web-core/`       | Framework-independent status and metrics helpers                 |
-| `packages/tooling/`        | Shared TypeScript, Oxc, and oxlint configuration                 |
-| `turbo.json`               | Turborepo tasks and package-boundary tags                        |
-| `crates/agent-sandboxd/`   | Bounded NDJSON process supervisor                                |
-| `crates/alloy-web3-example/` | Alloy HTTP provider and `sol!` contract interface example      |
-| `contracts/`               | Foundry Solidity project with Counter contract and forge tests   |
-| `flake.nix`                | Root flake — stays at root because Nix discovers flakes there    |
-| `flake/`                   | Thin public Nix-output layer (apps, checks, devShells, packages) |
-| `nix/demo/`                | Nix package and smoke-check implementation                       |
-| `nix/prelude.nix`          | Prelude command catalogue (`x` menu, MOTD, docs)                 |
-| `ops/`                     | Operational surface — see [ops/README.md](ops/README.md)         |
-| `tests/`                   | Cross-package smoke tests                                        |
-| `docs/`                    | Architecture and getting-started docs                            |
-| `docs/adr/`                | Standing Architecture Decision Records                           |
-| `.github/workflows/`       | CI pipeline                                                      |
+| Path                         | Purpose                                                          |
+| ---------------------------- | ---------------------------------------------------------------- |
+| `apps/cli/`                  | Effect CLI and terminal rendering boundary                       |
+| `apps/harnessd/`             | Typed harness HTTP API and long-lived Bun server                 |
+| `apps/web/`                  | Status/architecture page (`@agent-demo/web`) — Effect/Bun server |
+| `apps/native/`               | Tauri shell and managed Effect runtime boundary                  |
+| `packages/agent-core/`       | Stable schemas, services, journal, and agent loop                |
+| `packages/agent-demo/`       | Provider-free model/tool layers shared by runnable apps          |
+| `packages/agent-runtime/`    | Effect AI and sandbox adapters                                   |
+| `packages/agent-testkit/`    | Scripted model and deterministic test layers                     |
+| `packages/sandbox-client/`   | Schema contract for the Rust supervisor                          |
+| `packages/web-core/`         | Framework-independent status and metrics helpers                 |
+| `packages/tooling/`          | Shared TypeScript, Oxc, and oxlint configuration                 |
+| `turbo.json`                 | Turborepo tasks and package-boundary tags                        |
+| `crates/agent-sandboxd/`     | Bounded NDJSON process supervisor                                |
+| `crates/alloy-web3-example/` | Alloy HTTP provider and `sol!` contract interface example        |
+| `contracts/`                 | Foundry Solidity project with Counter contract and forge tests   |
+| `flake.nix`                  | Root flake — stays at root because Nix discovers flakes there    |
+| `flake/`                     | Thin public Nix-output layer (apps, checks, devShells, packages) |
+| `nix/demo/`                  | Nix package and smoke-check implementation                       |
+| `nix/prelude.nix`            | Prelude command catalogue (`x` menu, MOTD, docs)                 |
+| `ops/`                       | Operational surface — see [ops/README.md](ops/README.md)         |
+| `tests/`                     | Cross-package smoke tests                                        |
+| `docs/`                      | Architecture and getting-started docs                            |
+| `docs/adr/`                  | Standing Architecture Decision Records                           |
+| `.github/workflows/`         | CI pipeline                                                      |
 
 ### `ops/` boundary
 
@@ -97,6 +97,30 @@ The `justfile` provides `just` wrappers that enforce devshell entry
 
 After changing `package.json` dependencies, regenerate the Nix lock:
 `bun run generate:bun-nix` (runs `bun2nix -o bun.nix`).
+
+## Preferred libraries
+
+This template is the preferred-libs home for Darkmatter TypeScript apps. Encode
+shared versions in the root `catalog` and depend on them with `catalog:` from
+workspaces.
+
+- Prefer Bun workspaces, Turborepo boundaries, TypeScript 7, `@effect/tsgo`,
+  Nix, and `bun2nix` for TypeScript monorepos.
+- Prefer Effect v4, `@effect/platform-bun` / `@effect/platform-node`, Effect
+  Schema, services, and layers for runtime boundaries.
+- Prefer `effect-orpc` for typed RPC surfaces. While the npm `latest` tag still
+  targets the Effect 3 era, pin `effect-orpc@1.0.0-effect-v4.8` from the
+  `effect-v4` dist-tag and keep the `@orpc/*` peer packages on compatible
+  `>=1.13` versions.
+- Prefer Postgres for application data. The default app data path should use
+  `kysely` + `pg` and/or `@effect/sql-pg`; do not present D1 or SQLite as the
+  default store. D1 may remain only as an optional Cloudflare-local or legacy
+  demo resource when a stack already contains it.
+- Prefer Alchemy and `alchemy-sops` for deployable infrastructure examples,
+  with Cloudflare resources where they are already in scope.
+- React 19, shadcn, and Radix are optional UI choices for apps that already
+  need UI components; do not expand this harness into a full UI stack solely to
+  demonstrate them.
 
 ## Package conventions
 

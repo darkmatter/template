@@ -16,3 +16,12 @@
 | `policies/`      | Guardrails evaluated by automation              | image and dependency policies                |
 
 The public Nix flake surface is deliberately separate in `../flake/`: it exposes package, app, check, and development-shell output names. `ops/nix/` is for Nix configuration about real operational machines and profiles.
+
+## Data services
+
+Postgres is the preferred default data store for Darkmatter TypeScript apps.
+Local, staging, and production operational notes should start from Postgres
+(`kysely` + `pg` or `@effect/sql-pg` in application code) and place supporting
+configuration under `ops/config/postgres/`. D1 or SQLite can appear only as
+explicit Cloudflare-local or legacy demo support, not as the recommended app
+database.

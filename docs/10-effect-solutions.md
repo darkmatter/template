@@ -36,11 +36,27 @@ through layers assembled by Alchemy; application code does not invoke the
 Alchemy runtime.
 
 The repository uses `alchemy@2.0.0-beta.70` because it is the version matched by
-the installed `alchemy-sops` peer range and because the checked examples for
-that tag use the same D1 migration option as this stack.
+the installed `alchemy-sops` peer range. The existing D1 resource in
+`packages/infra` is retained as a Cloudflare-local demo artifact, not as the
+preferred application data store.
 
 Alchemy's experimental agent resource is not used: the agent lives in Effect,
 while Alchemy declares only deployable infrastructure.
+
+## Preferred library conventions
+
+Darkmatter TypeScript apps should treat this template's root catalog as the
+preferred-libs reference. New typed RPC surfaces should use `effect-orpc` and
+its Effect v4 dist-tag pin (`effect-orpc@1.0.0-effect-v4.8`), with compatible
+`@orpc/server`, `@orpc/client`, `@orpc/contract`, and `@orpc/shared` peers.
+The harness daemon keeps its stable Effect HTTP API and adds a small
+`apps/harnessd/src/orpc.ts` example showing `eos.provide(...).errors(...).effect`
+with `ORPCTaggedError`.
+
+Postgres is the preferred data store for app persistence. Use `kysely` + `pg`
+for query builders and/or `@effect/sql-pg` for Effect-native SQL services.
+Do not model D1 or SQLite as the default path for new Darkmatter apps; keep them
+only for existing Cloudflare-local demos or explicit legacy compatibility.
 
 ## Primary references
 
@@ -48,6 +64,7 @@ while Alchemy declares only deployable infrastructure.
 - <https://www.effect.website/docs/v4/requirements-management/layers/>
 - <https://www.effect.website/docs/v4/schema/classes/>
 - <https://www.effect.website/docs/v4/code-style/guidelines/>
+- <https://github.com/utopyin/effect-orpc>
 - <https://github.com/Effect-TS/effect/blob/de2a9a69099993087e57c64df58537c765ac0224/LLMS.md>
 - <https://alchemy.run/infrastructure-as-code/stack/>
 - <https://alchemy.run/infrastructure-as-code/resource/>
