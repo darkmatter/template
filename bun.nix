@@ -11,8 +11,7 @@
   fetchgit,
   fetchurl,
   ...
-}:
-{
+}: {
   "@agent-demo/cli" = copyPathToStore ./apps/cli;
   "@agent-demo/harnessd" = copyPathToStore ./apps/harnessd;
   "@agent-demo/native" = copyPathToStore ./apps/native;
