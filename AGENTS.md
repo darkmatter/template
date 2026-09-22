@@ -31,6 +31,7 @@ tsgo, oxlint/oxfmt, Nix flake-parts + Prelude).
 | `ops/`                     | Operational surface — see [ops/README.md](ops/README.md)         |
 | `tests/`                   | Cross-package smoke tests                                        |
 | `docs/`                    | Architecture and getting-started docs                            |
+| `docs/adr/`                | Standing Architecture Decision Records                           |
 | `.github/workflows/`       | CI pipeline                                                      |
 
 ### `ops/` boundary
@@ -151,6 +152,9 @@ Web support helpers live in `packages/web-core`:
 The server composes these layers with `HttpRouter.serve` and launches via
 `BunRuntime.runMain(Layer.launch(MainLive))`. Static files are served from
 `APP_PUBLIC_DIR` (defaults to the packaged `public/` directory).
+
+Standing structural choices are recorded in
+[Architecture Decision Records](docs/adr/).
 
 ### Environments
 

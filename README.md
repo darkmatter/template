@@ -26,6 +26,7 @@ worker is a bounded process supervisor—not a security sandbox.
 | `crates/agent-sandboxd/`   | NDJSON process supervisor with deadlines and output bounds      |
 | `crates/alloy-web3-example/` | Alloy HTTP provider and `sol!` contract interface example     |
 | `contracts/`               | Foundry Solidity project with Counter contract and forge tests  |
+| `docs/adr/`                | Architecture Decision Records for standing repo decisions       |
 
 Start with [`packages/agent-core/src/services/AgentHarness.ts`](packages/agent-core/src/services/AgentHarness.ts),
 then read [`packages/agent-testkit/test/agent-harness.test.ts`](packages/agent-testkit/test/agent-harness.test.ts).
@@ -92,7 +93,8 @@ forge test --root contracts
 
 See [the architecture guide](docs/architecture.md) for dependency direction and
 [the canonical patterns note](docs/10-effect-solutions.md) for the version-pinned
-Effect and Alchemy decisions.
+Effect and Alchemy decisions. Standing structural choices are recorded in
+[Architecture Decision Records](docs/adr/).
 
 ## Operations
 
