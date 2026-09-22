@@ -13,6 +13,6 @@
     "./organization": "./src/organization.ts"
   },
   "dependencies": {
-    "oxlint": "1.79.0"
+    "oxlint": "1.85.0"
   }
 }
