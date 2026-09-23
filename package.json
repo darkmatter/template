@@ -38,7 +38,7 @@
     "check": "bun run lint:boundaries && turbo boundaries && tsc && bun run --filter '*' typecheck",
     "lint:boundaries": "depcruise apps packages tests",
     "check:rust": "cargo check --workspace",
-    "generate:bun-nix": "bun2nix -o bun.nix",
+    "generate:bun-nix": "bun2nix -o nix/bun.nix -c ../",
     "test": "vitest run",
     "test:rust": "cargo test --workspace",
     "test:watch": "vitest",

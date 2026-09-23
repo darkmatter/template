@@ -5,6 +5,6 @@
       overlays = [inputs.bun2nix.overlays.default];
     };
   in {
-    checks.smoke = import ../../nix/demo/check.nix {inherit pkgs;};
+    checks.smoke = import ../../demo/check.nix {inherit pkgs;};
   };
 }

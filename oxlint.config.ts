@@ -58,7 +58,7 @@ export default defineConfig({
     "**/routeTree.gen.ts",
     "**/*.{test,spec}.{ts,tsx,mts,cts,js,jsx}",
     "**/{test,tests,__tests__,e2e}/**",
-    "bun.nix",
+    "nix/bun.nix",
   ],
   rules: {
     "eslint/max-lines": [

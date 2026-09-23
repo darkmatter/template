@@ -15,7 +15,7 @@
 | `nix/`           | Operational host/profile configuration          | builder host, deployer profile               |
 | `policies/`      | Guardrails evaluated by automation              | image and dependency policies                |
 
-The public Nix flake surface is deliberately separate in `../flake/`: it exposes package, app, check, and development-shell output names. `ops/nix/` is for Nix configuration about real operational machines and profiles.
+The public Nix flake surface is deliberately separate in `../nix/flake/`: it exposes package, app, check, and development-shell output names. `ops/nix/` is for Nix configuration about real operational machines and profiles.
 
 ## Data services
 

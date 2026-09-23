@@ -2,7 +2,7 @@
   imports = [
     inputs.treefmt-nix.flakeModule
     inputs.prelude.flakeModules.default
-    ../nix/prelude.nix
+    ../prelude.nix
     ./apps
     ./checks
     ./devShells

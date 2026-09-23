@@ -22,9 +22,10 @@ tsgo, oxlint/oxfmt, Nix flake-parts + Prelude).
 | `packages/tooling/`        | Shared TypeScript and Oxc configuration                          |
 | `crates/agent-sandboxd/`   | Bounded NDJSON process supervisor                                |
 | `flake.nix`                | Root flake — stays at root because Nix discovers flakes there    |
-| `flake/`                   | Thin public Nix-output layer (apps, checks, devShells, packages) |
+| `nix/flake/`               | Thin public Nix-output layer (apps, checks, devShells, packages) |
 | `nix/demo/`                | Nix package and smoke-check implementation                       |
 | `nix/prelude.nix`          | Prelude command catalogue (`x` menu, MOTD, docs)                 |
+| `nix/bun.nix`              | Generated Bun dependency lock for Nix builds (`bun2nix`)         |
 | `ops/`                     | Operational surface — see [ops/README.md](ops/README.md)         |
 | `tests/`                   | Cross-package smoke tests                                        |
 | `docs/`                    | Architecture and getting-started docs                            |
@@ -89,7 +90,7 @@ The `justfile` provides `just` wrappers that enforce devshell entry
 (`just check`, `just test`, `just dev`, `just fmt`, `just container-up`).
 
 After changing `package.json` dependencies, regenerate the Nix lock:
-`bun run generate:bun-nix` (runs `bun2nix -o bun.nix`).
+`bun run generate:bun-nix` (runs `bun2nix -o nix/bun.nix -c ../`).
 
 ## Preferred libraries
 

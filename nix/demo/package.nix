@@ -1,6 +1,6 @@
 {pkgs}: let
   bunDeps = pkgs.bun2nix.fetchBunDeps {
-    bunNix = ../../bun.nix;
+    bunNix = ../bun.nix;
   };
 in
   pkgs.stdenv.mkDerivation {

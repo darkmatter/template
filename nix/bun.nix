@@ -11,12 +11,11 @@
   fetchgit,
   fetchurl,
   ...
-}:
-{
-  "@agent-demo/cli" = copyPathToStore ./apps/cli;
-  "@agent-demo/harnessd" = copyPathToStore ./apps/harnessd;
-  "@agent-demo/native" = copyPathToStore ./apps/native;
-  "@agent-demo/web" = copyPathToStore ./apps/web;
+}: {
+  "@agent-demo/cli" = copyPathToStore ../apps/cli;
+  "@agent-demo/harnessd" = copyPathToStore ../apps/harnessd;
+  "@agent-demo/native" = copyPathToStore ../apps/native;
+  "@agent-demo/web" = copyPathToStore ../apps/web;
   "@alcalzone/ansi-tokenize@0.2.5" = fetchurl {
     url = "https://registry.npmjs.org/@alcalzone/ansi-tokenize/-/ansi-tokenize-0.2.5.tgz";
     hash = "sha512-3NX/MpTdroi0aKz134A6RC2Gb2iXVECN4QaAXnvCIxxIm3C3AVB1mkUe8NaaiyvOpDfsrqWhYtj+Q6a62RrTsw==";
@@ -821,14 +820,14 @@
     url = "https://registry.npmjs.org/@puppeteer/browsers/-/browsers-2.13.2.tgz";
     hash = "sha512-5EUZSUIc37H6aIXyWO0Z4y8NlF8NnjgmqeQgOGiswAU7pY0HOo16ho4+alIWmSfdZnjqBRawMsP3I5YqLSn6kw==";
   };
-  "@repo/agent-core" = copyPathToStore ./packages/agent-core;
-  "@repo/agent-demo" = copyPathToStore ./packages/agent-demo;
-  "@repo/agent-runtime" = copyPathToStore ./packages/agent-runtime;
-  "@repo/agent-testkit" = copyPathToStore ./packages/agent-testkit;
-  "@repo/infra" = copyPathToStore ./packages/infra;
-  "@repo/sandbox-client" = copyPathToStore ./packages/sandbox-client;
-  "@repo/tooling" = copyPathToStore ./packages/tooling;
-  "@repo/web-core" = copyPathToStore ./packages/web-core;
+  "@repo/agent-core" = copyPathToStore ../packages/agent-core;
+  "@repo/agent-demo" = copyPathToStore ../packages/agent-demo;
+  "@repo/agent-runtime" = copyPathToStore ../packages/agent-runtime;
+  "@repo/agent-testkit" = copyPathToStore ../packages/agent-testkit;
+  "@repo/infra" = copyPathToStore ../packages/infra;
+  "@repo/sandbox-client" = copyPathToStore ../packages/sandbox-client;
+  "@repo/tooling" = copyPathToStore ../packages/tooling;
+  "@repo/web-core" = copyPathToStore ../packages/web-core;
   "@rolldown/binding-android-arm-eabi@1.2.6" = fetchurl {
     url = "https://registry.npmjs.org/@rolldown/binding-android-arm-eabi/-/binding-android-arm-eabi-1.2.6.tgz";
     hash = "sha512-b+jTcARdTiFLI6jB4a5XjTm0RWd6KcRfQj/I2356fxUZemiho9zQLxo0RtCuMDAyKcLo6cEltkgbQp6d1+sjjQ==";
