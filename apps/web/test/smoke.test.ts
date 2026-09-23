@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { type ChildProcess, spawn } from "node:child_process";
 import { resolve } from "node:path";
-import { afterAll, beforeAll, test } from "vitest";
+import { afterAll, beforeAll, test } from "@effect/vitest";
 
 const port = 43000 + Math.floor(Math.random() * 1000);
 const appDirectory =
-  process.env.APP_DIRECTORY ?? resolve(process.cwd(), "apps/web");
+  process.env.APP_DIRECTORY ?? resolve(import.meta.dirname, "..");
 const statusUrl = `http://127.0.0.1:${port}/api/status`;
 
 let app: ChildProcess;
@@ -54,7 +54,11 @@ afterAll(async () => {
 test("the demo app serves its status API and front page", async () => {
   const status = await waitForStatus();
   assert.equal(status.status, 200);
-  const payload = await status.json();
+  const payload = (await status.json()) as {
+    demo: string;
+    environment: string;
+    demoMessageConfigured: boolean;
+  };
   assert.equal(payload.demo, "effect-agent-harness");
   assert.equal(payload.environment, "test");
   assert.equal(payload.demoMessageConfigured, true);

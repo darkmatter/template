@@ -27,7 +27,6 @@ tsgo, oxlint/oxfmt, Nix flake-parts + Prelude).
 | `nix/prelude.nix`          | Prelude command catalogue (`x` menu, MOTD, docs)                 |
 | `nix/bun.nix`              | Generated Bun dependency lock for Nix builds (`bun2nix`)         |
 | `ops/`                     | Operational surface — see [ops/README.md](ops/README.md)         |
-| `tests/`                   | Cross-package smoke tests                                        |
 | `docs/`                    | Architecture and getting-started docs                            |
 | `.github/workflows/`       | CI pipeline                                                      |
 
@@ -187,8 +186,8 @@ image reference. Production uses a digest rather than a mutable image tag.
   `it.effect` and fresh layers; do not wrap `it.effect` in `Effect.scoped`.
 - `packages/agent-testkit` replaces model and tool services with deterministic
   layers while exercising the real harness and journal.
-- Smoke tests live in `tests/` and spawn the real server to verify the
-  status API and front page end-to-end.
+- The web smoke test (`apps/web/test/smoke.test.ts`) spawns the real server
+  to verify the status API and front page end-to-end.
 - Test files match `**/*.test.ts`. Vitest excludes `.direnv/**`.
 - Add regression tests for behavior changes.
 
