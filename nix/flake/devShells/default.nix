@@ -1,6 +1,11 @@
-{...}: {
+{inputs, ...}: let
+  # Skills from darkmatter/skills exposed to agents working in this repo.
+  # .agents/ is generated (gitignored); bump with `nix flake update darkmatter-skills`.
+  repoSkills = ["darkmatter-repo-setup"];
+in {
   perSystem = {
     config,
+    lib,
     pkgs,
     ...
   }: {
@@ -30,6 +35,12 @@
 
         repoRoot=$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")
         export PATH="node_modules/.bin:$repoRoot/node_modules/.bin:$PATH"
+
+        mkdir -p "$repoRoot/.agents/skills"
+        ${lib.concatMapStrings (name: ''
+            ln -sfn ${inputs.darkmatter-skills}/skills/${name} "$repoRoot/.agents/skills/${name}"
+          '')
+          repoSkills}
       '';
     };
   };

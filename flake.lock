@@ -28,6 +28,22 @@
         "type": "github"
       }
     },
+    "darkmatter-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790074801,
+        "narHash": "sha256-EHeW8s0FeGMmeAVxYnfiGTTX0eDx9RgIM/gJGejweaM=",
+        "ref": "refs/heads/main",
+        "rev": "0c45d3cd225b4c3e6773ecac160b2ddfec7565cf",
+        "revCount": 181,
+        "type": "git",
+        "url": "https://github.com/darkmatter/skills"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://github.com/darkmatter/skills"
+      }
+    },
     "flake-parts": {
       "inputs": {
         "nixpkgs-lib": "nixpkgs-lib"
@@ -106,6 +122,7 @@
     "root": {
       "inputs": {
         "bun2nix": "bun2nix",
+        "darkmatter-skills": "darkmatter-skills",
         "flake-parts": "flake-parts",
         "nixpkgs": "nixpkgs",
         "prelude": "prelude",
