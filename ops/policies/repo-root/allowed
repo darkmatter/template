@@ -1,0 +1,45 @@
+# Entries allowed at the repository root. check.sh fails on anything else.
+#
+# Only add an entry when a tool can't find its file anywhere else (it walks
+# up to the root, or globs relative to the file's own location). Everything
+# else belongs under an existing directory — tool config in .config/.
+
+# Repo and editor plumbing
+.cargo
+.config
+.envrc
+.github
+.gitignore
+.gitmodules
+.sops.yaml
+.vscode
+.zed
+
+# Entry points people and agents look for
+AGENTS.md
+README.md
+justfile
+
+# Manifests and lockfiles tools discover at the root
+Cargo.lock
+Cargo.toml
+bun.lock
+flake.lock
+flake.nix
+package.json
+turbo.json
+
+# Configs whose globs resolve relative to their own location
+.oxfmtrc.json
+oxlint.config.ts
+tsconfig.json
+
+# Top-level structure
+apps
+contracts
+crates
+docs
+nix
+ops
+packages
+vendor
