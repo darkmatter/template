@@ -1,8 +1,8 @@
 import { BunHttpServer, BunRuntime } from "@effect/platform-bun";
 import { DemoHarnessLayer } from "@repo/agent-demo";
 import { Effect, Layer } from "effect";
-import { HttpRouter } from "effect/unstable/http";
-import { HttpApiBuilder } from "effect/unstable/httpapi";
+import { HttpRouter } from "effect/http";
+import { HttpApiBuilder } from "effect/http-api";
 
 import { HarnessdApi } from "#api.ts";
 import { HarnessdConfig } from "#config.ts";

@@ -52,12 +52,12 @@
 
       lint = {
         exec = "bun run lint";
-        description = "Lint with oxlint + tsgolint";
+        description = "Lint with Vite+ (oxlint + tsgolint)";
       };
 
       fmt = {
-        exec = "nix fmt";
-        description = "Format with treefmt (alejandra, oxfmt)";
+        exec = "bun run fmt && nix fmt";
+        description = "Format with Vite+ (oxfmt) and treefmt (alejandra)";
       };
 
       "ops:container-config" = {
@@ -107,7 +107,7 @@
         }
         {
           label = "lint";
-          value = "oxlint";
+          value = "vite+ (oxlint)";
         }
       ];
     };

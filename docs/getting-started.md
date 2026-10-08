@@ -53,4 +53,4 @@ operational shell around the demo; a provider-backed agent is intentionally not
 preconfigured.
 
 Always run Vitest through `bun run test`, never `bun test`. Format TypeScript,
-JSON, and Nix with `x fmt`; format Rust with `cargo fmt --all`.
+JSON, Markdown, and Nix with `x fmt`; format Rust with `cargo fmt --all`.

@@ -13,8 +13,7 @@ root without becoming the application runtime itself.
 `packages/infra/alchemy.run.ts` declares a named `AgentHarness` stack, receives
 Cloudflare provider/state layers, composes storage, queue, and dashboard
 resources, and returns deployable outputs. `docs/10-effect-solutions.md`
-records that `alchemy@2.0.0-beta.70` is pinned to match the installed
-`alchemy-sops` peer range.
+records the pinned Alchemy version and its `alchemy-sops` compatibility.
 
 The application harness itself lives in Effect packages and apps. The docs
 explicitly say Alchemy's experimental agent resource is not used: Alchemy

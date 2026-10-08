@@ -3,7 +3,7 @@
 Bun + Effect agent harness with a Tauri desktop shell, a bounded Rust process
 supervisor, and a deliberately structured operational surface. This is the org
 reference for clean Effect-native TypeScript and the preferred toolchain (Bun,
-tsgo, oxlint/oxfmt, Nix flake-parts + Prelude).
+tsgo, Vite+ for oxlint/oxfmt/Vitest, Nix flake-parts + Prelude).
 
 ## Repository layout
 
@@ -55,14 +55,19 @@ application schema still belongs beside the application that uses it.
 - Use `.ts` for Bun-owned source. Do not add new `.mjs` application files.
 - Typecheck with `tsc` / tsgo: `bun run check`. Do not use `tsc` from an
   unpatched TypeScript 5 install. The root `prepare` script patches tsgo
-  and oxlint via `effect-tsgo patch --no-typescript --oxlint`.
-- Tests use Vitest: run `bun run test`, never `bun test`.
-- Lint with oxlint (`bun run lint`). Format with oxfmt / `nix fmt`.
+  and the oxlint shipped by `vite-plus` via
+  `effect-tsgo patch --no-typescript --oxlint`. Keep `@effect/tsgo` on a
+  version that supports `vite-plus`'s oxlint.
+- The root `vite.config.ts` is the only lint, format, and test config
+  (`lint`, `fmt`, `test` blocks). See ADR 0010.
+- Tests use Vitest through Vite+: run `bun run test`, never `bun test`.
+- Lint with `bun run lint` (`vp lint`). Format with `x fmt` (`vp fmt` for
+  TypeScript/JSON/Markdown/YAML, `nix fmt` for Nix).
 - Effect/TSGO style warnings are advisory outside intentionally Effect-owned
   code. Keep the tsconfig plugin name as `@effect/language-service`.
-- oxlint warns at 300 lines per file (blank lines and comments skipped).
+- The linter warns at 300 lines per file (blank lines and comments skipped).
   Split files that exceed this.
-- oxfmt is configured at 80 print width and sorts `package.json` keys.
+- `vp fmt` is configured at 80 print width and sorts `package.json` keys.
   Prettier is disabled in Zed — oxfmt is the only formatter.
 - The root `bun run check` runs root `tsc` then every workspace package's
   `typecheck` script through Bun's workspace filter.
@@ -80,8 +85,8 @@ automatic entry). Inside the shell:
 - `x harnessd` — run the typed harness daemon
 - `x check` — tsgo typecheck
 - `x test` — Vitest
-- `x lint` — oxlint
-- `x fmt` — treefmt (alejandra + oxfmt)
+- `x lint` — `vp lint` (oxlint)
+- `x fmt` — `vp fmt` + treefmt (alejandra)
 - `x install` — `bun install`
 - `x ops:container-config` — validate the local Compose stack
 
@@ -101,10 +106,8 @@ workspaces.
   Nix, and `bun2nix` for TypeScript monorepos.
 - Prefer Effect v4, `@effect/platform-bun` / `@effect/platform-node`, Effect
   Schema, services, and layers for runtime boundaries.
-- Prefer `effect-orpc` for typed RPC surfaces. While the npm `latest` tag still
-  targets the Effect 3 era, pin `effect-orpc@1.0.0-effect-v4.8` from the
-  `effect-v4` dist-tag and keep the `@orpc/*` peer packages on compatible
-  `>=1.13` versions.
+- Prefer `effect-orpc` for typed RPC surfaces and keep the `@orpc/*` peer
+  packages on compatible `>=1.13` versions.
 - Prefer Postgres for application data. The default app data path should use
   `kysely` + `pg` and/or `@effect/sql-pg`; do not present D1 or SQLite as the
   default store. D1 may remain only as an optional Cloudflare-local or legacy
@@ -143,7 +146,7 @@ services, an in-memory event journal, and the bounded sequential agent loop.
 dependencies so its public operation has no hidden environment requirement.
 
 Provider and process details point inward from adapters. Only
-`packages/agent-runtime` may import `effect/unstable/ai`.
+`packages/agent-runtime` may import `effect/ai`.
 `packages/sandbox-client` owns the tagged wire protocol implemented by
 `crates/agent-sandboxd`. The Rust daemon supervises processes but is not a
 security sandbox.
@@ -240,3 +243,14 @@ docker compose -f ops/compose/local.yaml config
 
 - Never commit decrypted SOPS values or plaintext credentials.
 - Preserve unrelated worktree changes and do not commit unless asked.
+
+<!-- BEGIN:turborepo-agent-rules -->
+
+# This is NOT the Turborepo you know
+
+Turborepo configuration, task behavior, and CLI commands can vary between installed versions and may differ from your training data. Resolve the `turbo` package from this file's directory or relevant workspace; in monorepos, it may not be visible from the repository root. For example, run `node -p "require.resolve('turbo/package.json')"` from a workspace that depends on `turbo`.
+
+Read `docs/README.md` inside that installed package first, then read the relevant pages from its `docs/` directory before changing Turborepo configuration or commands. Heed deprecation notices. These bundled docs match the installed package version and are available without network access.
+
+This block is written and re-added by `turbo` before repository-scoped commands when an AI agent is detected. In the Turborepo source repository, its template is defined in `crates/turborepo-cli/src/cli/agent_guidance.rs`. Removing the managed block while updates are enabled means a later qualifying invocation will add it again. Set `"agentGuidance": false` in the root `turbo.json` or `turbo.jsonc` to opt out; this does not remove an existing block. Keep the block committed with your work to avoid an uncommitted change on the next agent invocation.
+<!-- END:turborepo-agent-rules -->

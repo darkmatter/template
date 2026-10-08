@@ -18,6 +18,7 @@ local examples.
 | [0007](0007-use-rust-for-bounded-process-supervision.md)        | accepted | Use Rust for bounded process supervision        |
 | [0008](0008-enforce-package-boundaries.md)                      | accepted | Enforce package boundaries                      |
 | [0009](0009-validate-every-supported-stack-in-ci.md)            | accepted | Validate every supported stack in CI            |
+| [0010](0010-run-oxc-and-vitest-through-vite-plus.md)            | accepted | Run Oxc and Vitest through Vite+                |
 
 ## Format
 

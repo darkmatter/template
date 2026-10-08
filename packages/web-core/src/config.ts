@@ -21,17 +21,17 @@ export class AppConfig extends Context.Service<
   static readonly layer = Layer.effect(
     AppConfig,
     Effect.gen(function* () {
-      const host = yield* Config.string("HOST").pipe(
+      const host = yield* Config.String("HOST").pipe(
         Config.withDefault("0.0.0.0"),
       );
-      const port = yield* Config.port("PORT").pipe(Config.withDefault(3000));
-      const environment = yield* Config.literals(environments, "APP_ENV").pipe(
+      const port = yield* Config.Port("PORT").pipe(Config.withDefault(3000));
+      const environment = yield* Config.Literals(environments, "APP_ENV").pipe(
         Config.withDefault("development" as const),
       );
-      const release = yield* Config.string("APP_RELEASE").pipe(
+      const release = yield* Config.String("APP_RELEASE").pipe(
         Config.withDefault("local"),
       );
-      const demoMessage = yield* Config.option(Config.redacted("DEMO_MESSAGE"));
+      const demoMessage = yield* Config.option(Config.Redacted("DEMO_MESSAGE"));
 
       return AppConfig.of({
         host,

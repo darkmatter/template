@@ -10,8 +10,9 @@ in {
     ...
   }: {
     treefmt = {
+      # TypeScript, JSON, Markdown, and YAML are formatted by `vp fmt`, which
+      # reads its settings from vite.config.ts; oxfmt run outside Vite+ cannot.
       programs.alejandra.enable = true;
-      programs.oxfmt.enable = true;
       settings.excludes = ["*.sops.yaml" "flake.lock"];
     };
 

@@ -18,7 +18,7 @@ export class HarnessConfig extends Context.Service<
       const maxSteps = yield* Config.schema(MaxSteps, "AGENT_MAX_STEPS").pipe(
         Config.withDefault(8),
       );
-      const systemPrompt = yield* Config.string("AGENT_SYSTEM_PROMPT").pipe(
+      const systemPrompt = yield* Config.String("AGENT_SYSTEM_PROMPT").pipe(
         Config.withDefault("Solve the goal with the smallest useful toolset."),
       );
 

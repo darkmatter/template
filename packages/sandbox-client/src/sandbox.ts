@@ -2,7 +2,7 @@ import { Context, Effect, Layer, Schema } from "effect";
 
 import type { CommandOutput, CommandRequest } from "./protocol.ts";
 
-export class SandboxError extends Schema.TaggedErrorClass<SandboxError>()(
+export class SandboxError extends Schema.TaggedError<SandboxError>()(
   "SandboxError",
   { reason: Schema.String },
 ) {}

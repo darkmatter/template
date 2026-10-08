@@ -19,7 +19,7 @@ worker is a bounded process supervisor—not a security sandbox.
 | `apps/web/`                  | Small Bun status server and architecture landing page           |
 | `packages/agent-core/`       | Stable schemas, errors, services, event journal, and agent loop |
 | `packages/agent-demo/`       | Shared provider-free model, tool, and runnable demo layer       |
-| `packages/agent-runtime/`    | Isolated `effect/unstable/ai` and supervised-shell adapters     |
+| `packages/agent-runtime/`    | Isolated `effect/ai` and supervised-shell adapters              |
 | `packages/agent-testkit/`    | Scripted model and deterministic tool layers                    |
 | `packages/infra/`            | Alchemy stack composition for the deployable web surface        |
 | `packages/sandbox-client/`   | Effect Schema contract shared with the Rust worker              |
@@ -85,14 +85,13 @@ forge test --root contracts
 - The in-memory journal uses `Ref`, `PubSub`, and `Stream`, bounding retained
   histories while returning each terminal snapshot atomically; persistence can
   replace its layer without changing the loop.
-- The Effect AI beta surface is quarantined in `agent-runtime` so version drift
+- The Effect AI surface is quarantined in `agent-runtime` so provider churn
   cannot spread through the domain.
 - Tauri owns callback execution through one `ManagedRuntime`; libraries only
   describe effects.
 - Alchemy owns infrastructure composition, not the application agent runtime.
-- Typed RPC examples should use `effect-orpc` on its Effect v4 dist-tag
-  (`effect-orpc@1.0.0-effect-v4.8`) with compatible `@orpc/*` peers; see
-  `apps/harnessd/src/orpc.ts` for the minimal Effect procedure pattern.
+- Typed RPC examples should use `effect-orpc` with compatible `@orpc/*` peers;
+  see `apps/harnessd/src/orpc.ts` for the minimal Effect procedure pattern.
 - Postgres is the preferred application data store. Use `kysely` + `pg` or
   `@effect/sql-pg` for new persistence examples; existing D1 resources are
   Cloudflare demo infrastructure rather than the recommended default.

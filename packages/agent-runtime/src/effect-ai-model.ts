@@ -8,7 +8,7 @@ import {
   UseTool,
 } from "@repo/agent-core";
 import { Effect, Layer, Schema } from "effect";
-import { LanguageModel } from "effect/unstable/ai";
+import { LanguageModel } from "effect/ai";
 
 import { ShellToolkit } from "./shell-tool.ts";
 

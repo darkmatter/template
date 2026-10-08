@@ -2,7 +2,7 @@
   "name": "@repo/tooling",
   "version": "0.1.0",
   "private": true,
-  "description": "Shared TypeScript, Oxc, and oxlint configuration",
+  "description": "Shared TypeScript, Oxc, and lint configuration",
   "files": [
     "src"
   ],
@@ -13,6 +13,6 @@
     "./organization": "./src/organization.ts"
   },
   "dependencies": {
-    "oxlint": "1.79.0"
+    "vite-plus": "catalog:"
   }
 }

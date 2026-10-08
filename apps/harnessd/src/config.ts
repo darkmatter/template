@@ -10,10 +10,10 @@ export class HarnessdConfig extends Context.Service<
   static readonly layer = Layer.effect(
     HarnessdConfig,
     Effect.gen(function* () {
-      const host = yield* Config.string("HARNESSD_HOST").pipe(
+      const host = yield* Config.String("HARNESSD_HOST").pipe(
         Config.withDefault("127.0.0.1"),
       );
-      const port = yield* Config.port("HARNESSD_PORT").pipe(
+      const port = yield* Config.Port("HARNESSD_PORT").pipe(
         Config.withDefault(4319),
       );
 

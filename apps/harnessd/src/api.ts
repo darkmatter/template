@@ -1,10 +1,6 @@
 import { Goal, RunReport } from "@repo/agent-core";
 import { Schema } from "effect";
-import {
-  HttpApi,
-  HttpApiEndpoint,
-  HttpApiGroup,
-} from "effect/unstable/httpapi";
+import { HttpApi, HttpApiEndpoint, HttpApiGroup } from "effect/http-api";
 
 export class Health extends Schema.Class<Health>("harnessd/Health")({
   service: Schema.Literal("harnessd"),
@@ -26,7 +22,7 @@ export class SubmitRun extends Schema.Class<SubmitRun>("harnessd/SubmitRun")({
   goal: Goal,
 }) {}
 
-export class RunRejected extends Schema.TaggedErrorClass<RunRejected>()(
+export class RunRejected extends Schema.TaggedError<RunRejected>()(
   "RunRejected",
   {
     kind: Schema.Literals([

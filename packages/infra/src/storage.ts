@@ -10,6 +10,6 @@ export const RunJournal = Effect.gen(function* () {
   const path = yield* Path;
 
   return yield* Cloudflare.D1.Database("RunJournal", {
-    migrationsDir: path.resolve(import.meta.dirname, "../migrations"),
+    migrations: path.resolve(import.meta.dirname, "../migrations"),
   });
 });

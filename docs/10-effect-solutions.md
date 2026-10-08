@@ -1,9 +1,9 @@
 # Canonical Effect and Alchemy choices
 
-This repository pins `effect@4.0.0-beta.102`. Current Effect v4 documentation
-has moved into release-candidate builds, so the exact beta source and its guide
-are the compile-time authority. In particular, this version spells schema
-errors `Schema.TaggedErrorClass`; newer examples use `Schema.TaggedError`.
+This repository pins `effect@4.0.2`, the stable Effect v4 line. Modules that
+were under `effect/unstable/*` during the beta are stable subpaths now
+(`effect/ai`, `effect/cli`, `effect/http`, `effect/http-api`), and constructors
+are capitalized (`Config.String`, `Flag.Boolean`, `Schema.TaggedError`).
 
 ## Effect conventions used here
 
@@ -22,10 +22,9 @@ errors `Schema.TaggedErrorClass`; newer examples use `Schema.TaggedError`.
   replace capabilities without mocking modules.
 - Generator control flow is preferred when it makes the state machine clearer.
 
-The patterns were cross-checked against the exact beta guide and examples in
-the official Effect repository, plus the Effect Solutions example catalogue.
-The unstable AI import is isolated because its versioning promise is different
-from the stable core.
+The patterns were cross-checked against the official Effect repository and the
+Effect Solutions example catalogue. The AI import stays isolated in
+`agent-runtime` so provider changes do not spread into the domain.
 
 ## Alchemy conventions used here
 
@@ -35,10 +34,11 @@ resources, and return their outputs. Resource Effects receive provider and state
 through layers assembled by Alchemy; application code does not invoke the
 Alchemy runtime.
 
-The repository uses `alchemy@2.0.0-beta.70` because it is the version matched by
-the installed `alchemy-sops` peer range. The existing D1 resource in
-`packages/infra` is retained as a Cloudflare-local demo artifact, not as the
-preferred application data store.
+The repository uses `alchemy@2.0.0-beta.81`. `alchemy-sops@0.9.0` still declares
+an exact `alchemy@2.0.0-beta.70` peer, so installs warn about it; the SOPS
+config test covers the integration until `alchemy-sops` widens that range. The
+existing D1 resource in `packages/infra` is retained as a Cloudflare-local demo
+artifact, not as the preferred application data store.
 
 Alchemy's experimental agent resource is not used: the agent lives in Effect,
 while Alchemy declares only deployable infrastructure.
@@ -46,9 +46,9 @@ while Alchemy declares only deployable infrastructure.
 ## Preferred library conventions
 
 Darkmatter TypeScript apps should treat this template's root catalog as the
-preferred-libs reference. New typed RPC surfaces should use `effect-orpc` and
-its Effect v4 dist-tag pin (`effect-orpc@1.0.0-effect-v4.8`), with compatible
-`@orpc/server`, `@orpc/client`, `@orpc/contract`, and `@orpc/shared` peers.
+preferred-libs reference. New typed RPC surfaces should use `effect-orpc`
+(`1.0.0` and later support Effect v4), with compatible `@orpc/server`,
+`@orpc/client`, `@orpc/contract`, and `@orpc/shared` peers.
 The harness daemon keeps its stable Effect HTTP API and adds a small
 `apps/harnessd/src/orpc.ts` example showing `eos.provide(...).errors(...).effect`
 with `ORPCTaggedError`.

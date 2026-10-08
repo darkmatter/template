@@ -9,9 +9,9 @@
   "scripts": {
     "dev": "bun src/server.ts",
     "typecheck": "tsc --noEmit",
-    "build": "vite build",
-    "serve": "vite preview",
-    "dev:bare": "vite dev"
+    "build": "vp build",
+    "serve": "vp preview",
+    "dev:bare": "vp dev"
   },
   "dependencies": {
     "@effect/platform-bun": "catalog:",
@@ -24,6 +24,8 @@
     "@repo/tooling": "workspace:*",
     "@types/bun": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
   }
 }

@@ -40,7 +40,7 @@ requirements to callers.
 `packages/agent-runtime` is intentionally less stable. It translates an Effect
 AI tool call to the core `ModelDecision`, validates unknown tool input once,
 and maps provider or transport failures into domain errors. No other package
-imports `effect/unstable/ai`.
+imports `effect/ai`.
 
 `packages/agent-testkit` proves that layers are the substitution mechanism. A
 scripted model and fake tool runner exercise the real harness and journal under

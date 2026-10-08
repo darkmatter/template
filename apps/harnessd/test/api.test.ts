@@ -3,9 +3,9 @@ import { call } from "@orpc/server";
 import { AgentHarness, ModelFailure } from "@repo/agent-core";
 import { DemoHarnessLayer } from "@repo/agent-demo";
 import { Effect, FileSystem, Layer, Path } from "effect";
-import { Etag, HttpPlatform } from "effect/unstable/http";
-import { HttpApiTest } from "effect/unstable/httpapi";
-import { expect } from "vitest";
+import { Etag, HttpPlatform } from "effect/http";
+import { HttpApiTest } from "effect/http-api";
+import { expect } from "vite-plus/test";
 
 import { HarnessdApi, SubmitRun } from "#api.ts";
 import { DemoRunner } from "#demo-runner.ts";

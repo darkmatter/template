@@ -10,12 +10,12 @@ The template's stable harness domain must survive provider SDK churn, unstable
 AI APIs, process execution details, and application-shell differences.
 `docs/architecture.md` says `packages/agent-runtime` is less stable, translates
 Effect AI tool calls to core `ModelDecision` values, and is the only package
-that imports `effect/unstable/ai`. It also says `packages/agent-demo` supplies
+that imports `effect/ai`. It also says `packages/agent-demo` supplies
 a provider-free runtime-safe composition shared by the CLI, daemon, and native
 app.
 
 The code reflects this boundary: `packages/agent-runtime/src/effect-ai-model.ts`
-imports `effect/unstable/ai`, maps provider output into `UseTool` or `Finish`,
+imports `effect/ai`, maps provider output into `UseTool` or `Finish`,
 and converts provider failures into `ModelFailure`. Core domain files define
 schemas and services without provider SDK imports.
 

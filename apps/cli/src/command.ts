@@ -1,19 +1,19 @@
 import { Goal, RunId } from "@repo/agent-core";
 import { DemoHarnessLayer } from "@repo/agent-demo";
 import { Console, Effect } from "effect";
-import { Argument, Command, Flag } from "effect/unstable/cli";
+import { Argument, Command, Flag } from "effect/cli";
 
 import { runDemo } from "#demo-run.ts";
 import { renderJson, renderText } from "#render.ts";
 
 const logLine = (line: string) => Console.log(line);
 
-const goal = Argument.string("goal").pipe(
+const goal = Argument.String("goal").pipe(
   Argument.withSchema(Goal),
   Argument.withDescription("Goal for the deterministic demo agent"),
 );
 
-const runId = Flag.string("run-id").pipe(
+const runId = Flag.String("run-id").pipe(
   Flag.withSchema(RunId),
   Flag.withDefault(RunId.make("cli-demo")),
   Flag.withDescription("Stable identifier used by the run journal"),
@@ -22,11 +22,13 @@ const runId = Flag.string("run-id").pipe(
 const run = Command.make(
   "run",
   {
-    events: Flag.boolean("events").pipe(
+    events: Flag.Boolean("events").pipe(
+      Flag.withDefault(false),
       Flag.withDescription("Print the journal after the answer"),
     ),
     goal,
-    json: Flag.boolean("json").pipe(
+    json: Flag.Boolean("json").pipe(
+      Flag.withDefault(false),
       Flag.withDescription("Emit the schema-encoded run as JSON"),
     ),
     runId,

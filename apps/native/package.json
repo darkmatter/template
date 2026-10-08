@@ -7,10 +7,10 @@
     "#*": "./src/*"
   },
   "scripts": {
-    "build": "vite build",
+    "build": "vp build",
     "desktop:build": "tauri build",
     "desktop:dev": "tauri dev",
-    "dev": "vite",
+    "dev": "vp dev",
     "tauri": "tauri",
     "typecheck": "tsc --noEmit"
   },
@@ -24,6 +24,7 @@
     "@tauri-apps/cli": "catalog:",
     "@types/node": "catalog:",
     "typescript": "catalog:",
-    "vite": "catalog:"
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
   }
 }

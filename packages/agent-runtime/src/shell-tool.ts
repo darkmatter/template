@@ -1,6 +1,6 @@
 import { Sandbox, SandboxError, CommandRequest } from "@repo/sandbox-client";
 import { Effect, Schema } from "effect";
-import { Tool, Toolkit } from "effect/unstable/ai";
+import { Tool, Toolkit } from "effect/ai";
 
 export const ShellParameters = Schema.Struct({
   args: Schema.Array(Schema.String),

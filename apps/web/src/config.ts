@@ -38,7 +38,7 @@ const layerForProvider = (provider: ConfigProvider.ConfigProvider) =>
 
 export const makeAppConfigLive = (options: AppConfigLayerOptions = {}) => {
   const environment = options.provider ?? ConfigProvider.fromEnv();
-  const sopsPath = Config.option(Config.string("APP_SOPS_FILE"));
+  const sopsPath = Config.option(Config.String("APP_SOPS_FILE"));
   const resolveProvider = withSopsFile(environment, options.decrypt);
 
   return Layer.unwrap(

@@ -7,7 +7,7 @@ import {
 } from "@repo/agent-core";
 import { it } from "@effect/vitest";
 import { Effect, Schema } from "effect";
-import { expect } from "vitest";
+import { expect } from "vite-plus/test";
 
 import { renderJson, renderText } from "../src/render.ts";
 

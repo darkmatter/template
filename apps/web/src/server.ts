@@ -1,11 +1,7 @@
 import { BunHttpServer, BunRuntime } from "@effect/platform-bun";
 import { AppConfig, Metrics, Status } from "@repo/web-core";
 import { Config, Effect, Layer } from "effect";
-import {
-  HttpRouter,
-  HttpServerResponse,
-  HttpStaticServer,
-} from "effect/unstable/http";
+import { HttpRouter, HttpServerResponse, HttpStaticServer } from "effect/http";
 import { fileURLToPath } from "node:url";
 
 import { AppConfigLive } from "./config.ts";
@@ -45,7 +41,7 @@ const Routes = HttpRouter.use(
 
 const StaticFiles = Layer.unwrap(
   Effect.gen(function* () {
-    const root = yield* Config.string("APP_PUBLIC_DIR").pipe(
+    const root = yield* Config.String("APP_PUBLIC_DIR").pipe(
       Config.withDefault(packagedPublicDirectory),
     );
     return HttpStaticServer.layer({ root });

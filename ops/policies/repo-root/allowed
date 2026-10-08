@@ -30,9 +30,8 @@ package.json
 turbo.json
 
 # Configs whose globs resolve relative to their own location
-.oxfmtrc.json
-oxlint.config.ts
 tsconfig.json
+vite.config.ts
 
 # Top-level structure
 apps
