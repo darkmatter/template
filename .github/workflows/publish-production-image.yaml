@@ -42,10 +42,6 @@ jobs:
           file: ops/container/web/Dockerfile
           push: true
           tags: ${{ env.IMAGE }}:sha-${{ github.sha }}
-      - name: Make the package pullable by the cluster
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh api --method PATCH /orgs/darkmatter/packages/container/template -f visibility=public
       - name: Pin the production overlay to the published digest
         env:
           DIGEST: ${{ steps.build.outputs.digest }}
