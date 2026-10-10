@@ -1,0 +1,70 @@
+# Dedicated application database. The R2 credential is GitOps-owned platform
+# infrastructure because its bucket and token are provisioned independently.
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: template-postgres
+spec:
+  description: PostgreSQL database for the darkmatter/template production demo
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.8@sha256:065411b6de62772ab56e7267676ba512a7cbf74df97fe66ea23657d4b050d75a
+  instances: 1
+  enableSuperuserAccess: false
+  bootstrap:
+    initdb:
+      database: template
+      owner: template
+      dataChecksums: true
+      secret:
+        name: template-postgres-bootstrap
+  backup:
+    retentionPolicy: "14d"
+    barmanObjectStore:
+      destinationPath: s3://template-postgres-backups/template-postgres
+      endpointURL: https://acb126dc2c4cf93764fa69d9bd55a3cf.r2.cloudflarestorage.com
+      s3Credentials:
+        accessKeyId:
+          name: template-postgres-backup-r2
+          key: ACCESS_KEY_ID
+        secretAccessKey:
+          name: template-postgres-backup-r2
+          key: SECRET_ACCESS_KEY
+      wal:
+        compression: gzip
+      data:
+        compression: gzip
+  storage:
+    storageClass: postgres-local-nvme
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+  monitoring:
+    enablePodMonitor: true
+  postgresql:
+    parameters:
+      max_connections: "100"
+      shared_buffers: 128MB
+    pg_hba:
+      - hostnossl all all all reject
+  affinity:
+    nodeSelector:
+      darkmatter.io/postgres-nvme: "true"
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+    podAntiAffinityType: preferred
+    topologyKey: kubernetes.io/hostname
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: topology.kubernetes.io/region
+                operator: In
+                values:
+                  - us-west-1

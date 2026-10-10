@@ -25,3 +25,25 @@ Local, staging, and production operational notes should start from Postgres
 configuration under `ops/config/postgres/`. D1 or SQLite can appear only as
 explicit Cloudflare-local or legacy demo support, not as the recommended app
 database.
+
+### Database deployment patterns
+
+Development and production use deliberately different database provisioning
+patterns:
+
+- **Development shared database:** Use a development-only shared Postgres
+  cluster and create this application's database through Bytebase. Bytebase
+  owns administrative database creation; application migrations remain in this
+  repository.
+- **Production dedicated database:** `ops/deploy/kubernetes/database/` defines
+  `template-postgres`, a dedicated CloudNativePG cluster with its own bootstrap
+  credential, TLS-only connections, daily base backups, and continuous WAL
+  archiving. The production Kustomization consumes the encrypted bootstrap
+  secret through KSOPS.
+
+The shared `postgres` cluster in `darkmatter/gitops` is production
+infrastructure, not a development target. Never use it to demonstrate or test
+the shared-development pattern. The R2 backup credential for the production
+cluster is platform infrastructure and is provisioned in `darkmatter/gitops`;
+the application repository owns the CNPG database definition and application
+migrations.
