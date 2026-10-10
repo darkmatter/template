@@ -7,6 +7,7 @@ resources:
 generators:
   - postgres-secret-generator.yaml
 patches:
+  - path: ghcr-pull-secret.patch.yaml
   - path: replicas.patch.yaml
   - path: runtime-config.patch.yaml
   - path: resources.patch.yaml
