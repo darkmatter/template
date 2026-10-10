@@ -42,6 +42,7 @@ jobs:
           file: ops/container/web/Dockerfile
           push: true
           tags: ${{ env.IMAGE }}:sha-${{ github.sha }}
+          labels: org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
       - name: Pin the production overlay to the published digest
         env:
           DIGEST: ${{ steps.build.outputs.digest }}
