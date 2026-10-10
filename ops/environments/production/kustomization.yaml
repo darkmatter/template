@@ -1,14 +1,16 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: agent-demo-production
+namespace: template-production
 resources:
   - ../../deploy/kubernetes/base
-  - namespace.yaml
-  - ingress.yaml
+  - ../../deploy/kubernetes/database
+generators:
+  - postgres-secret-generator.yaml
 patches:
   - path: replicas.patch.yaml
   - path: runtime-config.patch.yaml
   - path: resources.patch.yaml
 images:
   - name: ghcr.io/example/agent-demo
+    newName: ghcr.io/darkmatter/template
     digest: sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
