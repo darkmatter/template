@@ -16,6 +16,28 @@ spec:
       dataChecksums: true
       secret:
         name: template-postgres-bootstrap
+  certificates:
+    # Lets tailnet clients use sslmode=verify-full against the CNPG CA.
+    serverAltDNSNames:
+      - template-db.tail6277a6.ts.net
+  managed:
+    services:
+      additional:
+        - selectorType: rw
+          updateStrategy: patch
+          serviceTemplate:
+            metadata:
+              name: template-postgres-tailnet
+              annotations:
+                tailscale.com/hostname: template-db
+            spec:
+              type: LoadBalancer
+              loadBalancerClass: tailscale
+              ports:
+                - name: postgres
+                  port: 5432
+                  targetPort: 5432
+                  protocol: TCP
   backup:
     retentionPolicy: "14d"
     barmanObjectStore:

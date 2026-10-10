@@ -39,7 +39,9 @@ patterns:
   `template-postgres`, a dedicated CloudNativePG cluster with its own bootstrap
   credential, TLS-only connections, daily base backups, and continuous WAL
   archiving. The production Kustomization consumes the encrypted bootstrap
-  secret through KSOPS.
+  secret through KSOPS. Its read/write endpoint is exposed only to the
+  existing tailnet as `template-db.tail6277a6.ts.net:5432`; Tailscale ACLs,
+  not public DNS, control developer access.
 
 The shared `postgres` cluster in `darkmatter/gitops` is production
 infrastructure, not a development target. Never use it to demonstrate or test
