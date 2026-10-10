@@ -2,7 +2,16 @@ FROM oven/bun:1.3.14-alpine
 
 WORKDIR /app
 COPY package.json bun.lock ./
+COPY apps/cli/package.json ./apps/cli/package.json
+COPY apps/harnessd/package.json ./apps/harnessd/package.json
+COPY apps/native/package.json ./apps/native/package.json
 COPY apps/web/package.json ./apps/web/package.json
+COPY packages/agent-core/package.json ./packages/agent-core/package.json
+COPY packages/agent-demo/package.json ./packages/agent-demo/package.json
+COPY packages/agent-runtime/package.json ./packages/agent-runtime/package.json
+COPY packages/agent-testkit/package.json ./packages/agent-testkit/package.json
+COPY packages/infra/package.json ./packages/infra/package.json
+COPY packages/sandbox-client/package.json ./packages/sandbox-client/package.json
 COPY packages/tooling/package.json ./packages/tooling/package.json
 COPY packages/web-core/package.json ./packages/web-core/package.json
 RUN bun install --frozen-lockfile --production --ignore-scripts
