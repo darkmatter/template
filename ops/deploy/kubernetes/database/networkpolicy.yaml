@@ -33,6 +33,20 @@ spec:
         - protocol: TCP
           port: 5432
     - from:
+        # The Tailscale operator creates one managed proxy for the CNPG
+        # additional Service. It is reachable only from approved tailnet
+        # devices, never from the public Internet.
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tailscale
+          podSelector:
+            matchLabels:
+              tailscale.com/managed: "true"
+              tailscale.com/parent-resource: template-postgres-tailnet
+      ports:
+        - protocol: TCP
+          port: 5432
+    - from:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: observability
