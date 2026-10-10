@@ -13,4 +13,4 @@ patches:
 images:
   - name: ghcr.io/example/agent-demo
     newName: ghcr.io/darkmatter/template
-    digest: sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    digest: sha256:7985fb45e2c0abd4cd3e829e59a2f722773baa0d1a1293d44af7e3d00bde597a
