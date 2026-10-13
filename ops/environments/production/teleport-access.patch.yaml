@@ -1,0 +1,24 @@
+# CA Secret is managed by darkmatter/gitops template-postgres-platform.
+- op: add
+  path: /spec/certificates/clientCASecret
+  value: template-postgres-teleport-client-ca
+- op: add
+  path: /spec/managed/roles
+  value:
+    - name: teleport
+      comment: Teleport certificate login, read-only
+      inRoles:
+        - pg_read_all_data
+      ensure: present
+      login: true
+      superuser: false
+      createdb: false
+      createrole: false
+      replication: false
+      bypassrls: false
+      inherit: true
+      connectionLimit: 5
+      disablePassword: true
+- op: add
+  path: /spec/postgresql/pg_hba/0
+  value: hostssl all teleport 10.42.0.0/16 cert

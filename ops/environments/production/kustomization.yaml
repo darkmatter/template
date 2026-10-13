@@ -7,6 +7,12 @@ resources:
 generators:
   - postgres-secret-generator.yaml
 patches:
+  - target:
+      group: postgresql.cnpg.io
+      version: v1
+      kind: Cluster
+      name: template-postgres
+    path: teleport-access.patch.yaml
   - path: ghcr-pull-secret.patch.yaml
   - path: replicas.patch.yaml
   - path: runtime-config.patch.yaml
