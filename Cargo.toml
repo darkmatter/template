@@ -1,10 +1,6 @@
 [workspace]
 members = ["crates/agent-sandboxd", "crates/alloy-web3-example"]
-exclude = [
-  "apps/native/src-tauri",
-  "templates/nix-rust-lib",
-  "templates/nix-polyglot-lib",
-]
+exclude = ["apps/native/src-tauri"]
 resolver = "2"
 
 [workspace.package]

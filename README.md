@@ -34,26 +34,22 @@ The test is the shortest executable explanation of the design.
 
 ## Use it
 
-### Library templates
+### Initialize a project
 
-For a reusable library without the harness applications, initialize an empty
-directory with one of these standalone Nix templates:
+In an empty directory, initialize from the maintained repository:
 
 ```sh
-nix flake init -t github:darkmatter/template#nix-ts-lib
-nix flake init -t github:darkmatter/template#nix-rust-lib
-nix flake init -t github:darkmatter/template#nix-polyglot-lib
+nix flake init -t github:darkmatter/template
 ```
 
-Choose one command: TypeScript only, a standalone Rust crate, or TypeScript with
-a Cargo workspace under `crates/`. The default template is `nix-ts-lib`.
-None includes `apps/`; the repository's existing harness flake remains available.
+The default and named `#agent-harness` template both point at this repository
+root. They copy the actual `apps/`, `packages/`, and `crates/` together with their
+workspace manifests, lockfiles, Nix setup, and checks—not separately maintained
+starter implementations. The former `nix-ts-lib`, `nix-rust-lib`, and
+`nix-polyglot-lib` templates have been replaced by this single template.
 
-In a generated project, run `nix develop`. For TypeScript, run `bun install`,
-then `bun run check`, `bun run test`, and `bun run lint`. For Rust, run
-`cargo check --workspace` and `cargo test --workspace`. Run both sets in the
-polyglot template; the starter libraries are independent, not an FFI binding.
-TypeScript templates provide `nix fmt` for Nix formatting.
+This initializes a snapshot, not a live link to upstream. Make project-specific
+changes in the copied apps and packages using the same checks described below.
 
 ### Harness demo
 

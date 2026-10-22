@@ -47,12 +47,7 @@ export default defineConfig({
     // https://vitest.dev/guide/migration/#clearmocks-is-enabled-by-default
     clearMocks: false,
     environment: "node",
-    exclude: [
-      ...configDefaults.exclude,
-      ".direnv/**",
-      "vendor/**",
-      "templates/**",
-    ],
+    exclude: [...configDefaults.exclude, ".direnv/**", "vendor/**"],
     include: ["**/*.test.ts"],
   },
   lint: {

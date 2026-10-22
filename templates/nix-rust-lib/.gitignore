@@ -1,7 +1,0 @@
-/target/
-.direnv/
-result
-result-*
-.env
-.env.*
-*.agekey

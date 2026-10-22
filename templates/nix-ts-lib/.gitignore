@@ -1,9 +1,0 @@
-node_modules/
-dist/
-.direnv/
-result
-result-*
-*.tsbuildinfo
-.env
-.env.*
-*.agekey
