@@ -13,7 +13,8 @@ in {
       # TypeScript, JSON, Markdown, and YAML are formatted by `vp fmt`, which
       # reads its settings from vite.config.ts; oxfmt run outside Vite+ cannot.
       programs.alejandra.enable = true;
-      settings.excludes = ["*.sops.yaml" "flake.lock"];
+      # Standalone library templates use nixfmt rather than alejandra.
+      settings.excludes = ["*.sops.yaml" "flake.lock" "templates/*/flake.nix"];
     };
 
     devShells.default = pkgs.mkShell {
