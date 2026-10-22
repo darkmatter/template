@@ -34,6 +34,29 @@ The test is the shortest executable explanation of the design.
 
 ## Use it
 
+### Library templates
+
+For a reusable library without the harness applications, initialize an empty
+directory with one of these standalone Nix templates:
+
+```sh
+nix flake init -t github:darkmatter/template#nix-ts-lib
+nix flake init -t github:darkmatter/template#nix-rust-lib
+nix flake init -t github:darkmatter/template#nix-polyglot-lib
+```
+
+Choose one command: TypeScript only, a standalone Rust crate, or TypeScript with
+a Cargo workspace under `crates/`. The default template is `nix-ts-lib`.
+None includes `apps/`; the repository's existing harness flake remains available.
+
+In a generated project, run `nix develop`. For TypeScript, run `bun install`,
+then `bun run check`, `bun run test`, and `bun run lint`. For Rust, run
+`cargo check --workspace` and `cargo test --workspace`. Run both sets in the
+polyglot template; the starter libraries are independent, not an FFI binding.
+TypeScript templates provide `nix fmt` for Nix formatting.
+
+### Harness demo
+
 ```sh
 nix develop
 bun install

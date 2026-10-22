@@ -1,0 +1,10 @@
+node_modules/
+dist/
+/target/
+.direnv/
+result
+result-*
+*.tsbuildinfo
+.env
+.env.*
+*.agekey

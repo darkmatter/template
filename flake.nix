@@ -24,5 +24,24 @@
   outputs = inputs @ {flake-parts, ...}:
     flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [./nix/flake];
+
+      flake.templates = {
+        nix-ts-lib = {
+          path = ./templates/nix-ts-lib;
+          description = "TypeScript library baseline";
+        };
+        nix-rust-lib = {
+          path = ./templates/nix-rust-lib;
+          description = "Rust library baseline";
+        };
+        nix-polyglot-lib = {
+          path = ./templates/nix-polyglot-lib;
+          description = "TypeScript + Rust library baseline";
+        };
+        default = {
+          path = ./templates/nix-ts-lib;
+          description = "TypeScript library baseline";
+        };
+      };
     };
 }

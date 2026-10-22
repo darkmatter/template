@@ -1,0 +1,16 @@
+{
+  "name": "nix-ts-lib",
+  "private": true,
+  "type": "module",
+  "exports": "./src/index.ts",
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "vp test run",
+    "lint": "vp lint"
+  },
+  "devDependencies": {
+    "effect": "latest",
+    "typescript": "latest",
+    "vite-plus": "latest"
+  }
+}
