@@ -36,22 +36,40 @@ The test is the shortest executable explanation of the design.
 
 ### Initialize a project
 
-In an empty directory, initialize from the maintained repository:
+In an empty directory, choose a slice of the maintained repository:
 
 ```sh
-nix flake init -t github:darkmatter/template
+nix flake init -t github:darkmatter/template#nix-ts-lib
+# Or: #nix-rust-lib / #nix-polyglot-lib
 ```
 
-The default and named `#agent-harness` template both point at this repository
-root. They copy the actual `apps/`, `packages/`, and `crates/` together with their
-workspace manifests, lockfiles, Nix setup, and checks—not separately maintained
-starter implementations. The former `nix-ts-lib`, `nix-rust-lib`, and
-`nix-polyglot-lib` templates have been replaced by this single template.
+| Template               | Source slice                                                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `nix-ts-lib` (default) | `agent-core`, `agent-demo`, `agent-runtime`, `agent-testkit`, `sandbox-client`, `web-core`, and shared `tooling` packages |
+| `nix-rust-lib`         | The `agent-sandboxd` supervisor and `alloy-web3-example` Rust crates                                                      |
+| `nix-polyglot-lib`     | Both slices above                                                                                                         |
 
-This initializes a snapshot, not a live link to upstream. Make project-specific
-changes in the copied apps and packages using the same checks described below.
+All three exclude `apps/`, infrastructure deployment examples, and app-specific
+Nix outputs. `nix/templates.nix` selects tracked source paths; it does not keep
+copies of library implementations, manifests, or tooling configuration.
+The shared flake and devshell adapt to the languages present. Initializing a
+template creates a snapshot, not a live link to upstream.
+
+Run `git init` and `git add .` in the initialized directory so Nix and the root
+policy check can see the files, then enter `nix develop`.
+For TypeScript, run `bun install --frozen-lockfile`, `bun run check`,
+`bun run test`, `bun run lint`, and `bun run fmt:check`.
+For Rust, run `cargo check --workspace` and `cargo test --workspace`.
+Run both sets for the polyglot slice, and `nix flake check` for any slice.
+
+The workspace manifests and lockfiles are reused unchanged apart from shared
+scripts supporting absent apps. Bun skips lockfile workspaces not included in
+the slice; app-only commands such as `bun run dev` are for the full repository,
+not the library templates.
 
 ### Harness demo
+
+The full repository retains the runnable applications and operational tooling:
 
 ```sh
 nix develop

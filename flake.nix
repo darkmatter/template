@@ -1,5 +1,5 @@
 {
-  description = "Effect-native agent harness with CLI, daemon, desktop, and Rust edges";
+  description = "Effect-native TypeScript and Rust workspace";
 
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -25,12 +25,9 @@
     flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [./nix/flake];
 
-      flake.templates = rec {
-        agent-harness = {
-          path = ./.;
-          description = "Effect-native TypeScript apps and packages with a Rust supervisor";
-        };
-        default = agent-harness;
-      };
+      flake.templates =
+        if builtins.pathExists ./nix/templates.nix
+        then import ./nix/templates.nix {source = inputs.self.outPath;}
+        else {};
     };
 }
