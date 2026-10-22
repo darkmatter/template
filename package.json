@@ -37,7 +37,7 @@
     "dev": "bun run --cwd apps/web dev",
     "harnessd": "bun apps/harnessd/src/server.ts",
     "check": "bun run lint:root && bun run lint:boundaries && turbo boundaries && tsc && bun run --filter '*' typecheck",
-    "lint:root": "ops/policies/repo-root/check.sh",
+    "lint:root": "bash ops/policies/repo-root/check.sh",
     "lint:boundaries": "depcruise --config .config/dependency-cruiser.cjs packages $(test ! -d apps || echo apps)",
     "check:rust": "cargo check --workspace",
     "generate:bun-nix": "bun2nix -o nix/bun.nix -c ../",

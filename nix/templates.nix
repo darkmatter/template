@@ -27,16 +27,19 @@
   prefix = parent: child:
     builtins.substring 0 (builtins.stringLength parent) child == parent;
   slice = name: paths: {
-    path = builtins.path {
-      inherit name;
-      path = source;
-      filter = path: _type: let
-        relative = builtins.substring (builtins.stringLength (toString source) + 1) (-1) (toString path);
-      in
-        builtins.any
-        (entry: relative == entry || prefix "${entry}/" relative || prefix "${relative}/" entry)
-        (common ++ paths);
-    };
+    # Flake templates require a path value, not builtins.path's store string.
+    path =
+      /.
+      + builtins.unsafeDiscardStringContext (builtins.path {
+        inherit name;
+        path = source;
+        filter = path: _type: let
+          relative = builtins.substring (builtins.stringLength (toString source) + 1) (-1) (toString path);
+        in
+          builtins.any
+          (entry: relative == entry || prefix "${entry}/" relative || prefix "${relative}/" entry)
+          (common ++ paths);
+      });
     description = name;
   };
 in rec {

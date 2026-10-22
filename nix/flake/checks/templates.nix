@@ -6,9 +6,9 @@
   ts = templates.nix-ts-lib.path;
   rust = templates.nix-rust-lib.path;
   polyglot = templates.nix-polyglot-lib.path;
-  exists = root: path: builtins.pathExists "${root}/${path}";
+  exists = root: path: builtins.pathExists "${toString root}/${path}";
   unchanged = root: path:
-    builtins.readFile "${root}/${path}" == builtins.readFile "${source}/${path}";
+    builtins.readFile "${toString root}/${path}" == builtins.readFile "${source}/${path}";
   tsFiles = [
     "package.json"
     "bun.lock"
@@ -25,6 +25,7 @@
     "crates/alloy-web3-example/src/lib.rs"
   ];
 in
+  assert builtins.all (root: builtins.typeOf root == "path") [ts rust polyglot];
   assert templates.default.path == ts;
   assert builtins.all (root: !(exists root "apps") && !(exists root "packages/infra")) [ts rust polyglot];
   assert !(exists ts "Cargo.toml") && !(exists ts "crates");
