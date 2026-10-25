@@ -27,7 +27,15 @@ export const RustWorker = Effect.gen(function* () {
     cwd: crateDir,
     outdir: "build",
     memo: {
-      include: ["src/**", "Cargo.toml", "../../Cargo.lock"],
+      // Paths are relative to the crate. The workspace manifest, lockfile, and
+      // cargo config also shape the wasm output.
+      include: [
+        "src/**",
+        "Cargo.toml",
+        "../../Cargo.toml",
+        "../../Cargo.lock",
+        "../../.cargo/config.toml",
+      ],
     },
   });
 

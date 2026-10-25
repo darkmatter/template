@@ -16,12 +16,15 @@ Alchemy does not compile Rust. `packages/infra/src/rust-worker.ts` declares a
 `Command.Build` that runs `worker-build --release` in this directory, then a
 `Cloudflare.Worker` with `bundle: false` that uploads the output unchanged:
 `build/index.js` as the entry and `build/index_bg.wasm` as a wasm module.
-The build is skipped when `src/`, `Cargo.toml`, and `Cargo.lock` are
-unchanged.
+The build is skipped when the crate's `src/` and `Cargo.toml`, the workspace
+`Cargo.toml` and `Cargo.lock`, and `.cargo/config.toml` are unchanged.
+Toolchain upgrades are not hashed; delete `build/` to force a rebuild.
 
-`worker-build`, the `wasm32-unknown-unknown` standard library (bundled with
-nixpkgs `rustc`), and `lld` come from the Nix devshell. Run Alchemy from
-inside it:
+Because the stack always includes this Worker, `alchemy deploy` and
+`alchemy dev` of `packages/infra` run `worker-build` on a fresh checkout or
+whenever those inputs change. That needs `worker-build`, the
+`wasm32-unknown-unknown` standard library (bundled with nixpkgs `rustc`), and
+`lld`. The Nix devshell provides all three. Run Alchemy from inside it:
 
 ```sh
 nix develop
