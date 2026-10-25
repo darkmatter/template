@@ -12,7 +12,7 @@ Routes:
 
 ## How it deploys
 
-Alchemy does not compile Rust. `packages/infra/src/rust-worker.ts` declares a
+Alchemy does not compile Rust. `packages/infra/src/rust-cloudflare-worker.ts` declares a
 `Command.Build` that runs `worker-build --release` in this directory, then a
 `Cloudflare.Worker` with `bundle: false` that uploads the output unchanged:
 `build/index.js` as the entry and `build/index_bg.wasm` as a wasm module.

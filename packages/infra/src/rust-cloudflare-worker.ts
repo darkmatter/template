@@ -15,14 +15,14 @@ import { ArtifactStore } from "#storage.ts";
  * build output makes every deploy build first; the build is skipped when the
  * crate is unchanged.
  */
-export const RustWorker = Effect.gen(function* () {
+export const RustCloudflareWorker = Effect.gen(function* () {
   const path = yield* Path;
   const crateDir = path.resolve(
     import.meta.dirname,
     "../../../crates/cloudflare-worker-example",
   );
 
-  const build = yield* Command.Build("RustWorkerBuild", {
+  const build = yield* Command.Build("RustCloudflareWorkerBuild", {
     command: "worker-build --release",
     cwd: crateDir,
     outdir: "build",
@@ -39,7 +39,7 @@ export const RustWorker = Effect.gen(function* () {
     },
   });
 
-  return yield* Cloudflare.Worker("RustWorker", {
+  return yield* Cloudflare.Worker("RustCloudflareWorker", {
     main: build.outdir.pipe(
       Output.map((outdir) => path.join(outdir, "index.js")),
     ),

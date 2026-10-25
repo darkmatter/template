@@ -4,7 +4,7 @@ import * as Effect from "effect/Effect";
 
 import { Dashboard } from "#dashboard.ts";
 import { RunQueue } from "#dispatch.ts";
-import { RustWorker } from "#rust-worker.ts";
+import { RustCloudflareWorker } from "#rust-cloudflare-worker.ts";
 import { ArtifactStore, RunJournal } from "#storage.ts";
 
 export default Alchemy.Stack(
@@ -18,14 +18,14 @@ export default Alchemy.Stack(
     const artifactStore = yield* ArtifactStore;
     const runQueue = yield* RunQueue;
     const dashboard = yield* Dashboard;
-    const rustWorker = yield* RustWorker;
+    const rustCloudflareWorker = yield* RustCloudflareWorker;
 
     return {
       artifactStoreName: artifactStore.bucketName,
       dashboardUrl: dashboard.url.as<string>(),
       runJournalName: runJournal.databaseName,
       runQueueName: runQueue.queueName,
-      rustWorkerUrl: rustWorker.url.as<string>(),
+      rustCloudflareWorkerUrl: rustCloudflareWorker.url.as<string>(),
     };
   }),
 );
