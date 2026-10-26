@@ -2,6 +2,9 @@
   # Skills from darkmatter/skills exposed to agents working in this repo.
   # .agents/ is generated (gitignored); bump with `nix flake update darkmatter-skills`.
   repoSkills = ["darkmatter-repo-setup"];
+  hasApps = builtins.pathExists ../../../apps;
+  hasTypeScript = builtins.pathExists ../../../package.json;
+  hasRust = builtins.pathExists ../../../Cargo.toml;
 in {
   perSystem = {
     config,
@@ -17,25 +20,20 @@ in {
     };
 
     devShells.default = pkgs.mkShell {
-      packages = [
-        config.packages.prelude
-        pkgs.age
-        pkgs.bun
-        pkgs.cargo
-        pkgs.git
-        pkgs.jq
-        pkgs.kubectl
-        pkgs.kustomize
-        pkgs.rustc
-        pkgs.rustfmt
-        pkgs.sops
-        # Builds crates/cloudflare-worker-example into a Worker bundle. nixpkgs
-        # rustc ships the wasm32 std; lld links it.
-        pkgs.lld
-        pkgs.worker-build
-        pkgs.yq-go
-      ];
-      shellHook = ''
+      packages =
+        [pkgs.git config.treefmt.build.wrapper]
+        ++ lib.optionals hasTypeScript [pkgs.bun pkgs.nodejs_24]
+        ++ lib.optionals hasRust [pkgs.cargo pkgs.rustc pkgs.rustfmt pkgs.clippy pkgs.rust-analyzer]
+        ++ lib.optionals hasApps [
+          config.packages.prelude
+          pkgs.age
+          pkgs.jq
+          pkgs.kubectl
+          pkgs.kustomize
+          pkgs.sops
+          pkgs.yq-go
+        ];
+      shellHook = lib.optionalString hasApps ''
         motd
 
         repoRoot=$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")
