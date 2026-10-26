@@ -1,5 +1,9 @@
 [workspace]
-members = ["crates/agent-sandboxd", "crates/alloy-web3-example"]
+members = [
+  "crates/agent-sandboxd",
+  "crates/alloy-web3-example",
+  "crates/cloudflare-worker-example",
+]
 exclude = ["apps/native/src-tauri"]
 resolver = "2"
 

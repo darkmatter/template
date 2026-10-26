@@ -29,6 +29,10 @@ in {
         pkgs.rustc
         pkgs.rustfmt
         pkgs.sops
+        # Builds crates/cloudflare-worker-example into a Worker bundle. nixpkgs
+        # rustc ships the wasm32 std; lld links it.
+        pkgs.lld
+        pkgs.worker-build
         pkgs.yq-go
       ];
       shellHook = ''

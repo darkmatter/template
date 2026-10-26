@@ -7,28 +7,29 @@ tsgo, Vite+ for oxlint/oxfmt/Vitest, Nix flake-parts + Prelude).
 
 ## Repository layout
 
-| Path                       | Purpose                                                          |
-| -------------------------- | ---------------------------------------------------------------- |
-| `apps/cli/`                | Effect CLI and terminal rendering boundary                       |
-| `apps/harnessd/`           | Typed harness HTTP API and long-lived Bun server                 |
-| `apps/web/`                | Status/architecture page (`@agent-demo/web`) — Effect/Bun server |
-| `apps/native/`             | Tauri shell and managed Effect runtime boundary                  |
-| `packages/agent-core/`     | Stable schemas, services, journal, and agent loop                |
-| `packages/agent-demo/`     | Provider-free model/tool layers shared by runnable apps          |
-| `packages/agent-runtime/`  | Effect AI and sandbox adapters                                   |
-| `packages/agent-testkit/`  | Scripted model and deterministic test layers                     |
-| `packages/sandbox-client/` | Schema contract for the Rust supervisor                          |
-| `packages/web-core/`       | Framework-independent status and metrics helpers                 |
-| `packages/tooling/`        | Shared TypeScript and Oxc configuration                          |
-| `crates/agent-sandboxd/`   | Bounded NDJSON process supervisor                                |
-| `flake.nix`                | Root flake — stays at root because Nix discovers flakes there    |
-| `nix/flake/`               | Thin public Nix-output layer (apps, checks, devShells, packages) |
-| `nix/demo/`                | Nix package and smoke-check implementation                       |
-| `nix/prelude.nix`          | Prelude command catalogue (`x` menu, MOTD, docs)                 |
-| `nix/bun.nix`              | Generated Bun dependency lock for Nix builds (`bun2nix`)         |
-| `ops/`                     | Operational surface — see [ops/README.md](ops/README.md)         |
-| `docs/`                    | Architecture and getting-started docs                            |
-| `.github/workflows/`       | CI pipeline                                                      |
+| Path                                | Purpose                                                          |
+| ----------------------------------- | ---------------------------------------------------------------- |
+| `apps/cli/`                         | Effect CLI and terminal rendering boundary                       |
+| `apps/harnessd/`                    | Typed harness HTTP API and long-lived Bun server                 |
+| `apps/web/`                         | Status/architecture page (`@agent-demo/web`) — Effect/Bun server |
+| `apps/native/`                      | Tauri shell and managed Effect runtime boundary                  |
+| `packages/agent-core/`              | Stable schemas, services, journal, and agent loop                |
+| `packages/agent-demo/`              | Provider-free model/tool layers shared by runnable apps          |
+| `packages/agent-runtime/`           | Effect AI and sandbox adapters                                   |
+| `packages/agent-testkit/`           | Scripted model and deterministic test layers                     |
+| `packages/sandbox-client/`          | Schema contract for the Rust supervisor                          |
+| `packages/web-core/`                | Framework-independent status and metrics helpers                 |
+| `packages/tooling/`                 | Shared TypeScript and Oxc configuration                          |
+| `crates/agent-sandboxd/`            | Bounded NDJSON process supervisor                                |
+| `crates/cloudflare-worker-example/` | Rust (workers-rs) Cloudflare Worker deployed by `packages/infra` |
+| `flake.nix`                         | Root flake — stays at root because Nix discovers flakes there    |
+| `nix/flake/`                        | Thin public Nix-output layer (apps, checks, devShells, packages) |
+| `nix/demo/`                         | Nix package and smoke-check implementation                       |
+| `nix/prelude.nix`                   | Prelude command catalogue (`x` menu, MOTD, docs)                 |
+| `nix/bun.nix`                       | Generated Bun dependency lock for Nix builds (`bun2nix`)         |
+| `ops/`                              | Operational surface — see [ops/README.md](ops/README.md)         |
+| `docs/`                             | Architecture and getting-started docs                            |
+| `.github/workflows/`                | CI pipeline                                                      |
 
 ### `ops/` boundary
 
@@ -73,6 +74,9 @@ application schema still belongs beside the application that uses it.
   `typecheck` script through Bun's workspace filter.
 - Rust uses the root Cargo workspace. Run `cargo check --workspace` and
   `cargo test --workspace` after changing the supervisor or its protocol.
+- `crates/cloudflare-worker-example` compiles to wasm only through
+  `worker-build`, which the Alchemy stack runs on deploy. Run Alchemy from the
+  Nix devshell, which provides `worker-build` and `lld`. See the crate README.
 
 ### Nix devshell
 

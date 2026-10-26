@@ -11,22 +11,23 @@ worker is a bounded process supervisor—not a security sandbox.
 
 ## Tour
 
-| Path                         | Purpose                                                         |
-| ---------------------------- | --------------------------------------------------------------- |
-| `apps/cli/`                  | Effect CLI for local and operator-driven harness runs           |
-| `apps/harnessd/`             | Typed HTTP API and long-lived Bun runtime boundary              |
-| `apps/native/`               | Tauri shell with one managed Effect runtime at the UI boundary  |
-| `apps/web/`                  | Small Bun status server and architecture landing page           |
-| `packages/agent-core/`       | Stable schemas, errors, services, event journal, and agent loop |
-| `packages/agent-demo/`       | Shared provider-free model, tool, and runnable demo layer       |
-| `packages/agent-runtime/`    | Isolated `effect/ai` and supervised-shell adapters              |
-| `packages/agent-testkit/`    | Scripted model and deterministic tool layers                    |
-| `packages/infra/`            | Alchemy stack composition for the deployable web surface        |
-| `packages/sandbox-client/`   | Effect Schema contract shared with the Rust worker              |
-| `crates/agent-sandboxd/`     | NDJSON process supervisor with deadlines and output bounds      |
-| `crates/alloy-web3-example/` | Alloy HTTP provider and `sol!` contract interface example       |
-| `contracts/`                 | Foundry Solidity project with Counter contract and forge tests  |
-| `docs/adr/`                  | Architecture Decision Records for standing repo decisions       |
+| Path                                | Purpose                                                           |
+| ----------------------------------- | ----------------------------------------------------------------- |
+| `apps/cli/`                         | Effect CLI for local and operator-driven harness runs             |
+| `apps/harnessd/`                    | Typed HTTP API and long-lived Bun runtime boundary                |
+| `apps/native/`                      | Tauri shell with one managed Effect runtime at the UI boundary    |
+| `apps/web/`                         | Small Bun status server and architecture landing page             |
+| `packages/agent-core/`              | Stable schemas, errors, services, event journal, and agent loop   |
+| `packages/agent-demo/`              | Shared provider-free model, tool, and runnable demo layer         |
+| `packages/agent-runtime/`           | Isolated `effect/ai` and supervised-shell adapters                |
+| `packages/agent-testkit/`           | Scripted model and deterministic tool layers                      |
+| `packages/infra/`                   | Alchemy stack composition for the deployable web surface          |
+| `packages/sandbox-client/`          | Effect Schema contract shared with the Rust worker                |
+| `crates/agent-sandboxd/`            | NDJSON process supervisor with deadlines and output bounds        |
+| `crates/alloy-web3-example/`        | Alloy HTTP provider and `sol!` contract interface example         |
+| `crates/cloudflare-worker-example/` | Rust (workers-rs) Cloudflare Worker deployed by the Alchemy stack |
+| `contracts/`                        | Foundry Solidity project with Counter contract and forge tests    |
+| `docs/adr/`                         | Architecture Decision Records for standing repo decisions         |
 
 Start with [`packages/agent-core/src/services/AgentHarness.ts`](packages/agent-core/src/services/AgentHarness.ts),
 then read [`packages/agent-testkit/test/agent-harness.test.ts`](packages/agent-testkit/test/agent-harness.test.ts).
