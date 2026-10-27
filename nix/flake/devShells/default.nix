@@ -5,6 +5,7 @@
   hasApps = builtins.pathExists ../../../apps;
   hasTypeScript = builtins.pathExists ../../../package.json;
   hasRust = builtins.pathExists ../../../Cargo.toml;
+  hasRustWorker = builtins.pathExists ../../../crates/cloudflare-worker-example;
 in {
   perSystem = {
     config,
@@ -24,6 +25,9 @@ in {
         [pkgs.git config.treefmt.build.wrapper]
         ++ lib.optionals hasTypeScript [pkgs.bun pkgs.nodejs_24]
         ++ lib.optionals hasRust [pkgs.cargo pkgs.rustc pkgs.rustfmt pkgs.clippy pkgs.rust-analyzer]
+        # Builds crates/cloudflare-worker-example into a Worker bundle. nixpkgs
+        # rustc ships the wasm32 std; lld links it.
+        ++ lib.optionals hasRustWorker [pkgs.lld pkgs.worker-build]
         ++ lib.optionals hasApps [
           config.packages.prelude
           pkgs.age
