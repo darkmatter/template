@@ -7,7 +7,9 @@ metadata:
 spec:
   description: PostgreSQL database for the darkmatter/template production demo
   imageName: ghcr.io/cloudnative-pg/postgresql:17.8@sha256:065411b6de62772ab56e7267676ba512a7cbf74df97fe66ea23657d4b050d75a
-  instances: 1
+  # Temporarily 2 while the primary moves to the dedicated postgres node
+  # (argon); back to 1 once the old-node instance is retired.
+  instances: 2
   enableSuperuserAccess: false
   bootstrap:
     initdb:
@@ -79,6 +81,10 @@ spec:
       - key: node-role.kubernetes.io/control-plane
         operator: Exists
         effect: NoSchedule
+      - key: darkmatter.io/workload
+        operator: Equal
+        value: postgres
+        effect: NoSchedule
     podAntiAffinityType: preferred
     topologyKey: kubernetes.io/hostname
     nodeAffinity:
@@ -90,3 +96,11 @@ spec:
                 operator: In
                 values:
                   - us-west-1
+        # Prefer the dedicated postgres node (argon).
+        - weight: 100
+          preference:
+            matchExpressions:
+              - key: darkmatter.io/workload
+                operator: In
+                values:
+                  - postgres
