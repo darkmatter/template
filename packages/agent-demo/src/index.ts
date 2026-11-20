@@ -1,8 +1,8 @@
 export { DemoHarnessLayer } from "./layer.ts";
-export { DemoAgentModelLayer } from "./model.ts";
+export { DemoModel } from "./model.ts";
 export {
   DescribeHarnessInput,
   DescribeHarnessOutput,
   DescribeHarnessToolName,
 } from "./protocol.ts";
-export { DemoToolRunnerLayer } from "./tool-runner.ts";
+export { DemoToolkit, DemoToolkitLayer, DescribeHarness } from "./toolkit.ts";

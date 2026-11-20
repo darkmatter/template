@@ -1,16 +1,17 @@
-import { AgentHarness, HarnessConfig, RunJournal } from "@repo/agent-core";
+import { AgentHarness, HarnessConfig } from "@repo/agent-core";
+import { InMemory } from "@yielded/agent";
 import { Layer } from "effect";
 
-import { DemoAgentModelLayer } from "#model.ts";
-import { DemoToolRunnerLayer } from "#tool-runner.ts";
+import { DemoModel } from "#model.ts";
+import { DemoToolkit, DemoToolkitLayer } from "#toolkit.ts";
 
-const dependencies = Layer.mergeAll(
-  HarnessConfig.layerDemo,
-  RunJournal.layerMemory,
-  DemoAgentModelLayer,
-  DemoToolRunnerLayer,
-);
-
-export const DemoHarnessLayer = AgentHarness.layerNoDeps.pipe(
-  Layer.provide(dependencies),
+export const DemoHarnessLayer = AgentHarness.layer(DemoToolkit).pipe(
+  Layer.provide(
+    Layer.mergeAll(
+      HarnessConfig.layerDemo,
+      DemoModel,
+      DemoToolkitLayer,
+      InMemory.layer,
+    ),
+  ),
 );

@@ -13,13 +13,16 @@ Inside the shell, `x` lists the project commands and `docs` opens these notes.
 
 The useful reading order is:
 
-1. `packages/agent-core/src/domain/model.ts` — schema-backed decisions.
-2. `packages/agent-core/src/services/AgentHarness.ts` — the orchestration loop.
+1. `packages/agent-core/src/services/HarnessAgent.ts` — the yielded agent
+   definition.
+2. `packages/agent-core/src/services/AgentHarness.ts` — running it and
+   reporting yielded run events.
 3. `packages/agent-testkit/test/agent-harness.test.ts` — layer substitution.
-4. `packages/agent-demo/src/layer.ts` — provider-free app composition.
+4. `packages/agent-demo/src/model.ts` — a provider-free Effect AI model.
 5. `apps/cli/src/command.ts` — the terminal process boundary.
 6. `apps/harnessd/src/api.ts` — the typed HTTP boundary.
-7. `packages/agent-runtime/src/effect-ai-model.ts` — unstable API isolation.
+7. `packages/agent-runtime/src/shell-harness.ts` — a real tool for
+   provider-backed runs.
 8. `apps/native/src/app.ts` — the callback/runtime boundary.
 9. `crates/agent-sandboxd/src/supervisor.rs` — the process boundary.
 
@@ -48,9 +51,11 @@ curl -sS http://127.0.0.1:4319/runs \
   -d '{"goal":"Explain the harness"}'
 ```
 
-Open <http://localhost:3000> for the architecture page. The web app is an
-operational shell around the demo; a provider-backed agent is intentionally not
-preconfigured.
+`x dev` serves the architecture page at <http://localhost:3000> through
+`alchemy dev`, which needs a Cloudflare profile (`alchemy login`). Without
+one, `bun run web` builds and serves it on Bun at the same address. The web
+app is an operational shell around the demo; a provider-backed agent is
+intentionally not preconfigured.
 
 Always run Vitest through `bun run test`, never `bun test`. Format TypeScript,
 JSON, Markdown, and Nix with `x fmt`; format Rust with `cargo fmt --all`.

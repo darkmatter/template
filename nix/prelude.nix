@@ -14,8 +14,8 @@
 
       dev = {
         exec = "bun run dev";
-        description = "Run the Effect/Bun demo server";
-        details = "Serves /api/status, /api/metrics, and the static front page.";
+        description = "Run the Waku web app under alchemy dev";
+        details = "Local Worker on :3000 with /api/status and /api/metrics; needs a Cloudflare profile.";
         motd = 2;
       };
 

@@ -1,6 +1,6 @@
 # 0006 — Keep provider and process adapters at the edges
 
-- **Status:** accepted
+- **Status:** accepted; amended by [ADR 0012](0012-build-agents-with-yielded-agent.md)
 - **Date:** 2026-09-20
 - **Deciders:** Cooper Maruyama
 

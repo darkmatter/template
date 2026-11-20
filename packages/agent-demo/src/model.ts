@@ -1,12 +1,6 @@
-import {
-  AgentModel,
-  Finish,
-  ModelFailure,
-  ToolCall,
-  ToolCallId,
-  UseTool,
-} from "@repo/agent-core";
-import { Effect, Layer, Schema } from "effect";
+import { Effect, Layer, Schema, Stream } from "effect";
+import { AiError, LanguageModel, Model, type Prompt } from "effect/ai";
+import type { Response } from "effect/ai";
 
 import {
   DescribeHarnessInput,
@@ -14,46 +8,96 @@ import {
   DescribeHarnessToolName,
 } from "#protocol.ts";
 
+const decodeReport = Schema.decodeUnknownEffect(DescribeHarnessOutput);
 const encodeInput = Schema.encodeEffect(DescribeHarnessInput);
-const decodeOutput = Schema.decodeUnknownEffect(DescribeHarnessOutput);
 
-const modelFailure = (reason: unknown) =>
-  new ModelFailure({ reason: String(reason) });
+// The demo model reports no usage; zero keeps budget accounting exact.
+const usage = { inputTokens: { total: 0 }, outputTokens: { total: 0 } };
 
-export const DemoAgentModelLayer = Layer.succeed(
-  AgentModel,
-  AgentModel.of({
-    decide: Effect.fn("DemoAgentModel.decide")(function* (context) {
-      if (context.toolResults.length === 0) {
-        const input = yield* encodeInput(
-          new DescribeHarnessInput({ goal: context.goal }),
-        ).pipe(Effect.mapError(modelFailure));
+const modelFailure = (description: string) =>
+  AiError.AiError.make({
+    method: "streamText",
+    module: "@repo/agent-demo/DemoModel",
+    reason: AiError.UnknownError.make({ description }),
+  });
 
-        return new UseTool({
-          call: new ToolCall({
-            id: ToolCallId.make("demo-describe-harness"),
-            input,
-            name: DescribeHarnessToolName,
-          }),
-        });
-      }
+const latestToolResult = (prompt: Prompt.Prompt) =>
+  prompt.content
+    .flatMap((message) => (message.role === "tool" ? message.content : []))
+    .findLast(
+      (part) =>
+        part.type === "tool-result" && part.name === DescribeHarnessToolName,
+    );
 
-      const latest = context.toolResults[context.toolResults.length - 1];
-      if (latest === undefined) {
-        return yield* modelFailure("The demo tool result is missing");
-      }
+const latestGoal = (prompt: Prompt.Prompt) =>
+  prompt.content
+    .flatMap((message) => (message.role === "user" ? message.content : []))
+    .findLast((part) => part.type === "text");
 
-      const report = yield* decodeOutput(latest.output).pipe(
-        Effect.mapError(modelFailure),
-      );
+const answer = Effect.fn("DemoModel.answer")(function* (result: unknown) {
+  const report = yield* decodeReport(result).pipe(
+    Effect.mapError((error) => modelFailure(String(error))),
+  );
+  const text = [
+    report.summary,
+    `Capabilities: ${report.capabilities.join(", ")}.`,
+    `Requested focus: ${report.focus}`,
+  ].join("\n\n");
+  const parts: ReadonlyArray<Response.StreamPartEncoded> = [
+    { id: "answer", type: "text-start" },
+    { delta: text, id: "answer", type: "text-delta" },
+    { id: "answer", type: "text-end" },
+    { reason: "stop", type: "finish", usage },
+  ];
+  return parts;
+});
 
-      return new Finish({
-        answer: [
-          report.summary,
-          `Capabilities: ${report.capabilities.join(", ")}.`,
-          `Requested focus: ${report.focus}`,
-        ].join("\n\n"),
-      });
+const callTool = Effect.fn("DemoModel.callTool")(function* (goal: string) {
+  const params = yield* encodeInput(new DescribeHarnessInput({ goal })).pipe(
+    Effect.mapError((error) => modelFailure(String(error))),
+  );
+  const parts: ReadonlyArray<Response.StreamPartEncoded> = [
+    {
+      id: "describe-harness",
+      name: DescribeHarnessToolName,
+      params,
+      type: "tool-call",
+    },
+    { reason: "tool-calls", type: "finish", usage },
+  ];
+  return parts;
+});
+
+/**
+ * Provider-free model that reads the prompt instead of counting turns: with
+ * no `DescribeHarness` result yet it requests the tool for the user's goal;
+ * with one it answers from that result. The same prompt always produces the
+ * same response, so every run is deterministic.
+ */
+const decide = Effect.fn("DemoModel.decide")(function* (
+  options: LanguageModel.ProviderOptions,
+) {
+  const result = latestToolResult(options.prompt);
+  if (result?.type === "tool-result") {
+    return yield* answer(result.result);
+  }
+  const goal = latestGoal(options.prompt);
+  if (goal?.type !== "text") {
+    return yield* modelFailure("The prompt carries no goal");
+  }
+  return yield* callTool(goal.text);
+});
+
+export const DemoModel = Model.make(
+  "demo",
+  "deterministic",
+  Layer.effect(
+    LanguageModel.LanguageModel,
+    LanguageModel.make({
+      generateText: () =>
+        Effect.fail(modelFailure("The demo model only streams")),
+      streamText: (options) =>
+        Stream.unwrap(Effect.map(decide(options), Stream.fromIterable)),
     }),
-  }),
+  ),
 );

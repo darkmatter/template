@@ -1,81 +1,53 @@
 {
   "name": "effect-agent-harness-demo",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "apps/*",
-      "packages/*"
-    ],
-    "catalog": {
-      "@effect/platform-bun": "4.0.2",
-      "@effect/platform-node": "4.0.2",
-      "@effect/sql-pg": "4.0.2",
-      "@effect/vitest": "4.0.2",
-      "@orpc/client": "1.15.5",
-      "@orpc/contract": "1.15.5",
-      "@orpc/server": "1.15.5",
-      "@orpc/shared": "1.15.5",
-      "@tauri-apps/cli": "^2.12.1",
-      "@types/bun": "^1.4.2",
-      "@types/node": "^24.19.1",
-      "@types/pg": "8.23.1",
-      "alchemy": "2.0.0-beta.81",
-      "alchemy-sops": "0.9.0",
-      "effect": "4.0.2",
-      "effect-orpc": "1.0.0",
-      "kysely": "0.29.6",
-      "pg": "8.23.1",
-      "typescript": "^7.0.2",
-      "vite": "npm:@voidzero-dev/vite-plus-core@1.1.0",
-      "vitest": "5.0.3",
-      "vite-plus": "1.1.0"
-    }
-  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "type": "module",
   "scripts": {
     "cli": "bun apps/cli/src/main.ts",
     "dev": "bun run --cwd apps/web dev",
     "harnessd": "bun apps/harnessd/src/server.ts",
-    "check": "bun run lint:root && bun run lint:boundaries && turbo boundaries && tsc && bun run --filter '*' typecheck",
+    "check": "bun run lint:boundaries && tsc && bun run --filter './apps/*' --filter './packages/*' typecheck",
     "lint:root": "bash ops/policies/repo-root/check.sh",
     "lint:boundaries": "depcruise --config .config/dependency-cruiser.cjs packages $(test ! -d apps || echo apps)",
     "check:rust": "cargo check --workspace",
-    "generate:bun-nix": "bun2nix -o nix/bun.nix -c ../",
+    "generate:bun-nix": "nix run .#bun2nix -- -l bun.lock -c ../ -o nix/bun.nix && nix fmt nix/bun.nix",
     "test": "vp test run",
     "test:rust": "cargo test --workspace",
     "test:watch": "vp test",
-    "web": "bun apps/web/src/server.ts",
+    "web": "bun run --cwd apps/web build && bun run --cwd apps/web start",
     "lint": "vp lint packages vite.config.ts $(test ! -d apps || echo apps)",
     "fmt": "vp fmt",
     "fmt:check": "vp fmt --check",
     "prepare": "effect-tsgo patch --no-typescript --oxlint"
   },
   "devDependencies": {
-    "@effect/platform-bun": "catalog:",
-    "@effect/platform-node": "catalog:",
-    "@effect/tsgo": "0.51.1",
+    "@effect/platform-bun": "4.1.2",
+    "@effect/platform-node": "4.1.2",
+    "@effect/tsgo": "0.53.0",
     "@repo/tooling": "workspace:*",
-    "@swc/core": "^1.16.13",
-    "@types/bun": "catalog:",
-    "@types/node": "catalog:",
-    "alchemy": "catalog:",
-    "bun2nix": "^2.1.2",
-    "dependency-cruiser": "18.5.0",
-    "effect": "catalog:",
-    "turbo": "^2.11.7",
-    "typescript": "7.0.2",
-    "vite": "catalog:",
-    "vite-plus": "catalog:"
+    "@swc/core": "^1.16.1",
+    "@types/bun": "^1.3.10",
+    "@types/node": "^24.0.0",
+    "alchemy": "2.0.0-beta.85",
+    "dependency-cruiser": "^18.2.0",
+    "effect": "4.1.2",
+    "typescript": "^7.0.2",
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.2.0",
+    "vite-plus": "1.2.0"
   },
   "overrides": {
-    "@effect/platform-node-shared": "4.0.2",
-    "@effect/sql-d1": "4.0.2",
-    "@effect/sql-sqlite-do": "4.0.2",
-    "vite": "catalog:",
-    "vitest": "catalog:"
+    "@effect/platform-node-shared": "4.1.2",
+    "@effect/sql-d1": "4.1.2",
+    "@effect/sql-sqlite-do": "4.1.2",
+    "vite": "npm:@voidzero-dev/vite-plus-core@1.2.0",
+    "vitest": "5.0.4"
   },
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "bun@1.3.14"
+  "packageManager": "bun@1.4.4"
 }

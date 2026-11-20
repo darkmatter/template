@@ -1,21 +1,34 @@
+import { AgentHarness, HarnessConfig } from "@repo/agent-core";
+import { InMemory } from "@yielded/agent";
 import {
-  AgentHarness,
-  HarnessConfig,
-  RunJournal,
-  type ModelDecision,
-} from "@repo/agent-core";
+  ScriptedModel,
+  type ScriptedTurnInput,
+} from "@yielded/agent-testing/scripted-model";
 import { Layer } from "effect";
+import { Model } from "effect/ai";
 
-import { FakeToolRunnerLayer } from "./fake-tool-runner.ts";
-import { scriptedModelLayer } from "./scripted-model.ts";
+import { EchoToolkit, EchoToolkitLayer } from "./echo-tool.ts";
 
-export const agentTestLayer = (decisions: ReadonlyArray<ModelDecision>) => {
-  const dependencies = Layer.mergeAll(
-    HarnessConfig.layerDemo,
-    RunJournal.layerMemory,
-    scriptedModelLayer(decisions),
-    FakeToolRunnerLayer,
+/**
+ * The real harness and yielded runtime with the `Echo` tool and a model that
+ * replays `turns`. `ScriptedModel` stays in the output so tests can inspect
+ * the requests the runtime made.
+ */
+export const agentTestLayer = (turns: ReadonlyArray<ScriptedTurnInput>) => {
+  const model = Model.make(
+    "scripted",
+    "agent-testkit",
+    ScriptedModel.layer(turns),
   );
 
-  return AgentHarness.layerNoDeps.pipe(Layer.provideMerge(dependencies));
+  return AgentHarness.layer(EchoToolkit).pipe(
+    Layer.provideMerge(
+      Layer.mergeAll(
+        HarnessConfig.layerDemo,
+        model,
+        EchoToolkitLayer,
+        InMemory.layer,
+      ),
+    ),
+  );
 };

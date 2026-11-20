@@ -68,6 +68,7 @@ export default defineConfig({
       "**/*.sops.yaml",
       "**/*.sops.json",
       "**/routeTree.gen.ts",
+      "**/pages.gen.ts",
       "**/*.{test,spec}.{ts,tsx,mts,cts,js,jsx}",
       "**/{test,tests,__tests__,e2e}/**",
       "nix/bun.nix",
@@ -98,21 +99,14 @@ export default defineConfig({
         rules: { "effecttsgo/missing-pipeable-signature": "off" },
       },
       {
-        files: ["apps/web/**/*.ts"],
+        files: ["apps/web/**/*.{ts,tsx}"],
         rules: { "effecttsgo/duplicate-package": "off" },
       },
       {
-        files: ["apps/web/public/**/*.js"],
-        rules: {
-          "effecttsgo/async-function": "off",
-          "effecttsgo/global-date": "off",
-          "effecttsgo/global-fetch": "off",
-          "effecttsgo/global-random": "off",
-          "effecttsgo/global-timers": "off",
-          "effecttsgo/new-promise": "off",
-          "effecttsgo/node-builtin-import": "off",
-          "effecttsgo/process-env": "off",
-        },
+        // Waku's contract: server components, getConfig, and API handlers
+        // are async functions.
+        files: ["apps/web/src/pages/**"],
+        rules: { "effecttsgo/async-function": "off" },
       },
     ],
     options: {
@@ -125,6 +119,7 @@ export default defineConfig({
     ignorePatterns: [
       "**/*.sops.yaml",
       "**/routeTree.gen.ts",
+      "**/pages.gen.ts",
       ".agents/**",
       "packages/tooling/src/secrets.yaml",
       "vendor/**",

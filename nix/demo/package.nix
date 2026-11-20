@@ -24,8 +24,12 @@ in
       mv package.json.tmp package.json
     '';
 
+    # The web app's self-hosted output: Waku's Node adapter build in
+    # apps/web/dist. --bun runs Waku's node-shebang CLI on Bun.
     buildPhase = ''
       runHook preBuild
+      export HOME=$TMPDIR
+      bun --bun run --cwd apps/web build
       runHook postBuild
     '';
 
@@ -42,8 +46,8 @@ in
         --chdir $out/lib/agent-harness-demo \
         --add-flags "run --no-install apps/harnessd/src/server.ts"
       makeWrapper ${pkgs.bun}/bin/bun $out/bin/agent-harness-web \
-        --chdir $out/lib/agent-harness-demo \
-        --add-flags "run --no-install apps/web/src/server.ts"
+        --chdir $out/lib/agent-harness-demo/apps/web \
+        --add-flags "run --no-install dist/serve-node.js"
       ln -s agent-harness-web $out/bin/agent-harness-demo
       runHook postInstall
     '';

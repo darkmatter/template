@@ -12,9 +12,10 @@ export class DaemonStatus extends Schema.Class<DaemonStatus>(
 )({
   concurrency: Schema.Literal(64),
   execution: Schema.Literal("synchronous"),
-  journal: Schema.Literal("memory"),
+  history: Schema.Literal("in-memory"),
   mode: Schema.Literal("deterministic-demo"),
-  retention: Schema.Literal("bounded-256-histories"),
+  retention: Schema.Literal("released-after-run"),
+  runtime: Schema.Literal("@yielded/agent"),
   service: Schema.Literal("harnessd"),
 }) {}
 
@@ -22,15 +23,11 @@ export class SubmitRun extends Schema.Class<SubmitRun>("harnessd/SubmitRun")({
   goal: Goal,
 }) {}
 
+/** `kind` is the failed run's error tag, as on the yielded `RunFailed` event. */
 export class RunRejected extends Schema.TaggedError<RunRejected>()(
   "RunRejected",
   {
-    kind: Schema.Literals([
-      "ModelFailure",
-      "StepLimitExceeded",
-      "ToolDenied",
-      "ToolFailure",
-    ]),
+    kind: Schema.NonEmptyString,
     reason: Schema.String,
   },
   { httpApiStatus: 422 },

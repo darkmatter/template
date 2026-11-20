@@ -15,10 +15,11 @@
   },
   "dependencies": {
     "@repo/agent-core": "workspace:*",
-    "effect": "catalog:"
+    "@yielded/agent": "0.1.0-beta.192",
+    "effect": "4.1.2"
   },
   "devDependencies": {
     "@repo/tooling": "workspace:*",
-    "typescript": "catalog:"
+    "typescript": "^7.0.2"
   }
 }

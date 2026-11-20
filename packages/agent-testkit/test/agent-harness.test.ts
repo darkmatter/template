@@ -1,145 +1,81 @@
-import {
-  AgentHarness,
-  Finish,
-  Goal,
-  RunCompleted,
-  RunId,
-  RunJournal,
-  RunRequest,
-  RunStarted,
-  ToolCall,
-  ToolCallId,
-  UseTool,
-} from "@repo/agent-core";
+import { AgentHarness, Goal, RunRequest } from "@repo/agent-core";
 import { it } from "@effect/vitest";
+import { Identifiers } from "@yielded/agent";
+import type { ScriptedTurnInput } from "@yielded/agent-testing/scripted-model";
 import { Effect, Schema } from "effect";
 import { expect } from "vite-plus/test";
 
 import { agentTestLayer } from "../src/index.ts";
 
-const runId = RunId.make("run-demo");
-const toolCallId = ToolCallId.make("call-demo");
+const runId = Schema.decodeSync(Identifiers.RunId)("run-demo");
+const usage = { inputTokens: { total: 1 }, outputTokens: { total: 1 } };
 
-const TestLayer = agentTestLayer([
-  new UseTool({
-    call: new ToolCall({
-      id: toolCallId,
-      input: { args: ["hello"], command: "echo" },
-      name: "Shell",
-    }),
-  }),
-  new Finish({ answer: "The supervised command completed." }),
-]);
-
-const repeatedToolCall = new UseTool({
-  call: new ToolCall({
-    id: toolCallId,
-    input: { args: [], command: "true" },
-    name: "Shell",
-  }),
+const echoTurn = (id: string): ScriptedTurnInput => ({
+  _tag: "Stream",
+  parts: [
+    { id, name: "Echo", params: { text: "hello" }, type: "tool-call" },
+    { reason: "tool-calls", type: "finish", usage },
+  ],
+  termination: { _tag: "Complete" },
 });
 
-it.effect("runs a deterministic tool loop and records its history", () =>
+const answerTurn: ScriptedTurnInput = {
+  _tag: "Stream",
+  parts: [
+    { id: "answer", type: "text-start" },
+    {
+      delta: "The echo tool returned hello.",
+      id: "answer",
+      type: "text-delta",
+    },
+    { id: "answer", type: "text-end" },
+    { reason: "stop", type: "finish", usage },
+  ],
+  termination: { _tag: "Complete" },
+};
+
+it.effect("runs a scripted tool loop and reports the yielded events", () =>
   Effect.gen(function* () {
     const harness = yield* AgentHarness;
-    const journal = yield* RunJournal;
-
     const report = yield* harness.run(
-      new RunRequest({ goal: "Say hello", id: runId }),
+      new RunRequest({ goal: "Say hello", runId }),
     );
-    const events = yield* journal.read(runId);
+    const tags = report.events.map((event) => event._tag);
 
-    expect(report.summary.answer).toBe("The supervised command completed.");
-    expect(report.summary.steps).toBe(2);
-    expect(report.events).toEqual(events);
-    expect(events.map((event) => event._tag)).toEqual([
-      "RunStarted",
-      "ToolRequested",
-      "ToolCompleted",
-      "RunCompleted",
-    ]);
-  }).pipe(Effect.provide(TestLayer)),
+    expect(report.summary).toMatchObject({
+      answer: "The echo tool returned hello.",
+      runId: "run-demo",
+      turns: 2,
+    });
+    expect(tags[0]).toBe("RunStarted");
+    expect(tags).toContain("ToolCallSucceeded");
+    expect(tags.at(-1)).toBe("RunCompleted");
+  }).pipe(Effect.provide(agentTestLayer([echoTurn("call-1"), answerTurn]))),
 );
 
-it.effect("returns a typed error when the step budget is exhausted", () =>
+it.effect("fails with a policy error when the turn budget is exhausted", () =>
   Effect.gen(function* () {
     const harness = yield* AgentHarness;
-    const journal = yield* RunJournal;
-    const error = yield* harness
-      .run(new RunRequest({ goal: "Never finish", id: runId }))
+    const failure = yield* harness
+      .run(new RunRequest({ goal: "Never finish", runId }))
       .pipe(Effect.flip);
-    const events = yield* journal.read(runId);
 
-    expect(error._tag).toBe("StepLimitExceeded");
-    if (error._tag === "StepLimitExceeded") {
-      expect(error.limit).toBe(4);
-    }
-    expect(events.at(-1)?._tag).toBe("RunFailed");
+    expect(failure).toMatchObject({
+      _tag: "RunFailure",
+      errorTag: "AgentPolicyError",
+      runId: "run-demo",
+    });
   }).pipe(
     Effect.provide(
-      agentTestLayer([
-        repeatedToolCall,
-        repeatedToolCall,
-        repeatedToolCall,
-        repeatedToolCall,
-      ]),
+      agentTestLayer(["1", "2", "3", "4", "5"].map((n) => echoTurn(`c${n}`))),
     ),
   ),
 );
 
-it.effect("bounds completed histories without evicting an active run", () =>
-  Effect.gen(function* () {
-    const journal = yield* RunJournal;
-    const active = RunId.make("run-active");
-    const second = RunId.make("run-2");
-    const third = RunId.make("run-3");
-
-    yield* journal.append(
-      new RunStarted({ at: 0, goal: "Still running", runId: active }),
-    );
-    for (const [index, id] of [second, third].entries()) {
-      yield* journal.append(
-        new RunStarted({ at: index, goal: `Goal ${index}`, runId: id }),
-      );
-      yield* journal.append(
-        new RunCompleted({ answer: "Done", at: index, runId: id, steps: 1 }),
-      );
-    }
-
-    expect(yield* journal.read(active)).toHaveLength(1);
-    expect(yield* journal.read(second)).toEqual([]);
-    expect(yield* journal.read(third)).toHaveLength(2);
-  }).pipe(Effect.provide(RunJournal.layerMemoryWith({ maxRuns: 2 }))),
-);
-
-it.effect("returns a terminal snapshot atomically across eviction", () =>
-  Effect.gen(function* () {
-    const journal = yield* RunJournal;
-    const first = RunId.make("run-1");
-
-    for (const id of [first, RunId.make("run-2"), RunId.make("run-3")]) {
-      yield* journal.append(
-        new RunStarted({ at: 0, goal: "Concurrent run", runId: id }),
-      );
-    }
-    const snapshot = yield* journal.append(
-      new RunCompleted({ answer: "Done", at: 1, runId: first, steps: 1 }),
-    );
-
-    expect(snapshot.map((event) => event._tag)).toEqual([
-      "RunStarted",
-      "RunCompleted",
-    ]);
-    expect(yield* journal.read(first)).toEqual([]);
-  }).pipe(Effect.provide(RunJournal.layerMemoryWith({ maxRuns: 2 }))),
-);
-
-it.effect("trims goals and rejects blank run identifiers", () =>
+it.effect("trims goals before they reach the agent", () =>
   Effect.gen(function* () {
     expect(yield* Schema.decodeEffect(Goal)("  inspect layers  ")).toBe(
       "inspect layers",
     );
-    const error = yield* Schema.decodeEffect(RunId)("   ").pipe(Effect.flip);
-    expect(String(error)).toContain("length between 1 and 128");
   }),
 );

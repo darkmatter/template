@@ -14,10 +14,10 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "effect": "catalog:"
+    "effect": "4.1.2"
   },
   "devDependencies": {
     "@repo/tooling": "workspace:*",
-    "typescript": "catalog:"
+    "typescript": "^7.0.2"
   }
 }

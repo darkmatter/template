@@ -11,11 +11,11 @@ tsgo, Vite+ for oxlint/oxfmt/Vitest, Nix flake-parts + Prelude).
 | ----------------------------------- | ---------------------------------------------------------------- |
 | `apps/cli/`                         | Effect CLI and terminal rendering boundary                       |
 | `apps/harnessd/`                    | Typed harness HTTP API and long-lived Bun server                 |
-| `apps/web/`                         | Status/architecture page (`@agent-demo/web`) — Effect/Bun server |
+| `apps/web/`                         | Status/architecture page (`@agent-demo/web`) — Waku + Alchemy    |
 | `apps/native/`                      | Tauri shell and managed Effect runtime boundary                  |
-| `packages/agent-core/`              | Stable schemas, services, journal, and agent loop                |
-| `packages/agent-demo/`              | Provider-free model/tool layers shared by runnable apps          |
-| `packages/agent-runtime/`           | Effect AI and sandbox adapters                                   |
+| `packages/agent-core/`              | Harness agent on `@yielded/agent`, run schemas, `AgentHarness`   |
+| `packages/agent-demo/`              | Provider-free model and tool layers shared by runnable apps      |
+| `packages/agent-runtime/`           | Supervised `Shell` tool and its harness layer                    |
 | `packages/agent-testkit/`           | Scripted model and deterministic test layers                     |
 | `packages/sandbox-client/`          | Schema contract for the Rust supervisor                          |
 | `packages/web-core/`                | Framework-independent status and metrics helpers                 |
@@ -84,7 +84,7 @@ Enter the development shell with `nix develop` (or `direnv allow` for
 automatic entry). Inside the shell:
 
 - `x` — interactive command picker
-- `x dev` — run the Effect/Bun demo server
+- `x dev` — run the Waku web app under `alchemy dev` (local `workerd`, :3000)
 - `x cli` — run the deterministic harness CLI
 - `x harnessd` — run the typed harness daemon
 - `x check` — tsgo typecheck
@@ -110,6 +110,10 @@ workspaces.
   Nix, and `bun2nix` for TypeScript monorepos.
 - Prefer Effect v4, `@effect/platform-bun` / `@effect/platform-node`, Effect
   Schema, services, and layers for runtime boundaries.
+- Prefer `@yielded/agent` for agents: define them with `Agent.make`, native
+  Effect AI tools and models, and run them with `AgentRuntime`. Keep
+  `@yielded/agent*` packages on one release; that release must peer on the
+  catalog's `effect`.
 - Prefer `effect-orpc` for typed RPC surfaces and keep the `@orpc/*` peer
   packages on compatible `>=1.13` versions.
 - Prefer Postgres for application data. The default app data path should use
@@ -143,14 +147,16 @@ workspaces.
 
 ## Application architecture
 
-The demo is an Effect-native agent harness. `packages/agent-core` owns branded
-IDs, schema-backed requests/decisions/results/events/errors, capability
-services, an in-memory event journal, and the bounded sequential agent loop.
-`AgentHarness.layerNoDeps` captures its model, tool, journal, and configuration
-dependencies so its public operation has no hidden environment requirement.
+The demo is an Effect-native agent harness built on `@yielded/agent`, the
+preferred framework for Darkmatter agents (ADR 0012). `packages/agent-core`
+defines the harness agent with `Agent.make` (goal in, text out, turn and
+duration policy) and runs it with `AgentRuntime.start`. `AgentHarness.layer`
+captures the model, tool handlers, config, and history store so its public
+operation has no hidden environment requirement. Do not hand-roll a model/tool
+loop, journal, or event schema: use yielded's runtime and `RunEvent`.
 
-Provider and process details point inward from adapters. Only
-`packages/agent-runtime` may import `effect/ai`.
+Tools are native Effect AI `Tool`/`Toolkit` values and models are Effect AI
+`LanguageModel` layers; provider SDK layers stay at composition roots.
 `packages/sandbox-client` owns the tagged wire protocol implemented by
 `crates/agent-sandboxd`. The Rust daemon supervises processes but is not a
 security sandbox.
@@ -158,24 +164,35 @@ security sandbox.
 `packages/agent-demo` supplies one deterministic, schema-validated tool
 round-trip without provider credentials. `apps/cli`, `apps/harnessd`, and
 `apps/native` consume this same layer; application entrypoints must not copy or
-reimplement the harness loop.
+reimplement the harness.
 
 `apps/native` creates one `ManagedRuntime` for UI callback execution and
 disposes it with the application lifecycle. `apps/web` remains the operational
-shell, serving a static architecture page, `/api/status`, and Prometheus-ready
-`/api/metrics` through Effect and Bun.
+shell: a [Waku](https://waku.gg) app whose dynamic front page renders the live
+status, with `/api/status` and Prometheus-ready `/api/metrics` as Waku API
+routes (`src/pages/_api/`).
 
 Web support helpers live in `packages/web-core`:
 
 - `AppConfig` — Effect service reading `HOST`, `PORT`, `APP_ENV`,
-  `APP_RELEASE`, and the optional redacted `DEMO_MESSAGE`; the web adapter can
-  add a SOPS document behind environment config through `APP_SOPS_FILE`.
+  `APP_RELEASE`, and the optional redacted `DEMO_MESSAGE`.
 - `Metrics` — in-memory request counter with Prometheus text export.
 - `Status` — typed status payload encoded via `Schema`.
 
-The server composes these layers with `HttpRouter.serve` and launches via
-`BunRuntime.runMain(Layer.launch(MainLive))`. Static files are served from
-`APP_PUBLIC_DIR` (defaults to the packaged `public/` directory).
+`apps/web/src/runtime.ts` builds one `ManagedRuntime` from these layers and
+reads config through Waku's `getEnv`, so the same code runs in two places:
+
+- **Cloudflare** — `apps/web/alchemy.run.ts` owns the app's Alchemy stack
+  (`Cloudflare.Website.Waku`). `bun run dev` is `alchemy dev`;
+  `bun run deploy` deploys a stage. The stack binds `APP_ENV` (from the stage),
+  `APP_RELEASE`, and `DEMO_MESSAGE` as Worker env; `DEMO_MESSAGE` may come
+  from the SOPS document named by `APP_SOPS_FILE` at deploy time.
+- **Self-hosted** — `bun run build` is Waku's Node adapter build;
+  `bun run start` serves `dist/serve-node.js` on Bun from `HOST`/`PORT`.
+  The Nix package, container images, and Kubernetes base run this output.
+
+Do not set `unstable_adapter` in a `waku.config.ts`: Alchemy owns the adapter
+for Cloudflare, and the plain build uses Waku's Node default.
 
 Standing structural choices are recorded in
 [Architecture Decision Records](docs/adr/).
@@ -191,10 +208,10 @@ image reference. Production uses a digest rather than a mutable image tag.
 
 - Unit tests live next to the code they test. They use `@effect/vitest` with
   `it.effect` and fresh layers; do not wrap `it.effect` in `Effect.scoped`.
-- `packages/agent-testkit` replaces model and tool services with deterministic
-  layers while exercising the real harness and journal.
-- The web smoke test (`apps/web/test/smoke.test.ts`) spawns the real server
-  to verify the status API and front page end-to-end.
+- `packages/agent-testkit` runs the real harness and yielded runtime with
+  yielded's `ScriptedModel` and a deterministic `Echo` tool.
+- The Nix smoke check (`nix/demo/check.nix`) builds the web app and verifies
+  its status API and front page end-to-end.
 - Test files match `**/*.test.ts`. Vitest excludes `.direnv/**`.
 - Add regression tests for behavior changes.
 

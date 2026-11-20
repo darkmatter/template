@@ -61,6 +61,32 @@ module.exports = {
       },
     },
     {
+      name: "apps-are-top-level",
+      comment:
+        "Ported from the retired turbo boundaries tag rule `app` (dependents: app only): nothing outside apps/ may import app code. Package-level (manifest) edges are not checked; imports are.",
+      severity: "error",
+      from: { pathNot: "^apps/" },
+      to: { path: "^apps/" },
+    },
+    {
+      name: "internal-only-below-service",
+      comment:
+        "Ported from the retired turbo boundaries tag rule `internal` (dependencies: internal, leaf): the internal packages may not depend on service packages.",
+      severity: "error",
+      from: { path: `^${R}/(sandbox-client|web-core)/` },
+      to: {
+        path: `^${R}/(agent-core|agent-demo|agent-runtime|agent-testkit|infra)/`,
+      },
+    },
+    {
+      name: "leaf-depends-on-no-package",
+      comment:
+        "Ported from the retired turbo boundaries tag rule `leaf` (dependencies: none): the tooling package depends on no other package.",
+      severity: "error",
+      from: { path: `^${R}/tooling/` },
+      to: { path: `^${R}/`, pathNot: `^${R}/tooling/` },
+    },
+    {
       name: "tests-folder-is-private",
       comment:
         "A package's tests/ folder is reachable only from tests: nothing else may import fixtures.",

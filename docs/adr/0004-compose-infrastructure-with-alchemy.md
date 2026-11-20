@@ -1,6 +1,6 @@
 # 0004 — Compose infrastructure with Alchemy
 
-- **Status:** accepted
+- **Status:** accepted; amended by [ADR 0011](0011-deploy-the-web-app-with-waku-and-its-own-stack.md)
 - **Date:** 2026-08-23
 - **Deciders:** Cooper Maruyama
 

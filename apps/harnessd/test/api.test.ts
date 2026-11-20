@@ -1,8 +1,14 @@
 import { it } from "@effect/vitest";
 import { call } from "@orpc/server";
-import { AgentHarness, ModelFailure } from "@repo/agent-core";
-import { DemoHarnessLayer } from "@repo/agent-demo";
-import { Effect, FileSystem, Layer, Path } from "effect";
+import { AgentHarness, HarnessConfig } from "@repo/agent-core";
+import {
+  DemoHarnessLayer,
+  DemoToolkit,
+  DemoToolkitLayer,
+} from "@repo/agent-demo";
+import { InMemory } from "@yielded/agent";
+import { Effect, FileSystem, Layer, Path, Stream } from "effect";
+import { AiError, LanguageModel, Model } from "effect/ai";
 import { Etag, HttpPlatform } from "effect/http";
 import { HttpApiTest } from "effect/http-api";
 import { expect } from "vite-plus/test";
@@ -28,13 +34,33 @@ const TestLayer = Layer.mergeAll(
   HarnessdHandlers.pipe(Layer.provide(DemoRunnerLive)),
 );
 
-const FailingHarnessLayer = Layer.succeed(
-  AgentHarness,
-  AgentHarness.of({
-    run: Effect.fn("FailingHarness.run")(() =>
-      Effect.fail(new ModelFailure({ reason: "provider unavailable" })),
+const unavailable = AiError.AiError.make({
+  method: "streamText",
+  module: "harnessd-test",
+  reason: AiError.UnknownError.make({ description: "provider unavailable" }),
+});
+
+const UnavailableModel = Model.make(
+  "test",
+  "unavailable",
+  Layer.effect(
+    LanguageModel.LanguageModel,
+    LanguageModel.make({
+      generateText: () => Effect.fail(unavailable),
+      streamText: () => Stream.fail(unavailable),
+    }),
+  ),
+);
+
+const FailingHarnessLayer = AgentHarness.layer(DemoToolkit).pipe(
+  Layer.provide(
+    Layer.mergeAll(
+      HarnessConfig.layerDemo,
+      UnavailableModel,
+      DemoToolkitLayer,
+      InMemory.layer,
     ),
-  }),
+  ),
 );
 
 const FailingRunnerLive = DemoRunner.layerNoDeps.pipe(
@@ -58,19 +84,28 @@ it.effect("serves health and runs the deterministic harness", () =>
     expect(health.status).toBe("ok");
     expect(status).toMatchObject({
       concurrency: 64,
-      retention: "bounded-256-histories",
+      retention: "released-after-run",
+      runtime: "@yielded/agent",
     });
-    expect(report.summary.id).toBe("harnessd-1");
+    expect(report.summary).toMatchObject({ runId: "harnessd-1", turns: 2 });
     expect(report.events.map((event) => event._tag)).toEqual([
       "RunStarted",
-      "ToolRequested",
-      "ToolCompleted",
+      "TurnStarted",
+      "ModelStarted",
+      "ToolCallDeclared",
+      "TurnCompleted",
+      "ToolCallStarted",
+      "ToolCallSucceeded",
+      "TurnStarted",
+      "ModelStarted",
+      "TextDelta",
+      "TurnCompleted",
       "RunCompleted",
     ]);
   }).pipe(Effect.provide(TestLayer)),
 );
 
-it.effect("maps domain failures into the declared API error", () =>
+it.effect("maps a failed run into the declared API error", () =>
   Effect.gen(function* () {
     const client = yield* HttpApiTest.groups(HarnessdApi, ["operations"]);
     const error = yield* client.operations
@@ -79,8 +114,8 @@ it.effect("maps domain failures into the declared API error", () =>
 
     expect(error).toMatchObject({
       _tag: "RunRejected",
-      kind: "ModelFailure",
-      reason: "provider unavailable",
+      kind: "AiError",
+      reason: expect.stringContaining("provider unavailable"),
     });
   }).pipe(Effect.provide(FailureTestLayer)),
 );

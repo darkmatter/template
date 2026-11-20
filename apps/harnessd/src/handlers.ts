@@ -19,9 +19,10 @@ export const HarnessdHandlers = HttpApiBuilder.group(
           new DaemonStatus({
             concurrency: 64,
             execution: "synchronous",
-            journal: "memory",
+            history: "in-memory",
             mode: "deterministic-demo",
-            retention: "bounded-256-histories",
+            retention: "released-after-run",
+            runtime: "@yielded/agent",
             service: "harnessd",
           }),
         ),

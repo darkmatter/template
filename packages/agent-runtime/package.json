@@ -2,7 +2,7 @@
   "name": "@repo/agent-runtime",
   "version": "0.1.0",
   "private": true,
-  "description": "Effect AI and sandbox adapters for the agent harness",
+  "description": "Supervised shell toolkit and harness layer for provider-backed runs",
   "type": "module",
   "imports": {
     "#*": "./src/*"
@@ -16,10 +16,10 @@
   "dependencies": {
     "@repo/agent-core": "workspace:*",
     "@repo/sandbox-client": "workspace:*",
-    "effect": "catalog:"
+    "effect": "4.1.2"
   },
   "devDependencies": {
     "@repo/tooling": "workspace:*",
-    "typescript": "catalog:"
+    "typescript": "^7.0.2"
   }
 }

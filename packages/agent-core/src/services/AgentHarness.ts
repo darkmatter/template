@@ -1,139 +1,91 @@
-import { Clock, Context, Effect, Layer } from "effect";
+import {
+  AgentRuntime,
+  InMemory,
+  type Identifiers,
+  type Thread,
+} from "@yielded/agent";
+import { Context, Effect, Layer, Predicate } from "effect";
+import type { Toolkit } from "effect/ai";
 
 import {
-  type AgentEvent,
-  RunCompleted,
-  RunFailed,
-  RunStarted,
-  ToolCompleted,
-  ToolRequested,
-} from "#domain/events.ts";
-import { ModelContext } from "#domain/model.ts";
-import { RunReport, RunSummary, type RunRequest } from "#domain/run.ts";
-import { StepLimitExceeded, type AgentError } from "#errors.ts";
+  RunFailure,
+  RunReport,
+  RunSummary,
+  type RunRequest,
+} from "#domain/run.ts";
 
-import { AgentModel } from "./AgentModel.ts";
+import { type HarnessAgent, makeHarnessAgent } from "./HarnessAgent.ts";
 import { HarnessConfig } from "./HarnessConfig.ts";
-import { RunJournal } from "./RunJournal.ts";
-import { ToolRunner } from "./ToolRunner.ts";
 
-type Journal = {
-  readonly append: (
-    event: AgentEvent,
-  ) => Effect.Effect<ReadonlyArray<AgentEvent>>;
-};
+// The failure union depends on the toolkit's handler errors, so it is read
+// structurally: every yielded and Effect AI failure is a tagged error.
+const toRunFailure = (runId: Identifiers.RunId) => (error: unknown) =>
+  new RunFailure({
+    errorTag:
+      Predicate.hasProperty(error, "_tag") && typeof error._tag === "string"
+        ? error._tag
+        : "UnknownError",
+    message:
+      Predicate.hasProperty(error, "message") &&
+      typeof error.message === "string"
+        ? error.message
+        : String(error),
+    runId,
+  });
 
-const appendFailed = (
-  journal: Journal,
-  runId: RunRequest["id"],
-  error: AgentError,
-  at: number,
-) => journal.append(new RunFailed({ at, error, runId }));
-
-const failedAt =
-  (journal: Journal, runId: RunRequest["id"], error: AgentError) =>
-  (at: number) =>
-    appendFailed(journal, runId, error, at);
-
-const recordRunFailed =
-  (journal: Journal, runId: RunRequest["id"]) => (error: AgentError) =>
-    Clock.currentTimeMillis.pipe(
-      Effect.flatMap(failedAt(journal, runId, error)),
-    );
+// `InMemory.scoped` replaces the run's ThreadHistory with a disposable one
+// owned by the shared in-memory Store.
+type Requirements<Tools extends Toolkit.Any> =
+  | AgentRuntime.AgentRuntimeRequirements<HarnessAgent<Tools>>
+  | Thread.Store;
 
 export class AgentHarness extends Context.Service<
   AgentHarness,
   {
-    readonly run: (request: RunRequest) => Effect.Effect<RunReport, AgentError>;
+    readonly run: (request: RunRequest) => Effect.Effect<RunReport, RunFailure>;
   }
 >()("@repo/agent-core/services/AgentHarness") {
-  static readonly layerNoDeps = Layer.effect(
-    AgentHarness,
-    Effect.gen(function* () {
-      const config = yield* HarnessConfig;
-      const journal = yield* RunJournal;
-      const model = yield* AgentModel;
-      const tools = yield* ToolRunner;
+  /**
+   * Run the harness agent for `toolkit` on yielded's in-memory runtime. Each
+   * run owns a disposable Thread (`InMemory.scoped`), so a long-lived host
+   * keeps no history after a run settles. The layer captures the model,
+   * handler, and history services once; `run` has no requirements.
+   */
+  static readonly layer = <Tools extends Toolkit.Any>(toolkit: Tools) =>
+    Layer.effect(
+      AgentHarness,
+      Effect.gen(function* () {
+        const agent = makeHarnessAgent(toolkit);
+        const config = yield* HarnessConfig;
+        const context = yield* Effect.context<Requirements<Tools>>();
 
-      const execute = Effect.fn("AgentHarness.execute")(function* (
-        request: RunRequest,
-      ) {
-        let context = new ModelContext({
-          goal: request.goal,
-          instructions: config.systemPrompt,
-          step: 0,
-          toolResults: [],
-        });
-
-        for (let step = 1; step <= config.maxSteps; step += 1) {
-          const decision = yield* model.decide(context);
-          const at = yield* Clock.currentTimeMillis;
-
-          if (decision._tag === "Finish") {
-            const summary = new RunSummary({
-              answer: decision.answer,
-              id: request.id,
-              steps: step,
-            });
-            const events = yield* journal.append(
-              new RunCompleted({
-                answer: summary.answer,
-                at,
-                runId: request.id,
-                steps: summary.steps,
-              }),
-            );
-            return new RunReport({ events, summary });
-          }
-
-          yield* journal.append(
-            new ToolRequested({
-              at,
-              call: decision.call,
-              runId: request.id,
-              step,
-            }),
-          );
-          const result = yield* tools.execute(decision.call);
-          yield* journal.append(
-            new ToolCompleted({
-              at: yield* Clock.currentTimeMillis,
-              result,
-              runId: request.id,
-              step,
-            }),
-          );
-          context = new ModelContext({
-            goal: context.goal,
-            instructions: context.instructions,
-            step,
-            toolResults: [...context.toolResults, result],
+        const execute = Effect.fn("AgentHarness.execute")(function* (
+          request: RunRequest,
+        ) {
+          const handle = yield* AgentRuntime.start(agent, request.goal, {
+            runId: request.runId,
+            turnAllowance: config.maxTurns,
           });
-        }
-
-        return yield* new StepLimitExceeded({
-          limit: config.maxSteps,
-          runId: request.id,
+          const result = yield* handle.await;
+          const events = yield* handle.events;
+          const summary = new RunSummary({
+            answer: result.output,
+            runId: result.runId,
+            threadId: result.threadId,
+            turns: result.turns,
+          });
+          return new RunReport({ events, summary });
         });
-      });
 
-      const run = Effect.fn("AgentHarness.run")(function* (
-        request: RunRequest,
-      ) {
-        yield* journal.append(
-          new RunStarted({
-            at: yield* Clock.currentTimeMillis,
-            goal: request.goal,
-            runId: request.id,
-          }),
+        const run = Effect.fn("AgentHarness.run")(
+          (request: RunRequest): Effect.Effect<RunReport, RunFailure> =>
+            InMemory.scoped(execute(request)).pipe(
+              Effect.mapError(toRunFailure(request.runId)),
+              Effect.provideContext(context),
+            ),
         );
 
-        return yield* execute(request).pipe(
-          Effect.tapError(recordRunFailed(journal, request.id)),
-        );
-      });
-
-      return AgentHarness.of({ run });
-    }),
-  );
+        return AgentHarness.of({ run });
+      }),
+    );
 }

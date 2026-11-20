@@ -13,6 +13,6 @@
     "./organization": "./src/organization.ts"
   },
   "dependencies": {
-    "vite-plus": "catalog:"
+    "vite-plus": "1.2.0"
   }
 }

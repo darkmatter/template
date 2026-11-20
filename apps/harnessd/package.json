@@ -13,23 +13,24 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@effect/platform-bun": "catalog:",
-    "@orpc/client": "catalog:",
-    "@orpc/contract": "catalog:",
-    "@orpc/server": "catalog:",
-    "@orpc/shared": "catalog:",
+    "@effect/platform-bun": "4.1.2",
+    "@orpc/client": "1.15.5",
+    "@orpc/contract": "1.15.5",
+    "@orpc/server": "1.15.5",
+    "@orpc/shared": "1.15.5",
     "@repo/agent-core": "workspace:*",
     "@repo/agent-demo": "workspace:*",
-    "effect": "catalog:",
-    "effect-orpc": "catalog:"
+    "@yielded/agent": "0.1.0-beta.192",
+    "effect": "4.1.2",
+    "effect-orpc": "1.0.0"
   },
   "devDependencies": {
-    "@effect/vitest": "catalog:",
+    "@effect/vitest": "4.1.2",
     "@repo/tooling": "workspace:*",
-    "@types/bun": "catalog:",
-    "@types/node": "catalog:",
-    "typescript": "catalog:",
-    "vite-plus": "catalog:",
-    "vitest": "catalog:"
+    "@types/bun": "^1.3.10",
+    "@types/node": "^24.0.0",
+    "typescript": "^7.0.2",
+    "vite-plus": "1.2.0",
+    "vitest": "5.0.4"
   }
 }

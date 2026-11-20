@@ -1,5 +1,4 @@
-export { EffectAiModelLayer } from "./effect-ai-model.ts";
-export { SandboxToolRunnerLayer } from "./sandbox-tool-runner.ts";
+export { ShellHarnessLayer } from "./shell-harness.ts";
 export {
   ShellParameters,
   ShellTool,

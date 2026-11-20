@@ -3,12 +3,6 @@ services:
     build:
       context: ../..
       dockerfile: ops/container/web/Dockerfile
-    command:
-      [
-        "bun",
-        "build",
-        "--no-install",
-        "--target=bun",
-        "apps/web/src/server.ts",
-        "--outfile=/tmp/agent-demo-check.js",
-      ]
+    # The image build compiles the app; this loads the built server to prove
+    # its runtime dependencies resolve from the production install.
+    command: ["bun", "-e", "await import('./dist/server/index.js')"]

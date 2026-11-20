@@ -1,5 +1,8 @@
-FROM oven/bun:1.3.14-alpine
-
+# The local compose stacks build this image. Production ships the Nix-built
+# image.nix beside it, which runs the same build output on the same
+# production dependencies; change both together.
+# Match packageManager: older Bun cannot read the lockfile format.
+FROM oven/bun:1.4.4-alpine AS manifests
 WORKDIR /app
 COPY package.json bun.lock ./
 COPY apps/cli/package.json ./apps/cli/package.json
@@ -14,13 +17,22 @@ COPY packages/infra/package.json ./packages/infra/package.json
 COPY packages/sandbox-client/package.json ./packages/sandbox-client/package.json
 COPY packages/tooling/package.json ./packages/tooling/package.json
 COPY packages/web-core/package.json ./packages/web-core/package.json
-RUN bun install --frozen-lockfile --production --ignore-scripts
 
-COPY apps/web ./apps/web
-COPY ops/secrets ./ops/secrets
+# The build needs dev dependencies (the shared tsconfig in @repo/tooling).
+FROM manifests AS build
+RUN bun install --frozen-lockfile --ignore-scripts
+COPY apps/web/tsconfig.json ./apps/web/
+COPY apps/web/src ./apps/web/src
 COPY packages/tooling ./packages/tooling
 COPY packages/web-core ./packages/web-core
+# Waku's Node adapter build; --bun runs its node-shebang CLI on Bun.
+RUN cd apps/web && bun --bun run build
 
+# The server bundles @repo/web-core; it imports only production packages.
+FROM manifests
+RUN bun install --frozen-lockfile --production --ignore-scripts
+COPY --from=build /app/apps/web/dist ./apps/web/dist
+WORKDIR /app/apps/web
 USER bun
 EXPOSE 3000
-CMD ["bun", "apps/web/src/server.ts"]
+CMD ["bun", "dist/serve-node.js"]

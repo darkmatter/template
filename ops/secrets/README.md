@@ -14,10 +14,12 @@ Never commit an age private key, a decrypted file, or a plaintext `.env` file. A
 
 ## Existing app integration
 
-`apps/web` adds `demo.sops.yaml` to its Effect config provider chain when
-`APP_SOPS_FILE` is set. After replacing the demo recipient and re-encrypting the
-document with your team identity, run the existing app from the repository
-root:
+`apps/web/alchemy.run.ts` reads `DEMO_MESSAGE` at deploy time and binds it to
+the Worker as a secret. When `APP_SOPS_FILE` is set and the deploy environment
+does not set `DEMO_MESSAGE`, it is read from that SOPS document. After
+replacing the demo recipient and re-encrypting the document with your team
+identity, run the app from the repository root (`bun run dev` delegates to
+`apps/web`):
 
 ```sh
 export APP_SOPS_FILE="$PWD/ops/secrets/demo.sops.yaml"
@@ -26,7 +28,9 @@ bun run dev
 
 `sops-age` discovers the identity through standard SOPS locations and variables,
 including `SOPS_AGE_KEY` and `SOPS_AGE_KEY_FILE`. The checked-in document's
-throwaway private identity is intentionally absent, so the real app path should
-fail until the recipient has been replaced. The focused test covers the same
-existing-app provider integration with synthetic plaintext and never reveals a
-real decrypted value.
+throwaway private identity is intentionally absent, so the real path should
+fail until the recipient has been replaced. `apps/web/src/worker-env.test.ts`
+covers the same provider integration with synthetic plaintext and never reveals
+a real decrypted value. The Worker itself never decrypts: the self-hosted
+server reads `DEMO_MESSAGE` from its environment, which a deployment supplies
+through its secret controller.

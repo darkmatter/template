@@ -1,5 +1,6 @@
-import { Goal, RunId } from "@repo/agent-core";
+import { Goal } from "@repo/agent-core";
 import { DemoHarnessLayer } from "@repo/agent-demo";
+import { Identifiers } from "@yielded/agent";
 import { Console, Effect } from "effect";
 import { Argument, Command, Flag } from "effect/cli";
 
@@ -14,9 +15,9 @@ const goal = Argument.String("goal").pipe(
 );
 
 const runId = Flag.String("run-id").pipe(
-  Flag.withSchema(RunId),
-  Flag.withDefault(RunId.make("cli-demo")),
-  Flag.withDescription("Stable identifier used by the run journal"),
+  Flag.withSchema(Identifiers.RunId),
+  Flag.withDefault(Identifiers.RunId.make("cli-demo")),
+  Flag.withDescription("Run identifier recorded on every run event"),
 );
 
 const run = Command.make(
@@ -24,7 +25,7 @@ const run = Command.make(
   {
     events: Flag.Boolean("events").pipe(
       Flag.withDefault(false),
-      Flag.withDescription("Print the journal after the answer"),
+      Flag.withDescription("Print the run events after the answer"),
     ),
     goal,
     json: Flag.Boolean("json").pipe(

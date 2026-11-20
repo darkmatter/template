@@ -1,3 +1,0 @@
-[submodule "vendor/darkmatter/common"]
-	path = vendor/darkmatter/common
-	url = https://github.com/darkmatter/common.git

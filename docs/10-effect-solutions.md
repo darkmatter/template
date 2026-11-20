@@ -1,6 +1,6 @@
 # Canonical Effect and Alchemy choices
 
-This repository pins `effect@4.0.2`, the stable Effect v4 line. Modules that
+This repository pins `effect@4.1.2`, the stable Effect v4 line. Modules that
 were under `effect/unstable/*` during the beta are stable subpaths now
 (`effect/ai`, `effect/cli`, `effect/http`, `effect/http-api`), and constructors
 are capitalized (`Config.String`, `Flag.Boolean`, `Schema.TaggedError`).
@@ -16,15 +16,17 @@ are capitalized (`Config.String`, `Flag.Boolean`, `Schema.TaggedError`).
   and `Schema.Union`; recoverable boundary failures use tagged schema errors.
 - Configuration stays in `Config` and provider layers. Domain code never reads
   `process.env`.
-- Execution happens at application edges: `BunRuntime.runMain` for the server
-  and one lifecycle-managed `ManagedRuntime` for desktop callbacks.
+- Execution happens at application edges: `BunRuntime.runMain` for the Bun
+  servers and one lifecycle-managed `ManagedRuntime` each for desktop
+  callbacks and the Waku web app.
 - `@effect/vitest` runs Effects directly with a fresh test scope. Test layers
   replace capabilities without mocking modules.
 - Generator control flow is preferred when it makes the state machine clearer.
 
 The patterns were cross-checked against the official Effect repository and the
-Effect Solutions example catalogue. The AI import stays isolated in
-`agent-runtime` so provider changes do not spread into the domain.
+Effect Solutions example catalogue. Agents are built with `@yielded/agent`
+(ADR 0012), which uses Effect AI `Tool`, `Toolkit`, and `LanguageModel`
+directly; provider SDK layers stay at composition roots.
 
 ## Alchemy conventions used here
 
@@ -34,11 +36,17 @@ resources, and return their outputs. Resource Effects receive provider and state
 through layers assembled by Alchemy; application code does not invoke the
 Alchemy runtime.
 
-The repository uses `alchemy@2.0.0-beta.81`. `alchemy-sops@0.9.0` still declares
-an exact `alchemy@2.0.0-beta.70` peer, so installs warn about it; the SOPS
-config test covers the integration until `alchemy-sops` widens that range. The
-existing D1 resource in `packages/infra` is retained as a Cloudflare-local demo
-artifact, not as the preferred application data store.
+The repository uses `alchemy@2.0.0-beta.85`, with Cloudflare resources from
+`@alchemy.run/cloudflare` at the same version. `alchemy-sops@0.8.1` still
+declares an exact `alchemy@2.0.0-beta.70` peer, so installs warn about it;
+`apps/web/src/worker-env.test.ts` covers the integration until `alchemy-sops`
+widens that range. The existing D1 resource in `packages/infra` is retained as
+a Cloudflare-local demo artifact, not as the preferred application data store.
+
+`apps/web` deploys with `Cloudflare.Website.Waku`, whose adapter ships in
+`@alchemy.run/frontend-frameworks@2.0.0-beta.85`. That release peers on exactly
+`waku@1.0.0-rc.4`, which needs React `~19.3.1`; upgrade Alchemy, Waku, and
+React together.
 
 Alchemy's experimental agent resource is not used: the agent lives in Effect,
 while Alchemy declares only deployable infrastructure.

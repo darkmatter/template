@@ -1,11 +1,18 @@
 {
   "extends": "@repo/tooling/tsconfig",
   "compilerOptions": {
-    "types": ["node", "bun"],
+    "jsx": "react-jsx",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": ["node", "vite/client"],
     "paths": {
       "#*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "alchemy.run.ts",
+    "waku.config.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx"
+  ],
+  "exclude": ["node_modules", "dist", ".alchemy"]
 }
