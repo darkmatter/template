@@ -40,7 +40,7 @@ application schema still belongs beside the application that uses it.
 | Directory            | Owns                                                              |
 | -------------------- | ----------------------------------------------------------------- |
 | `ops/bin/`           | Human-invoked operational commands                                |
-| `ops/container/`     | Container build recipes (Dockerfiles, bases)                      |
+| `ops/container/`     | Container build recipes (Nix images, bases)                       |
 | `ops/compose/`       | Local multi-service Docker Compose stacks                         |
 | `ops/config/`        | Runtime configuration for dependencies (Nginx, PostgreSQL, Redis) |
 | `ops/deploy/`        | Reusable deployment primitives (Kubernetes base, Terraform)       |

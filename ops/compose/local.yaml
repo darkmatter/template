@@ -1,8 +1,8 @@
 services:
   web:
-    build:
-      context: ../..
-      dockerfile: ops/container/web/Dockerfile
+    # Built by Nix (ops/container/web/image.nix); `just container-image`
+    # loads it into Docker under this tag.
+    image: ghcr.io/darkmatter/template:local
     environment:
       APP_ENV: development
       APP_RELEASE: compose-local

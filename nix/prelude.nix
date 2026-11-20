@@ -60,6 +60,11 @@
         description = "Format with Vite+ (oxfmt) and treefmt (alejandra)";
       };
 
+      "ops:container-image" = {
+        exec = "just container-image";
+        description = "Build the web image with Nix and load it into Docker";
+      };
+
       "ops:container-config" = {
         exec = "docker compose -f ops/compose/local.yaml config";
         description = "Validate the local Compose stack";

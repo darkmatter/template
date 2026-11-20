@@ -1,8 +1,8 @@
 services:
   web-test:
-    build:
-      context: ../..
-      dockerfile: ops/container/web/Dockerfile
-    # The image build compiles the app; this loads the built server to prove
+    # Built by Nix (ops/container/web/image.nix); `just container-image`
+    # loads it into Docker under this tag.
+    image: ghcr.io/darkmatter/template:local
+    # The image carries the built app; this loads the built server to prove
     # its runtime dependencies resolve from the production install.
     command: ["bun", "-e", "await import('./dist/server/index.js')"]

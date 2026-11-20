@@ -203,7 +203,8 @@ toolchain, and boundaries; replace the example domain with your own.
 - **Convention:** `flake.nix` (`flake-parts`) provides the hermetic devshell,
   `nix/bun.nix` (`bun2nix`) locks Bun dependencies for offline Nix builds, and
   `ops/container/web/image.nix` streams the production OCI image without a
-  Docker daemon. `package.json` scripts are the canonical non-interactive
+  Docker daemon. It is the only image recipe: the local Compose stacks run the
+  same image, loaded with `just container-image`. `package.json` scripts are the canonical non-interactive
   command surface for CI and agents; Prelude (`x`) and `just` wrap those exact
   scripts for interactive discovery and devshell enforcement. CI installs with
   `--frozen-lockfile --ignore-scripts`, runs explicit `bun run prepare`, and

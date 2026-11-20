@@ -5,7 +5,7 @@
 | Directory        | Owns                                            | Example                                      |
 | ---------------- | ----------------------------------------------- | -------------------------------------------- |
 | `bin/`           | Human-invoked operational commands              | deploy, migrations, smoke tests              |
-| `container/`     | Container build recipes                         | application Dockerfiles and shared bases     |
+| `container/`     | Container build recipes                         | Nix-built application images, shared bases   |
 | `compose/`       | Local multi-service compositions                | app, database, and observability stacks      |
 | `config/`        | Runtime configuration for dependencies          | Nginx, PostgreSQL, Redis                     |
 | `deploy/`        | Reusable deployment primitives                  | Kubernetes base manifests, Terraform modules |

@@ -21,8 +21,14 @@
       # The production web image (ops/container/web/image.nix). Linux-only:
       # dockerTools images and their target are Linux regardless of the
       # building system.
-      // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
-        web-image = import ../../../ops/container/web/image.nix {inherit pkgs;};
-      };
+      // pkgs.lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux (let
+        webImage = import ../../../ops/container/web/image.nix {inherit pkgs;};
+      in {
+        # A script that streams the image; CI pipes it straight to skopeo.
+        web-image = webImage;
+        # The same image as a file. The stream script only runs on Linux, so
+        # this is what a macOS host builds (on a Linux builder) and loads.
+        web-image-archive = pkgs.runCommand "template-web-image.tar" {} "${webImage} > $out";
+      });
   };
 }

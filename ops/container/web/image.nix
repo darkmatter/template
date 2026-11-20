@@ -1,9 +1,8 @@
-# The production web image: the files the Dockerfile beside this file ships
-# (production dependencies installed without lifecycle scripts, plus the
-# web app's Waku build), run by nixpkgs' Bun instead of the Dockerfile's
-# oven/bun base image. Nix builds it so CI can publish from a runner without
-# a Docker daemon; skopeo pushes the result. The Dockerfile stays the recipe
-# for the local compose stacks; change both together.
+# The web image, and the only recipe for it: production dependencies from
+# nix/bun.nix installed without lifecycle scripts, plus the web app's Waku
+# build, run by nixpkgs' Bun. Nix builds it so CI can publish from a runner
+# without a Docker daemon (skopeo pushes the result), and the local compose
+# stacks run the same image (`just container-image` loads it into Docker).
 {pkgs}: let
   bunDeps = pkgs.bun2nix.fetchBunDeps {
     bunNix = ../../../nix/bun.nix;
@@ -21,11 +20,11 @@
       pkgs.makeWrapper
     ];
     inherit bunDeps;
-    # --production, as in the Dockerfile: dev dependencies would multiply the
-    # image size. copyfile/hoisted for the same reason as nix/demo/package.nix.
+    # --production: dev dependencies would multiply the image size.
+    # copyfile/hoisted for the same reason as nix/demo/package.nix.
     bunInstallFlags = "--linker=hoisted --backend=copyfile --frozen-lockfile --production";
-    # The Dockerfile installs with --ignore-scripts. The hook already does,
-    # then by default re-runs the install with lifecycle scripts; skip that.
+    # The hook installs with --ignore-scripts, then by default re-runs the
+    # install with lifecycle scripts; the server needs none of them.
     dontRunLifecycleScripts = true;
     buildPhase = ''
       runHook preBuild
@@ -52,8 +51,13 @@
 in
   pkgs.dockerTools.streamLayeredImage {
     name = "ghcr.io/darkmatter/template";
+    # The tag `docker load` gives the image, which the compose stacks name.
+    # Publishing ignores it: skopeo pushes to an explicit sha tag.
+    tag = "local";
     contents = [
       web
+      # Already in the closure; on PATH for compose healthchecks and probes.
+      pkgs.bun
       pkgs.dockerTools.binSh
       pkgs.dockerTools.caCertificates
       pkgs.dockerTools.fakeNss
@@ -71,5 +75,6 @@ in
         "org.opencontainers.image.source" = "https://github.com/darkmatter/template";
       };
       User = "nobody";
+      WorkingDir = "/lib/template-web/apps/web";
     };
   }

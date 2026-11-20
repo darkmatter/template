@@ -8,11 +8,19 @@ on:
 jobs:
   verify:
     runs-on: arc
+    env:
+      CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version-file: package.json
+      # vite.config.ts imports a workspace .ts file, which Node only loads
+      # natively from 22.18; the runner's own Node is older. package.json
+      # engines asks for 24.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
       # The arc runner image carries Nix but no C toolchain, so a rustup
       # toolchain dies at `linker cc not found`. Take cargo/rustc/gcc/rustfmt
       # from nixpkgs; the runner's baked substituters serve them. Nix is
@@ -31,6 +39,21 @@ jobs:
       - run: cargo check --workspace
       - run: cargo test --workspace
       - run: cargo fmt --all -- --check
+      # Pushes what this job builds to the darkmatter Cachix cache, which the
+      # arc runners already read from, so later runs fetch the app's ~500
+      # dependency tarballs and build outputs instead of redoing them. Skipped
+      # where the token is absent (forks, the exported repo).
+      - uses: cachix/cachix-action@v17
+        if: env.CACHIX_AUTH_TOKEN != ''
+        continue-on-error: true
+        # The arc runner leaves USER unset, which cachix refuses to run without.
+        env:
+          USER: runner
+        with:
+          name: darkmatter
+          authToken: ${{ env.CACHIX_AUTH_TOKEN }}
+          # arc already has the cache as a substituter; this step only pushes.
+          skipAddingSubstituter: true
       - run: nix flake check
       # No Docker daemon on arc (and public repos cannot use arc-dind), but
       # `config` only renders the stack; the standalone compose binary from
