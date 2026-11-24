@@ -12,7 +12,11 @@ in {
     lib,
     pkgs,
     ...
-  }: {
+  }: let
+    workerBuild = pkgs.worker-build.overrideAttrs (old: {
+      buildInputs = (old.buildInputs or []) ++ [pkgs.zstd];
+    });
+  in {
     treefmt = {
       # TypeScript, JSON, Markdown, and YAML are formatted by `vp fmt`, which
       # reads its settings from vite.config.ts; oxfmt run outside Vite+ cannot.
@@ -26,8 +30,9 @@ in {
         ++ lib.optionals hasTypeScript [pkgs.bun pkgs.nodejs_24]
         ++ lib.optionals hasRust [pkgs.cargo pkgs.rustc pkgs.rustfmt pkgs.clippy pkgs.rust-analyzer]
         # Builds crates/cloudflare-worker-example into a Worker bundle. nixpkgs
-        # rustc ships the wasm32 std; lld links it.
-        ++ lib.optionals hasRustWorker [pkgs.lld pkgs.worker-build]
+        # rustc ships the wasm32 std; lld links it. worker-build currently
+        # misses zstd despite cargoSetupHook requiring the system library.
+        ++ lib.optionals hasRustWorker [pkgs.lld workerBuild]
         ++ lib.optionals hasApps [
           config.packages.prelude
           pkgs.age
